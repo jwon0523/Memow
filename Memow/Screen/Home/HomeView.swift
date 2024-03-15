@@ -10,12 +10,23 @@ import SwiftUI
 struct HomeView: View {
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            CustomNavigationBar(
+                isDisplayLeftBtn: false
+            )
+            
+            // ChatView
+            
+            // ChatCotentInputView
         }
-        .padding()
+    }
+}
+
+private struct ChatView: View {
+    private var date = Date()
+    
+    fileprivate var body: some View {
+        Text("\(date.formattedDay)")
+            .font(.system(size: 12, weight: .medium))
     }
 }
 
