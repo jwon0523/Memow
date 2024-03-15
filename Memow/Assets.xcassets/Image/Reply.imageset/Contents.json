@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "Chat Reply - icon.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
