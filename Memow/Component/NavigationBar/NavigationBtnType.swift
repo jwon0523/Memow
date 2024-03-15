@@ -11,5 +11,5 @@ enum NavigationBtnType: String {
     case close
     case eidt = "편집"
     case complete = "완료"
-    case create
+    case create = "생성"
 }
