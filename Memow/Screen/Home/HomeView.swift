@@ -14,12 +14,14 @@ struct HomeView: View {
         VStack {
             CustomNavigationBar(
                 isDisplayLeftBtn: false
+                // 왼쪽 버튼 클릭시 작동할 함수 작성 필요
             )
             
             ChatListView(homeViewModel: homeViewModel)
             
-             MessageFieldView(homeViewModel: homeViewModel)
+            MessageFieldView(homeViewModel: homeViewModel)
         }
+        .background(.customBlack)
     }
 }
 
@@ -35,11 +37,24 @@ private struct ChatListView: View {
     
     fileprivate var body: some View {
         VStack {
+            // 메세지가 작성된 날짜를 보여줌
             Text(date.formattedDay)
                 .font(.system(size: 12, weight: .bold))
             
-            ForEach(homeViewModel.messages, id: \.self) { message in
-                MessageBubbleView(message: message)
+            ScrollViewReader { proxy in
+                ScrollView {
+                    ForEach(homeViewModel.messages, id:\.id) { message in
+                        MessageBubbleView(message: message)
+                    }
+                }
+                .padding(.top, 10)
+                .background(.customBlack)
+                .onChange(of: homeViewModel.lastMessageId, initial: true) {
+                    // 메세지의 lastMessageId가 변경되면 대화의 마지막 부분으로 이동
+                    withAnimation {
+                        proxy.scrollTo(homeViewModel.lastMessageId, anchor: .bottom)
+                    }
+                }
             }
         }
     }
@@ -54,9 +69,25 @@ private struct MessageBubbleView: View {
     }
     
     fileprivate var body: some View {
+        // 내가 보낸 메세지면 끝에 정렬하고, 상대방이 보낸 메세지라면 앞에 정렬
         VStack(alignment: message.received ? .leading : .trailing) {
-            Text(message.content)
+            HStack {
+                Text(message.content)
+                    .padding()
+                    .background(Color.customYellow)
+                    .cornerRadius(10)
+            }
+            .frame(
+                maxWidth: 300,
+                alignment: message.received ? .leading : .trailing
+            )
         }
+        .frame(
+            maxWidth: .infinity,
+            alignment: message.received ? .leading : .trailing
+        )
+        .padding(.trailing)
+        .padding(.horizontal, 10)
     }
 }
 
@@ -71,15 +102,14 @@ private struct MessageFieldView: View {
     
     fileprivate var body: some View {
         HStack {
+            // TextField를 커스텀한 뷰
             CustomTextField(
-                placeholder: Text("내용을 입력하세요"), 
+                placeholder: Text("내용을 입력하세요"),
                 text: $text
             )
             
             Button {
-                homeViewModel.sendMessage(
-                    .init(id: "1", content: text, date: Date())
-                )
+                homeViewModel.sendMessage(text)
                 text = ""
             } label: {
                 Image(systemName: "paperplane.fill")

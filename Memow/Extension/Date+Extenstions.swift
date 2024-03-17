@@ -8,6 +8,7 @@
 import Foundation
 
 extension Date {
+    // 시간 커스텀
     var formattedTime: String {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "ko_KR")
@@ -16,9 +17,10 @@ extension Date {
         return formatter.string(from: self)
     }
     
+    // 날짜 커스텀
     var formattedDay: String {
-        let now = Date()
-        let calender = Calendar.current
+//        let now = Date()
+//        let calender = Calendar.current
         
 //        let nowStartOfDay = calender.startOfDay(for: now)
 //        let dateStartOfDay = calender.startOfDay(for: self)

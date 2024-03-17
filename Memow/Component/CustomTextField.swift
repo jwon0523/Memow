@@ -7,11 +7,13 @@
 
 import SwiftUI
 
+// TextField 커스텀
 struct CustomTextField: View {
     var placeholder: Text
     @Binding var text: String
-    var editingChanged: (Bool) -> () = {_ in}
-    var commit: () -> () = {}
+    var editingChanged: (Bool) -> Void = {_ in}
+    var commit: () -> Void = {}
+    
     
     var body: some View {
         ZStack(alignment: .leading) {
