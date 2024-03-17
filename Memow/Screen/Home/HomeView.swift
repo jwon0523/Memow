@@ -14,6 +14,7 @@ struct HomeView: View {
         VStack {
             CustomNavigationBar(
                 // 왼쪽 버튼 클릭시 작동 함수 필요
+                isDisplayRightBtn: true
                 // 오른쪽 버튼 클릭시 작동 함수 필요
             )
             
@@ -123,8 +124,11 @@ private struct MessageFieldView: View {
             )
             
             Button {
-                homeViewModel.sendMessage(text)
-                text = ""
+                // 입력된 내용이 없을 경우 전송되지 않음
+                if text != "" {
+                    homeViewModel.sendMessage(text)
+                    text = ""
+                }
             } label: {
                 Image(systemName: "paperplane.fill")
                     .foregroundColor(.white)
@@ -143,5 +147,4 @@ private struct MessageFieldView: View {
 
 #Preview {
     HomeView()
-        .environmentObject(HomeViewModel())
 }
