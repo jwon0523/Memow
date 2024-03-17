@@ -20,8 +20,8 @@ extension Date {
         let now = Date()
         let calender = Calendar.current
         
-        let nowStartOfDay = calender.startOfDay(for: now)
-        let dateStartOfDay = calender.startOfDay(for: self)
+//        let nowStartOfDay = calender.startOfDay(for: now)
+//        let dateStartOfDay = calender.startOfDay(for: self)
 //        let numOfDaysDifference = calender.dateComponents([.day], from: nowStartOfDay, to: dateStartOfDay).day!
         
         let formatter = DateFormatter()

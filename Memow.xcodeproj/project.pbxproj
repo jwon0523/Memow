@@ -13,8 +13,10 @@
 		0E53A6AE2BA450A0002C37C5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0E53A6AD2BA450A0002C37C5 /* Preview Assets.xcassets */; };
 		0E53A6BB2BA452D8002C37C5 /* NavigationBtnType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53A6BA2BA452D8002C37C5 /* NavigationBtnType.swift */; };
 		0E53A6BD2BA45889002C37C5 /* CustomNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53A6BC2BA45889002C37C5 /* CustomNavigationBar.swift */; };
-		0E53A6C02BA4605B002C37C5 /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53A6BF2BA4605B002C37C5 /* Chat.swift */; };
+		0E53A6C02BA4605B002C37C5 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53A6BF2BA4605B002C37C5 /* Message.swift */; };
 		0E53A6C32BA4613C002C37C5 /* Date+Extenstions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53A6C22BA4613C002C37C5 /* Date+Extenstions.swift */; };
+		0E53A6F42BA68D8F002C37C5 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53A6F32BA68D8F002C37C5 /* HomeViewModel.swift */; };
+		0E53A6F62BA6A8C1002C37C5 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53A6F52BA6A8C1002C37C5 /* CustomTextField.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,8 +27,10 @@
 		0E53A6AD2BA450A0002C37C5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		0E53A6BA2BA452D8002C37C5 /* NavigationBtnType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBtnType.swift; sourceTree = "<group>"; };
 		0E53A6BC2BA45889002C37C5 /* CustomNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationBar.swift; sourceTree = "<group>"; };
-		0E53A6BF2BA4605B002C37C5 /* Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chat.swift; sourceTree = "<group>"; };
+		0E53A6BF2BA4605B002C37C5 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		0E53A6C22BA4613C002C37C5 /* Date+Extenstions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extenstions.swift"; sourceTree = "<group>"; };
+		0E53A6F32BA68D8F002C37C5 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		0E53A6F52BA6A8C1002C37C5 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,7 +93,7 @@
 		0E53A6B52BA451BA002C37C5 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				0E53A6B82BA45267002C37C5 /* Chat */,
+				0E53A6B82BA45267002C37C5 /* Message */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -98,6 +102,7 @@
 			isa = PBXGroup;
 			children = (
 				0E53A6B92BA452A2002C37C5 /* NavigationBar */,
+				0E53A6F52BA6A8C1002C37C5 /* CustomTextField.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -110,12 +115,12 @@
 			path = Screen;
 			sourceTree = "<group>";
 		};
-		0E53A6B82BA45267002C37C5 /* Chat */ = {
+		0E53A6B82BA45267002C37C5 /* Message */ = {
 			isa = PBXGroup;
 			children = (
-				0E53A6BF2BA4605B002C37C5 /* Chat.swift */,
+				0E53A6BF2BA4605B002C37C5 /* Message.swift */,
 			);
-			path = Chat;
+			path = Message;
 			sourceTree = "<group>";
 		};
 		0E53A6B92BA452A2002C37C5 /* NavigationBar */ = {
@@ -131,6 +136,7 @@
 			isa = PBXGroup;
 			children = (
 				0E53A6A82BA4509F002C37C5 /* HomeView.swift */,
+				0E53A6F32BA68D8F002C37C5 /* HomeViewModel.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -215,9 +221,11 @@
 			files = (
 				0E53A6C32BA4613C002C37C5 /* Date+Extenstions.swift in Sources */,
 				0E53A6BD2BA45889002C37C5 /* CustomNavigationBar.swift in Sources */,
+				0E53A6F42BA68D8F002C37C5 /* HomeViewModel.swift in Sources */,
 				0E53A6A92BA4509F002C37C5 /* HomeView.swift in Sources */,
+				0E53A6F62BA6A8C1002C37C5 /* CustomTextField.swift in Sources */,
 				0E53A6BB2BA452D8002C37C5 /* NavigationBtnType.swift in Sources */,
-				0E53A6C02BA4605B002C37C5 /* Chat.swift in Sources */,
+				0E53A6C02BA4605B002C37C5 /* Message.swift in Sources */,
 				0E53A6A72BA4509F002C37C5 /* MemowApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
