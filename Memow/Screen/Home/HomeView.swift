@@ -13,8 +13,8 @@ struct HomeView: View {
     var body: some View {
         VStack {
             CustomNavigationBar(
-                isDisplayLeftBtn: false
-                // 왼쪽 버튼 클릭시 작동할 함수 작성 필요
+                // 왼쪽 버튼 클릭시 작동 함수 필요
+                // 오른쪽 버튼 클릭시 작동 함수 필요
             )
             
             ChatListView(homeViewModel: homeViewModel)
@@ -40,6 +40,7 @@ private struct ChatListView: View {
             // 메세지가 작성된 날짜를 보여줌
             Text(date.formattedDay)
                 .font(.system(size: 12, weight: .bold))
+                .foregroundStyle(.customGray)
             
             ScrollViewReader { proxy in
                 ScrollView {
@@ -72,13 +73,20 @@ private struct MessageBubbleView: View {
         // 내가 보낸 메세지면 끝에 정렬하고, 상대방이 보낸 메세지라면 앞에 정렬
         VStack(alignment: message.received ? .leading : .trailing) {
             HStack {
+                Text(message.date.formattedTime)
+                    .padding(.leading)
+                    .padding(.top, 20)
+                    .foregroundColor(.customWhite)
+                    .font(.system(size: 8))
+                
                 Text(message.content)
-                    .padding()
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
                     .background(Color.customYellow)
                     .cornerRadius(10)
             }
             .frame(
-                maxWidth: 300,
+                maxWidth: 350,
                 alignment: message.received ? .leading : .trailing
             )
         }

@@ -13,7 +13,7 @@ class HomeViewModel: ObservableObject {
     
     // 앱 실행시 빈 배열로 messages 배열 초기화
     // 추후 로컬이나 서버 DB에서 메세지를 받아올 예정
-    init(messages: [Message] = []) {
+    init(messages: [Message] = [Message(id: "1", content: "Hello", date: Date())]) {
         self.messages = messages
     }
 }
