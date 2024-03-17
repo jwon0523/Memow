@@ -13,9 +13,11 @@ struct CustomNavigationBar: View {
     let leftBtnAction: () -> Void
     let rightBtnAction: () -> Void
     
+    // 왼쪽과 오른쪽 버튼을 false로 초기화
+    // 왼쪽과 오른쪽 버튼의 기능을 각각 커스텀 가능
     init(
         isDisplayLeftBtn: Bool = false,
-        isDisplayRightBtn: Bool = true,
+        isDisplayRightBtn: Bool = false,
         leftBtnAction: @escaping () -> Void = {},
         rightBtnAction: @escaping () -> Void = {}
     ) {
@@ -33,6 +35,7 @@ struct CustomNavigationBar: View {
                     label: { Image("LeftBack") }
                 )
             } else {
+                // 왼쪽 버튼을 보여주지 않을 경우 빈공간 주어 로고 정렬
                 Spacer()
                     .frame(width: 50)
             }
@@ -48,6 +51,10 @@ struct CustomNavigationBar: View {
                     action: rightBtnAction, label: {
                         Image("RightBtn")
                 })
+            } else {
+                // 오른쪽 버튼을 보여주지 않을 경우 빈공간 주어 로고 정렬
+                Spacer()
+                    .frame(width: 50)
             }
         }
     }

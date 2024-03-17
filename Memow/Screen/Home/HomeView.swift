@@ -73,11 +73,14 @@ private struct MessageBubbleView: View {
         // 내가 보낸 메세지면 끝에 정렬하고, 상대방이 보낸 메세지라면 앞에 정렬
         VStack(alignment: message.received ? .leading : .trailing) {
             HStack {
-                Text(message.date.formattedTime)
-                    .padding(.leading)
-                    .padding(.top, 20)
-                    .foregroundColor(.customWhite)
-                    .font(.system(size: 8))
+                // 보낸 시각을 메세지 왼쪽 최하단에 위치시킴
+                VStack {
+                    Spacer()
+                    Text(message.date.formattedTime)
+                        .padding(.leading)
+                        .foregroundColor(.customWhite)
+                        .font(.system(size: 8))
+                }
                 
                 Text(message.content)
                     .padding(.horizontal, 12)
@@ -86,7 +89,7 @@ private struct MessageBubbleView: View {
                     .cornerRadius(10)
             }
             .frame(
-                maxWidth: 350,
+                maxWidth: 400,
                 alignment: message.received ? .leading : .trailing
             )
         }
@@ -112,7 +115,10 @@ private struct MessageFieldView: View {
         HStack {
             // TextField를 커스텀한 뷰
             CustomTextField(
-                placeholder: Text("내용을 입력하세요"),
+                placeholder: 
+                    Text("내용을 입력하세요")
+                    .foregroundColor(Color.customBorder)
+                ,
                 text: $text
             )
             
@@ -129,8 +135,8 @@ private struct MessageFieldView: View {
         }
         .padding(.horizontal)
         .padding(.vertical, 10)
-        .background(Color.gray)
-        .cornerRadius(50)
+        .background(Color.customTextField)
+        .cornerRadius(20)
         .padding()
     }
 }

@@ -12,7 +12,8 @@ extension Date {
     var formattedTime: String {
         let formatter = DateFormatter()
         //     한글로 변환
-        formatter.locale = Locale(identifier: "ko_KR")
+//        formatter.locale = Locale(identifier: "ko_KR")
+        // 시간 나타낼 방식
         formatter.dateFormat = "hh:mm a"
         
         return formatter.string(from: self)
