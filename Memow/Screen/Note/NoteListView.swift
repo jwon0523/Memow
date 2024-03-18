@@ -45,15 +45,18 @@ private struct NoteListCellView: View {
     }
     
     fileprivate var body: some View {
-        NavigationStack {
-            List {
-                ForEach(noteListViewModel.notes, id:\.id) { note in
-                    NoteContentView(note: note)
-                }
+        List {
+            ForEach(noteListViewModel.notes, id:\.id) { note in
+                NoteContentView(note: note)
+                    .onTapGesture {
+                        // 화면 전환 기능 추가 필요
+                        print("Move view")
+                    }
             }
-            // 리스트 간격 벌려주는 속성
-            .listRowSpacing(20)
         }
+        // 리스트 간격 벌려주는 속성
+        .listRowSpacing(20)
+        
     }
 }
 
