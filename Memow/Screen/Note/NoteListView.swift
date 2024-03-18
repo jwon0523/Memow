@@ -45,14 +45,14 @@ private struct NoteListCellView: View {
     }
     
     fileprivate var body: some View {
-        VStack {
-            ScrollView(.vertical) {
-                VStack(spacing: 0) {
-                    ForEach(noteListViewModel.notes, id:\.id) { note in
-                        NoteContentView(note: note)
-                    }
+        NavigationStack {
+            List {
+                ForEach(noteListViewModel.notes, id:\.id) { note in
+                    NoteContentView(note: note)
                 }
             }
+            // 리스트 간격 벌려주는 속성
+            .listRowSpacing(20)
         }
     }
 }
@@ -66,39 +66,37 @@ private struct NoteContentView: View {
     }
     
     fileprivate var body: some View {
-        Button(
-            action: {
-                print("Print")
-            },
-            label: {
-                VStack {
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text(note.title)
-                                .lineLimit(1)
-                                .font(.system(size: 16))
-                                .foregroundColor(.customYellow)
-                                .padding(.bottom,8)
-                            
-                            
-                            Text(note.content)
-                                .multilineTextAlignment(.leading)
-                                .lineLimit(2)
-                                .font(.system(size: 12))
-                                .foregroundColor(.customFont)
-                        }
-                        .padding(.horizontal)
-                        
-                        Spacer()
-                    }
-                    .frame(minHeight: 84)
-                    .background(.customWhite)
-                    .cornerRadius(10)
-                    .shadow(radius: 1, y: 0.5)
+        VStack {
+            HStack {
+                VStack(alignment: .leading) {
+                    Text(note.title)
+                        .lineLimit(1)
+                        .font(.system(size: 16))
+                        .foregroundColor(.customYellow)
+                        .padding(.bottom,8)
+                    
+                    
+                    Text(note.content)
+                        .multilineTextAlignment(.leading)
+                        .lineLimit(2)
+                        .font(.system(size: 12))
+                        .foregroundColor(.customFont)
                 }
-                .frame(maxWidth: .infinity)
-                .padding()
-            })
+            }
+        }
+        // 스와이프 기능 추가
+        .swipeActions {
+            Button(
+                action: {
+                    // 삭제 기능 추가 필요
+                    print("Delete")
+                },
+                label: {
+                    Text("삭제")
+                        .foregroundColor(.customWhite)
+                })
+            .tint(.red)
+        }
     }
 }
 

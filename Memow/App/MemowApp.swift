@@ -11,7 +11,8 @@ import SwiftUI
 struct MemowApp: App {
     var body: some Scene {
         WindowGroup {
-            HomeView()
+//            HomeView()
+            NoteListView()
         }
     }
 }

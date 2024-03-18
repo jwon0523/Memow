@@ -20,7 +20,25 @@ class NoteListViewModel: ObservableObject {
                 id: "1",
                 title: "생각의 플로우",
                 content: "메모장을 만들어 보자!메모장을 만들어 보자!메모장을 만들어 보자!메모장을 만들어 보자!",
-                date: Date())
+                date: Date()
+            ),
+            Note(
+                id: "2",
+                title: "생각의 플로우",
+                content: "메모장을 만들어 보자!메모장을 만들어 보자!메모장을 만들어 보자!메모장을 만들어 보자!",
+                date: Date()
+            ),
+            Note(
+                id: "3",
+                title: "생각의 플로우",
+                content: "메모장을 만들어 보자!메모장을 만들어 보자!메모장을 만들어 보자!메모장을 만들어 보자!",
+                date: Date()
+            ),Note(
+                id: "4",
+                title: "생각의 플로우",
+                content: "메모장을 만들어 보자!메모장을 만들어 보자!메모장을 만들어 보자!메모장을 만들어 보자!",
+                date: Date()
+            ),
         ],
         isEditNoteMode: Bool = false,
         removeNotes: [Note] = [],
