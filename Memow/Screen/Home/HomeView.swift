@@ -13,8 +13,6 @@ struct HomeView: View {
     var body: some View {
         VStack {
             CustomNavigationBar(
-                // 왼쪽 버튼 클릭시 작동 함수 필요
-                isDisplayRightBtn: true
                 // 오른쪽 버튼 클릭시 작동 함수 필요
             )
             

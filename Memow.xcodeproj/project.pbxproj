@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E08771D2BA83F4E0090FD14 /* NoteListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E08771C2BA83F4E0090FD14 /* NoteListView.swift */; };
+		0E0877202BA83F610090FD14 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E08771F2BA83F610090FD14 /* Note.swift */; };
+		0E437E142BA84DDB0069252D /* NoteListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E437E132BA84DDB0069252D /* NoteListViewModel.swift */; };
 		0E53A6A72BA4509F002C37C5 /* MemowApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53A6A62BA4509F002C37C5 /* MemowApp.swift */; };
 		0E53A6A92BA4509F002C37C5 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53A6A82BA4509F002C37C5 /* HomeView.swift */; };
 		0E53A6AB2BA450A0002C37C5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0E53A6AA2BA450A0002C37C5 /* Assets.xcassets */; };
@@ -20,6 +23,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0E08771C2BA83F4E0090FD14 /* NoteListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteListView.swift; sourceTree = "<group>"; };
+		0E08771F2BA83F610090FD14 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
+		0E437E132BA84DDB0069252D /* NoteListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteListViewModel.swift; sourceTree = "<group>"; };
 		0E53A6A32BA4509F002C37C5 /* Memow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Memow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E53A6A62BA4509F002C37C5 /* MemowApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemowApp.swift; sourceTree = "<group>"; };
 		0E53A6A82BA4509F002C37C5 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -44,6 +50,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0E08771B2BA83F220090FD14 /* Note */ = {
+			isa = PBXGroup;
+			children = (
+				0E08771C2BA83F4E0090FD14 /* NoteListView.swift */,
+				0E437E132BA84DDB0069252D /* NoteListViewModel.swift */,
+			);
+			path = Note;
+			sourceTree = "<group>";
+		};
+		0E08771E2BA83F530090FD14 /* Note */ = {
+			isa = PBXGroup;
+			children = (
+				0E08771F2BA83F610090FD14 /* Note.swift */,
+			);
+			path = Note;
+			sourceTree = "<group>";
+		};
+		0E0877212BA8412A0090FD14 /* CustomTextField */ = {
+			isa = PBXGroup;
+			children = (
+				0E53A6F52BA6A8C1002C37C5 /* CustomTextField.swift */,
+			);
+			path = CustomTextField;
+			sourceTree = "<group>";
+		};
 		0E53A69A2BA4509F002C37C5 = {
 			isa = PBXGroup;
 			children = (
@@ -93,6 +124,7 @@
 		0E53A6B52BA451BA002C37C5 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				0E08771E2BA83F530090FD14 /* Note */,
 				0E53A6B82BA45267002C37C5 /* Message */,
 			);
 			path = Model;
@@ -101,8 +133,8 @@
 		0E53A6B62BA451D5002C37C5 /* Component */ = {
 			isa = PBXGroup;
 			children = (
+				0E0877212BA8412A0090FD14 /* CustomTextField */,
 				0E53A6B92BA452A2002C37C5 /* NavigationBar */,
-				0E53A6F52BA6A8C1002C37C5 /* CustomTextField.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -110,6 +142,7 @@
 		0E53A6B72BA45223002C37C5 /* Screen */ = {
 			isa = PBXGroup;
 			children = (
+				0E08771B2BA83F220090FD14 /* Note */,
 				0E53A6BE2BA458C2002C37C5 /* Home */,
 			);
 			path = Screen;
@@ -221,11 +254,14 @@
 			files = (
 				0E53A6C32BA4613C002C37C5 /* Date+Extenstions.swift in Sources */,
 				0E53A6BD2BA45889002C37C5 /* CustomNavigationBar.swift in Sources */,
+				0E08771D2BA83F4E0090FD14 /* NoteListView.swift in Sources */,
 				0E53A6F42BA68D8F002C37C5 /* HomeViewModel.swift in Sources */,
 				0E53A6A92BA4509F002C37C5 /* HomeView.swift in Sources */,
+				0E0877202BA83F610090FD14 /* Note.swift in Sources */,
 				0E53A6F62BA6A8C1002C37C5 /* CustomTextField.swift in Sources */,
 				0E53A6BB2BA452D8002C37C5 /* NavigationBtnType.swift in Sources */,
 				0E53A6C02BA4605B002C37C5 /* Message.swift in Sources */,
+				0E437E142BA84DDB0069252D /* NoteListViewModel.swift in Sources */,
 				0E53A6A72BA4509F002C37C5 /* MemowApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

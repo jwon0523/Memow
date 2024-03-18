@@ -8,8 +8,12 @@
 import Foundation
 
 enum NavigationBtnType: String {
-    case close
-    case eidt = "편집"
-    case complete = "완료"
-    case create = "생성"
+    // CustomNavigationBar에서 title 외 나머지는 이미지로 보여줌
+    case notes = "Notes"
+    case close = "Close"
+    // 추후 디자인 나오면 추가 예정
+    case hamburgerMenuIcon
+    case kebabMenuIcon = "KebabMenu"
+    case meetbalMenulIcon
+    case leftBack = "LeftBack"
 }
