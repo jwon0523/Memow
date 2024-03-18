@@ -22,7 +22,7 @@ struct HomeView: View {
             
             MessageFieldView(homeViewModel: homeViewModel)
         }
-        .background(.customBlack)
+        .background(.customBackground)
     }
 }
 
@@ -41,7 +41,7 @@ private struct ChatListView: View {
             // 메세지가 작성된 날짜를 보여줌
             Text(date.formattedDay)
                 .font(.system(size: 12, weight: .bold))
-                .foregroundStyle(.customGray)
+                .foregroundStyle(.customFont)
             
             ScrollViewReader { proxy in
                 ScrollView {
@@ -50,7 +50,7 @@ private struct ChatListView: View {
                     }
                 }
                 .padding(.top, 10)
-                .background(.customBlack)
+                .background(.customBackground)
                 .onChange(of: homeViewModel.lastMessageId, initial: true) {
                     // 메세지의 lastMessageId가 변경되면 대화의 마지막 부분으로 이동
                     withAnimation {
@@ -79,7 +79,7 @@ private struct MessageBubbleView: View {
                     Spacer()
                     Text(message.date.formattedTime)
                         .padding(.leading)
-                        .foregroundColor(.customWhite)
+                        .foregroundColor(.customFont)
                         .font(.system(size: 8))
                 }
                 
@@ -116,9 +116,9 @@ private struct MessageFieldView: View {
         HStack {
             // TextField를 커스텀한 뷰
             CustomTextField(
-                placeholder: 
+                placeholder:
                     Text("내용을 입력하세요")
-                    .foregroundColor(Color.customBorder)
+                    .foregroundColor(Color.customFont)
                 ,
                 text: $text
             )
@@ -130,17 +130,18 @@ private struct MessageFieldView: View {
                     text = ""
                 }
             } label: {
-                Image(systemName: "paperplane.fill")
-                    .foregroundColor(.white)
-                    .padding(10)
-                    .background(Color.customBlack)
-                    .cornerRadius(50)
+                // 입력 내용이 있을 경우만 전송 버튼 보임.
+                if text != "" {
+                    Image("SendMessage")
+                }
             }
         }
         .padding(.horizontal)
-        .padding(.vertical, 10)
+        .padding(.vertical, 5)
+        .frame(minHeight: 40)
         .background(Color.customTextField)
         .cornerRadius(20)
+        .border(.customBorder, width: 2)
         .padding()
     }
 }

@@ -22,7 +22,7 @@ struct CustomTextField: View {
             // lineLimit은 5줄로 제한하되, 초과시 스크롤 가능
             TextField("", text: $text, axis: .vertical)
                 .lineLimit(5)
-                .foregroundColor(.customWhite)
+                .foregroundColor(.customFont)
         }
     }
 }

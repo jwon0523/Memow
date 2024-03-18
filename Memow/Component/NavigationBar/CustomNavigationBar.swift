@@ -37,7 +37,7 @@ struct CustomNavigationBar: View {
             } else {
                 // 왼쪽 버튼을 보여주지 않을 경우 빈공간 주어 로고 정렬
                 Spacer()
-                    .frame(width: 50)
+                    .frame(width: 48)
             }
             
             Spacer()
@@ -54,7 +54,7 @@ struct CustomNavigationBar: View {
             } else {
                 // 오른쪽 버튼을 보여주지 않을 경우 빈공간 주어 로고 정렬
                 Spacer()
-                    .frame(width: 50)
+                    .frame(width: 48)
             }
         }
     }

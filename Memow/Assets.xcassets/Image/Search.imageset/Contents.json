@@ -1,7 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "Group 468.png",
+      "filename" : "Group 55.png",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
       "idiom" : "universal"
     }
   ],
