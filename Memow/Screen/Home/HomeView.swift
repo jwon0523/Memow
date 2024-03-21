@@ -62,41 +62,92 @@ private struct ChatListView: View {
 
 // MARK: - 메세지 버블 뷰
 private struct MessageBubbleView: View {
+    private let screenWidth: CGFloat = UIScreen.main.bounds.size.width
     private var message: Message
+    @State private var showRightIcon: Bool = false
+    @State private var dragOffset: CGSize = .zero
+    @State private var moveLeft: Bool = false
     
     fileprivate init(message: Message) {
         self.message = message
     }
     
     fileprivate var body: some View {
-        // 내가 보낸 메세지면 끝에 정렬하고, 상대방이 보낸 메세지라면 앞에 정렬
-        VStack(alignment: message.received ? .leading : .trailing) {
+        VStack {
             HStack {
-                // 보낸 시각을 메세지 왼쪽 최하단에 위치시킴
-                VStack {
-                    Spacer()
-                    Text(message.date.formattedTime)
-                        .padding(.leading)
-                        .foregroundColor(.customFont)
-                        .font(.system(size: 8))
+                HStack {
+                    VStack {
+                        Spacer()
+                        Text(message.date.formattedTime)
+                            .foregroundColor(.customFont)
+                            .font(.system(size: 8))
+                            .padding(.top)
+                    }
+                    
+                    Text(message.content)
+                        .font(.system(size: 12))
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
+                        .background(Color.customYellow)
+                        .cornerRadius(10)
+                    
                 }
-                
-                Text(message.content)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .background(Color.customYellow)
-                    .cornerRadius(10)
+                // 메세지의 최대 너비는 화면의 68%로 지정
+                .frame(maxWidth: screenWidth * 0.68, alignment: .trailing)
+                // 왼쪽으로 당기면 x축으로 전체 width범위의 -10까지 이동
+                .offset(x: moveLeft ? -10 : 0)
+                .animation(.default)
+                // 왼쪽으로 당기는 제스처
+                .gesture(
+                    DragGesture(minimumDistance: 50)
+                        .onChanged { value in
+                            self.dragOffset = value.translation
+                            // 오른쪽에서 왼쪽으로 드래그
+                            if self.dragOffset.width < 0 {
+                                // 애니메이션으로 부드럽게 보여줌
+                                withAnimation {
+                                    self.showRightIcon = true
+                                    self.moveLeft = true
+                                }
+                                // 왼쪽에서 오른쪽으로 드래그
+                            } else if self.dragOffset.width > 0 {
+                                // 애니메이션으로 부드럽게 보여줌
+                                withAnimation {
+                                    self.showRightIcon = false
+                                    self.moveLeft = false
+                                }
+                            }
+                        }
+                        .onEnded { _ in
+                            self.dragOffset = .zero
+                            // 드래그 완료시 작동할 코드 추가 가능.
+                        }
+                )
+                if showRightIcon {
+                    HStack {
+                        Image("Alarm")
+                            .frame(width: 35, height: 35)
+                            .background(.customWhite)
+                            .cornerRadius(20)
+                            .shadow(radius: 2)
+                        
+                        Spacer()
+                            .frame(width: 15)
+                        
+                        Image("AddFile")
+                            .frame(width: 35, height: 35)
+                            .background(.customWhite)
+                            .cornerRadius(20)
+                            .shadow(radius: 2)
+                        
+                        Spacer()
+                            .frame(width: 5)
+                    }
+                }
             }
-            .frame(
-                maxWidth: 400,
-                alignment: message.received ? .leading : .trailing
-            )
+            .frame(maxWidth: .infinity, alignment: .trailing)
         }
-        .frame(
-            maxWidth: .infinity,
-            alignment: message.received ? .leading : .trailing
-        )
-        .padding(.trailing)
+        .padding(.vertical, 3)
         .padding(.horizontal, 10)
     }
 }
