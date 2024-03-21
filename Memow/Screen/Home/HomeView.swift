@@ -49,10 +49,10 @@ private struct ChatListView: View {
                 }
                 .padding(.top, 10)
                 .background(.customBackground)
-                .onChange(of: homeViewModel.lastMessageId, initial: true) {
+                .onChange(of: homeViewModel.lastMessageId) { id in
                     // 메세지의 lastMessageId가 변경되면 대화의 마지막 부분으로 이동
                     withAnimation {
-                        proxy.scrollTo(homeViewModel.lastMessageId, anchor: .bottom)
+                        proxy.scrollTo(id, anchor: .bottom)
                     }
                 }
             }
