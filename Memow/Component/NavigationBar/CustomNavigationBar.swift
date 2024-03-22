@@ -57,31 +57,25 @@ struct CustomNavigationBar: View {
                         }
                     }
                 )
-            } else {
-                // 왼쪽 버튼을 보여주지 않을 경우 빈공간 주어 로고 정렬
-                Spacer()
-                    .frame(width: 48)
             }
             
             Spacer()
-            
-            // 디자인에서 로고 삭제할 예정
-//            if isDisplayLogo {
-//                Image("Icon")
-//                Spacer()
-//            }
             
             if isDisplayRightBtn {
                 Button(
                     action: rightBtnAction,
                     label: {
-                        Image(rightBtnType.rawValue)
+                        if rightBtnType == .complete || rightBtnType == .update{
+                            Text(rightBtnType.rawValue)
+                                .foregroundColor(.customFont)
+                        } else {
+                            Image(rightBtnType.rawValue)
+                        }
                 })
-            } else {
-                // 오른쪽 버튼을 보여주지 않을 경우 빈공간 주어 로고 정렬
-                Spacer()
-                    .frame(width: 48)
             }
+            
+            Spacer()
+                .frame(width: 20)
         }
     }
 }

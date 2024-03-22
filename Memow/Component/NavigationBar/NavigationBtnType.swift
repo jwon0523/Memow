@@ -16,4 +16,7 @@ enum NavigationBtnType: String {
     case kebabMenuIcon = "KebabMenu"
     case meetbalMenulIcon
     case leftBack = "LeftBack"
+    case add = "Add"
+    case complete = "완료"
+    case update = "수정"
 }

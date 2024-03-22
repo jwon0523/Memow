@@ -17,24 +17,20 @@ class NoteListViewModel: ObservableObject {
         // notes의 값은 테스트를 위한 것이므로 테스트 종료 후 빈 배열로 되돌려놓기
         notes: [Note] = [
             Note(
-                id: "1",
                 title: "생각의 플로우",
                 content: "메모장을 만들어 보자!메모장을 만들어 보자!메모장을 만들어 보자!메모장을 만들어 보자!",
                 date: Date()
             ),
             Note(
-                id: "2",
                 title: "생각의 플로우",
                 content: "메모장을 만들어 보자!메모장을 만들어 보자!메모장을 만들어 보자!메모장을 만들어 보자!",
                 date: Date()
             ),
             Note(
-                id: "3",
                 title: "생각의 플로우",
                 content: "메모장을 만들어 보자!메모장을 만들어 보자!메모장을 만들어 보자!메모장을 만들어 보자!",
                 date: Date()
             ),Note(
-                id: "4",
                 title: "생각의 플로우",
                 content: "메모장을 만들어 보자!메모장을 만들어 보자!메모장을 만들어 보자!메모장을 만들어 보자!",
                 date: Date()

@@ -13,7 +13,8 @@ struct NoteListView: View {
     var body: some View {
         VStack {
             CustomNavigationBar(
-                leftBtnType: .notes
+                leftBtnType: .notes,
+                rightBtnType: .add
                 // 오른쪽 버튼 액션 추가 필요
             )
             

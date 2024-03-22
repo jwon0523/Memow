@@ -167,20 +167,20 @@ private struct MessageFieldView: View {
             CustomTextField(
                 placeholder:
                     Text("내용을 입력하세요")
-                    .foregroundColor(Color.customFont)
+                    .foregroundColor(.customFont)
                 ,
                 text: $text
             )
             
-            Button {
-                // 입력된 내용이 없을 경우 전송되지 않음
-                if text != "" {
-                    homeViewModel.sendMessage(text)
-                    text = ""
-                }
-            } label: {
-                // 입력 내용이 있을 경우만 전송 버튼 보임.
-                if text != "" {
+            // 입력 내용이 있을 경우만 전송 버튼 보임.
+            if text != "" {
+                Button {
+                    // 입력된 내용이 없을 경우 전송되지 않음
+                    if text != "" {
+                        homeViewModel.sendMessage(text)
+                        text = ""
+                    }
+                } label: {
                     Image("SendMessage")
                 }
             }
@@ -188,9 +188,8 @@ private struct MessageFieldView: View {
         .padding(.horizontal)
         .padding(.vertical, 5)
         .frame(minHeight: 40)
-        .background(Color.customTextField)
-        .cornerRadius(20)
-        .border(.customBorder, width: 2)
+        .background(.customTextField)
+        .cornerRadius(50)
         .padding()
     }
 }

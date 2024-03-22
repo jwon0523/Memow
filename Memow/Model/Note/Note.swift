@@ -8,15 +8,8 @@
 import Foundation
 
 struct Note: Hashable {
-    let id: String
+    var id = UUID()
     var title: String
     var content: String
-    var date: Date
-    
-    init(id: String, title: String, content: String, date: Date) {
-        self.id = id
-        self.title = title
-        self.content = content
-        self.date = date
-    }
+    var date: Date    
 }
