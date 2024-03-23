@@ -10,6 +10,7 @@ import SwiftUI
 struct NoteListView: View {
     @EnvironmentObject private var pathModel: PathModel
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
+    @State private var searchText = ""
     
     var body: some View {
         ZStack {
@@ -22,11 +23,12 @@ struct NoteListView: View {
                     rightBtnType: .home
                 )
                 
-                // NoteSearchView
+                SearchBarView(text: $searchText)
                 
                 NoteListCellView()
                 
             }
+            .background(.customBackground)
             
             WriteNoteBtnView()
                 .padding(.trailing, 20)
@@ -36,10 +38,34 @@ struct NoteListView: View {
 }
 
 // MARK: - 노트 검색 뷰
-private struct NoteSearchView: View {
+private struct SearchBarView: View {
+    @Binding var text: String
+    @State private var isEditing = false
+
     fileprivate var body: some View {
         HStack {
-            Text("Search")
+            TextField("Search..", text: $text)
+                .padding(7)
+                .padding(.horizontal, 10)
+                .background(.customBorder)
+                .cornerRadius(8)
+                .padding(.horizontal, 15)
+                .onTapGesture {
+                    self.isEditing = true
+                }
+
+            // 검색 바 터치하면 오른쪽에 취소 버튼 생성
+            if isEditing {
+                Button(action: {
+                    self.isEditing = false
+                    self.text = ""
+                }) {
+                    Text("Cancel")
+                }
+                .padding(.trailing, 10)
+                .transition(.move(edge: .trailing))
+                .animation(.default)
+            }
         }
     }
 }
@@ -49,14 +75,11 @@ private struct NoteListCellView: View {
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
     
     fileprivate var body: some View {
-        List {
-            ForEach(noteListViewModel.notes, id:\.id) { note in
-                NoteContentView(note: note)
-            }
+        List(noteListViewModel.notes, id:\.id) { note in
+            NoteContentView(note: note)
         }
         // 리스트 간격 벌려주는 속성
         .listRowSpacing(20)
-        
     }
 }
 
