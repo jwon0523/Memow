@@ -20,16 +20,20 @@ struct OnboardingView: View {
     var body: some View {
         NavigationStack(path: $pathModel.paths) {
 //            OnboardingContentView(onboardingViewModel: onboardingViewModel)
-            // NoteListView 작동 확인을 위한 임시 코드
+            // 작동 확인을 위한 임시 코드
             // 테스트 완료 후 OnboardingContentView 다시 추가
-            NoteListView()
-                .environmentObject(noteListViewModel)
+            HomeView()
+                .environmentObject(homeViewModel)
                 .navigationDestination(for: PathType.self) { pathType in
                     switch pathType {
                     case .homeView:
                         HomeView()
                             .navigationBarBackButtonHidden()
                             .environmentObject(homeViewModel)
+                    case .noteListView:
+                        NoteListView()
+                            .navigationBarBackButtonHidden()
+                            .environmentObject(noteListViewModel)
                     case let .noteView(isCreateMode, note):
                         NoteView(
                             noteViewModel: isCreateMode

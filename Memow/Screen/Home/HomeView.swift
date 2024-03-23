@@ -9,10 +9,15 @@ import SwiftUI
 
 struct HomeView: View {
     @StateObject private var homeViewModel = HomeViewModel()
+    @EnvironmentObject private var pathModel: PathModel
     
     var body: some View {
         VStack {
             CustomNavigationBar(
+                leftBtnAction: {
+                    pathModel.paths.append(.noteListView)
+                },
+                leftBtnType: .notes
                 // 오른쪽 버튼 클릭시 작동 함수 필요
             )
             
