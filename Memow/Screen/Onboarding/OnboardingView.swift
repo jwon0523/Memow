@@ -15,10 +15,23 @@ struct OnboardingView: View {
     @StateObject private var pathModel = PathModel()
     @StateObject private var onboardingViewModel = OnboardingViewModel()
     @StateObject private var homeViewModel = HomeViewModel()
+    @StateObject private var noteListViewModel = NoteListViewModel()
     
     var body: some View {
         NavigationStack(path: $pathModel.paths) {
             OnboardingContentView(onboardingViewModel: onboardingViewModel)
+                .navigationDestination(for: PathType.self) { pathType in
+                    switch pathType {
+                    case .homeView:
+                        HomeView()
+                            .navigationBarBackButtonHidden()
+                            .environmentObject(homeViewModel)
+                    case .noteView:
+                        NoteListView()
+                            .navigationBarBackButtonHidden()
+                            .environmentObject(noteListViewModel)
+                    }
+                }
         }
         .environmentObject(pathModel)
     }
@@ -200,9 +213,14 @@ private struct SettingContentBtnView: View {
 
 // MARK: - 계속하기 버튼 뷰
 private struct ContinueBtnView: View {
+    @EnvironmentObject private var pathModel: PathModel
+    
     fileprivate var body: some View {
         HStack {
-            Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
+            Button(action: {
+                // 계속하기 버튼 클릭시 HomeView로 이동
+                pathModel.paths.append(.homeView)
+            }, label: {
                 Text("Continue")
                     .foregroundColor(.black)
             })
