@@ -13,15 +13,16 @@ struct MemowApp: App {
         WindowGroup {
 //            HomeView()
 //            NoteListView()
-            NoteView(
-                noteViewModel: .init(
-                    note: .init(
-                        title: "",
-                        content: "",
-                        date: Date()
-                    )
-                )
-            )
+//            NoteView(
+//                noteViewModel: .init(
+//                    note: .init(
+//                        title: "",
+//                        content: "",
+//                        date: Date()
+//                    )
+//                )
+//            )
+            OnboardingView()
         }
     }
 }

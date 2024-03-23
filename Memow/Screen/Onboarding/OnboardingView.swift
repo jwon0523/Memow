@@ -34,8 +34,6 @@ private struct OnboardingContentView: View {
     fileprivate var body: some View {
         VStack {
             OnboardingCellListView(onboardingViewModel: onboardingViewModel)
-            
-            ContinueBtnView()
         }
         .background(.customBackground)
         .edgesIgnoringSafeArea(.top)
@@ -46,6 +44,7 @@ private struct OnboardingContentView: View {
 private struct OnboardingCellListView: View {
     @ObservedObject private var onboardingViewModel: OnboardingViewModel
     @State private var selectedIndex: Int
+    private var lastOnboading: Int = 3
     
     fileprivate init(
         onboardingViewModel: OnboardingViewModel,
@@ -61,12 +60,14 @@ private struct OnboardingCellListView: View {
                 Array(onboardingViewModel.onboardingContents.enumerated()),
                 id: \.element
             ) { index, onboardingContent in
-                OnboardingCellView(onboardingContent: onboardingContent)
+                OnboardingCellView(
+                    onboardingContent: onboardingContent,
+                    isShowContinueBtn: index == lastOnboading ? true: false
+                )
                     .tag(index)
             }
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
-        .frame(width: UIScreen.main.bounds.width, height: .infinity)
         .background(.customBackground)
         .clipped()
     }
@@ -75,12 +76,15 @@ private struct OnboardingCellListView: View {
 // MARK: - 온보딩 셀 뷰
 private struct OnboardingCellView: View {
     private var onboardingContent: OnboardingContent
+    private var isShowContinueBtn: Bool
     @State private var isSelectedBtn: Bool = false
     
     fileprivate init(
-        onboardingContent: OnboardingContent
+        onboardingContent: OnboardingContent,
+        isShowContinueBtn: Bool
     ) {
         self.onboardingContent = onboardingContent
+        self.isShowContinueBtn = isShowContinueBtn
     }
     
     fileprivate var body: some View {
@@ -127,6 +131,10 @@ private struct OnboardingCellView: View {
                 }
             
             Spacer()
+            
+            if isShowContinueBtn {
+                ContinueBtnView()
+            }
         }
     }
 }
@@ -176,7 +184,7 @@ private struct SettingContentBtnView: View {
             print(title)
         }, label: {
             Text(title)
-                .foregroundColor(.customFont)
+                .foregroundColor(.black)
         })
         .frame(width: 150, height: 50)
         .background(isSelected ? Color.customYellow : Color.customWhite)
@@ -191,6 +199,7 @@ private struct ContinueBtnView: View {
         HStack {
             Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
                 Text("Continue")
+                    .foregroundColor(.black)
             })
             .frame(width: screenWidth * 0.85, height: 48)
             .background(.customWhite)
