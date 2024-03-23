@@ -15,9 +15,11 @@ struct NoteListView: View {
         ZStack {
             VStack {
                 CustomNavigationBar(
+                    rightBtnAction: {
+                        pathModel.paths.removeLast()
+                    }, 
                     leftBtnType: .notes,
                     rightBtnType: .home
-                    // 오른쪽 버튼 액션 추가 필요
                 )
                 
                 // NoteSearchView
