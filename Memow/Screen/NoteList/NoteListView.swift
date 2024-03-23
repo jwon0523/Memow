@@ -12,17 +12,23 @@ struct NoteListView: View {
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
     
     var body: some View {
-        VStack {
-            CustomNavigationBar(
-                leftBtnType: .notes,
-                rightBtnType: .add
-                // 오른쪽 버튼 액션 추가 필요
-            )
+        ZStack {
+            VStack {
+                CustomNavigationBar(
+                    leftBtnType: .notes,
+                    rightBtnType: .home
+                    // 오른쪽 버튼 액션 추가 필요
+                )
+                
+                // NoteSearchView
+                
+                NoteListCellView()
+                
+            }
             
-            // NoteSearchView
-            
-            NoteListCellView()
-            
+            WriteNoteBtnView()
+                .padding(.trailing, 20)
+                .padding(.bottom, 30)
         }
     }
 }
@@ -39,19 +45,11 @@ private struct NoteSearchView: View {
 // MARK: - 노트 리스트 셀 뷰
 private struct NoteListCellView: View {
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
-    @EnvironmentObject private var pathModel: PathModel
     
     fileprivate var body: some View {
         List {
             ForEach(noteListViewModel.notes, id:\.id) { note in
                 NoteContentView(note: note)
-                    .onTapGesture {
-                        print("Move View")
-                        pathModel.paths.append(.noteView(
-                            isCreateMode: false,
-                            note: note
-                        ))
-                    }
             }
         }
         // 리스트 간격 벌려주는 속성
@@ -62,6 +60,7 @@ private struct NoteListCellView: View {
 
 // MARK: - 노트 컨텐트 뷰
 private struct NoteContentView: View {
+    @EnvironmentObject private var pathModel: PathModel
     private var note: Note
     
     fileprivate init(note: Note) {
@@ -70,23 +69,32 @@ private struct NoteContentView: View {
     
     fileprivate var body: some View {
         VStack {
-            HStack {
-                VStack(alignment: .leading) {
-                    Text(note.title)
-                        .lineLimit(1)
-                        .font(.system(size: 16))
-                        .foregroundColor(.customYellow)
-                        .padding(.bottom,8)
-                    
-                    
-                    Text(note.content)
-                        .multilineTextAlignment(.leading)
-                        .lineLimit(2)
-                        .font(.system(size: 12))
-                        .foregroundColor(.customFont)
+            Button(action: {
+                pathModel.paths.append(.noteView(
+                    isCreateMode: false,
+                    note: note
+                ))
+            }, label: {
+                HStack(alignment:.top) {
+                    VStack(alignment: .leading) {
+                        Text(note.title)
+                            .lineLimit(1)
+                            .font(.system(size: 16))
+                            .foregroundColor(.customYellow)
+                            .padding(.bottom, 8)
+                        
+                        
+                        Text(note.content)
+                            .multilineTextAlignment(.leading)
+                            .lineLimit(1)
+                            .font(.system(size: 12))
+                            .foregroundColor(.customFont)
+                    }
                 }
-            }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            })
         }
+        .frame(minHeight: 50)
         // 스와이프 기능 추가
         .swipeActions {
             Button(
@@ -99,6 +107,33 @@ private struct NoteContentView: View {
                         .foregroundColor(.customWhite)
                 })
             .tint(.red)
+        }
+    }
+}
+
+// MARK: - 노트 작성 버튼 뷰
+private struct WriteNoteBtnView: View {
+    @EnvironmentObject private var pathModel: PathModel
+    
+    fileprivate var body: some View {
+        VStack {
+            Spacer()
+            
+            HStack {
+                Spacer()
+                
+                Button(
+                    action: {
+                        pathModel.paths.append(.noteView(isCreateMode: true, note: nil))
+                    },
+                    label: {
+                        Image(systemName: "square.and.pencil.circle.fill")
+                            .resizable()
+                            .frame(width: 50, height: 50)
+                            .foregroundColor(.customYellow)
+                    }
+                )
+            }
         }
     }
 }

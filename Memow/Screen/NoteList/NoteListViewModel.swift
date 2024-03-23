@@ -32,7 +32,7 @@ class NoteListViewModel: ObservableObject {
                 date: Date()
             ),Note(
                 title: "생각의 플로우",
-                content: "메모장을 만들어 보자!메모장을 만들어 보자!메모장을 만들어 보자!메모장을 만들어 보자!",
+                content: "메모장을 만들어 보자!",
                 date: Date()
             ),
         ],

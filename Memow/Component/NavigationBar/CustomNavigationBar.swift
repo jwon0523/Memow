@@ -65,9 +65,14 @@ struct CustomNavigationBar: View {
                 Button(
                     action: rightBtnAction,
                     label: {
-                        if rightBtnType == .complete || rightBtnType == .update{
+                        if rightBtnType == .complete
+                            || rightBtnType == .update
+                            || rightBtnType == .home
+                        {
                             Text(rightBtnType.rawValue)
                                 .foregroundColor(.customFont)
+                                .fontWeight(.bold)
+                                .padding(.vertical)
                         } else {
                             Image(rightBtnType.rawValue)
                         }
