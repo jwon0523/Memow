@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// 화면 전체 너비와 높이 크기를 가지는 변수
 private var screenHeight: CGFloat = UIScreen.main.bounds.height
 private var screenWidth: CGFloat = UIScreen.main.bounds.width
 
@@ -43,8 +44,10 @@ private struct OnboardingContentView: View {
 // MARK: - 온보딩 셀 리스트 뷰
 private struct OnboardingCellListView: View {
     @ObservedObject private var onboardingViewModel: OnboardingViewModel
+    // 탭뷰 디폴트 인덱스 지정을 위한 변수
     @State private var selectedIndex: Int
-    private var lastOnboading: Int = 3
+    // 마지막 온보딩의 인덱스 변수
+    private let lastOnboading: Int = 3
     
     fileprivate init(
         onboardingViewModel: OnboardingViewModel,
@@ -62,6 +65,7 @@ private struct OnboardingCellListView: View {
             ) { index, onboardingContent in
                 OnboardingCellView(
                     onboardingContent: onboardingContent,
+                    // 마지막 온보딩이라면 계속하기 버튼을 보여줌
                     isShowContinueBtn: index == lastOnboading ? true: false
                 )
                     .tag(index)
@@ -77,7 +81,6 @@ private struct OnboardingCellListView: View {
 private struct OnboardingCellView: View {
     private var onboardingContent: OnboardingContent
     private var isShowContinueBtn: Bool
-    @State private var isSelectedBtn: Bool = false
     
     fileprivate init(
         onboardingContent: OnboardingContent,
@@ -92,7 +95,7 @@ private struct OnboardingCellView: View {
             HStack {
                 ForEach(
                     Array(onboardingContent.tabBarImageFileName.enumerated()),
-                    id: \.element) { index, imageFileName in
+                    id: \.element) { _, imageFileName in
                         Image(imageFileName)
                     }
             }
@@ -124,6 +127,7 @@ private struct OnboardingCellView: View {
                 Spacer()
             }
             
+            // Onboarding model에 정의되어 있는 설정 버튼 값을 가져옴
             ForEach(
                 Array(onboardingContent.settingBtnContents.enumerated()),
                 id: \.element) { index, settingBtnContents in
@@ -132,6 +136,7 @@ private struct OnboardingCellView: View {
             
             Spacer()
             
+            // 마지막 온보딩인 경우 계속하기 버튼 보여줌
             if isShowContinueBtn {
                 ContinueBtnView()
             }
