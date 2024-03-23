@@ -11,17 +11,6 @@ import SwiftUI
 struct MemowApp: App {
     var body: some Scene {
         WindowGroup {
-//            HomeView()
-//            NoteListView()
-//            NoteView(
-//                noteViewModel: .init(
-//                    note: .init(
-//                        title: "",
-//                        content: "",
-//                        date: Date()
-//                    )
-//                )
-//            )
             OnboardingView()
         }
     }

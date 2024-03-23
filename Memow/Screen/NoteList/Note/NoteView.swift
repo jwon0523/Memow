@@ -11,6 +11,8 @@ import SwiftUI
 private let noteHorizontalPaddingSize: CGFloat = 20
 
 struct NoteView: View {
+    @EnvironmentObject private var pathModel: PathModel
+    @EnvironmentObject private var noteListViewModel: NoteListViewModel
     @StateObject var noteViewModel: NoteViewModel
     @State var isCreateMode: Bool = true
     
@@ -18,10 +20,18 @@ struct NoteView: View {
         ZStack {
             VStack {
                 CustomNavigationBar(
-                    isDisplayLeftBtn: true,
                     leftBtnAction: {
-                        // NoteListView로 이동
+                        pathModel.paths.removeLast()
                     },
+                    rightBtnAction: {
+                        if isCreateMode {
+                            noteListViewModel.addNote(noteViewModel.note)
+                        } else {
+                            noteListViewModel.updateNote(noteViewModel.note
+                            )
+                        }
+                        pathModel.paths.removeLast()
+                    }, 
                     leftBtnType: .leftBack,
                     rightBtnType: isCreateMode ? .complete : .update
                 )

@@ -9,5 +9,5 @@ import Foundation
 
 enum PathType: Hashable {
     case homeView
-    case noteView
+    case noteView(isCreateMode: Bool, note: Note?)
 }

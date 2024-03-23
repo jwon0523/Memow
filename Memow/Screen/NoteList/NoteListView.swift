@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct NoteListView: View {
-    @StateObject private var noteListViewModel = NoteListViewModel()
+    @EnvironmentObject private var pathModel: PathModel
+    @EnvironmentObject private var noteListViewModel: NoteListViewModel
     
     var body: some View {
         VStack {
@@ -20,7 +21,7 @@ struct NoteListView: View {
             
             // NoteSearchView
             
-            NoteListCellView(noteListViewModel: noteListViewModel)
+            NoteListCellView()
             
         }
     }
@@ -37,21 +38,19 @@ private struct NoteSearchView: View {
 
 // MARK: - 노트 리스트 셀 뷰
 private struct NoteListCellView: View {
-    @ObservedObject private var noteListViewModel: NoteListViewModel
-    
-    fileprivate init(
-        noteListViewModel: NoteListViewModel
-    ) {
-        self.noteListViewModel = noteListViewModel
-    }
+    @EnvironmentObject private var noteListViewModel: NoteListViewModel
+    @EnvironmentObject private var pathModel: PathModel
     
     fileprivate var body: some View {
         List {
             ForEach(noteListViewModel.notes, id:\.id) { note in
                 NoteContentView(note: note)
                     .onTapGesture {
-                        // 화면 전환 기능 추가 필요
-                        print("Move view")
+                        print("Move View")
+                        pathModel.paths.append(.noteView(
+                            isCreateMode: false,
+                            note: note
+                        ))
                     }
             }
         }
@@ -106,4 +105,6 @@ private struct NoteContentView: View {
 
 #Preview {
     NoteListView()
+        .environmentObject(NoteListViewModel())
+        .environmentObject(PathModel())
 }
