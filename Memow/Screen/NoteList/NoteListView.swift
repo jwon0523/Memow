@@ -16,11 +16,18 @@ struct NoteListView: View {
         ZStack {
             VStack {
                 CustomNavigationBar(
-                    rightBtnAction: {
+                    leftBtnAction: {
                         pathModel.paths.removeLast()
-                    }, 
-                    leftBtnType: .notes,
-                    rightBtnType: .home
+                    },
+                    rightBtnAction: {
+                        // 버튼 선택시 리스트 왼쪽 다중 선택 활성화
+                        withAnimation {
+                            noteListViewModel.navigationSelectBtnTapped()
+                        }
+                    },
+                    leftBtnType: .memow,
+                    // 버튼 클릭할 때마다 선택 이미지와 삭제 전환
+                    rightBtnType: noteListViewModel.navigationBarRightMode
                 )
                 
                 SearchBarView(text: $searchText)
@@ -33,6 +40,19 @@ struct NoteListView: View {
             WriteNoteBtnView()
                 .padding(.trailing, 20)
                 .padding(.bottom, 30)
+        }
+        // 오른쪽 네비게이션바 삭제 버튼 클릭시 실행
+        .alert(
+            "메모 \(noteListViewModel.removeNoteCount)개 삭제하시겠습니까?",
+            isPresented: $noteListViewModel.isDisplayRemoveNoteAlert
+        ) {
+            Button("삭제", role: .destructive) {
+                withAnimation {
+                    noteListViewModel.removeBtnTapped()
+                }
+            }
+            
+            Button("취소", role: .cancel) {  }
         }
     }
 }
@@ -87,10 +107,15 @@ private struct NoteListCellView: View {
 private struct NoteContentView: View {
     @EnvironmentObject private var pathModel: PathModel
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
+    @State private var isRemoveSelected: Bool
     private var note: Note
     
-    fileprivate init(note: Note) {
+    fileprivate init(
+        note: Note,
+        isRemoveSelected: Bool = false
+    ) {
         self.note = note
+        self.isRemoveSelected = isRemoveSelected
     }
     
     fileprivate var body: some View {
@@ -102,7 +127,23 @@ private struct NoteContentView: View {
                 ))
             }, label: {
                 HStack(alignment:.top) {
+                    // 메모 선택 버튼 클릭시 활성
+                    if noteListViewModel.isEditNoteMode {
+                        Button(action: {
+                            isRemoveSelected.toggle()
+                            // 삭제 버튼 클릭시 해당 노트 noteListViewModel의 removeNotes에 추가
+                            noteListViewModel.noteRemoveSelectedBoxTapped(note)
+                        }, label: {
+                            isRemoveSelected ?
+                            Image("SelectedBox") : Image("unSelectedBox")
+                        })
+                        .padding(.vertical)
+                        .padding(.horizontal, 5)
+                    }
+                    
                     VStack(alignment: .leading) {
+                        Spacer()
+                        
                         Text(note.title)
                             .lineLimit(1)
                             .font(.system(size: 16))
@@ -115,9 +156,12 @@ private struct NoteContentView: View {
                             .lineLimit(1)
                             .font(.system(size: 12))
                             .foregroundColor(.customFont)
+                        
+                        Spacer()
                     }
+                    .frame(maxHeight: .infinity, alignment: .leading)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(maxWidth: .infinity, maxHeight: 50, alignment: .leading)
             })
         }
         .frame(minHeight: 50)

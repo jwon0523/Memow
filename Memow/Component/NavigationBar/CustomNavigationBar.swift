@@ -46,12 +46,20 @@ struct CustomNavigationBar: View {
                     action: leftBtnAction,
                     label: {
                         // 왼쪽 버튼 타입에 따라 텍스트나 이미지 보여줌
-                        if leftBtnType == .notes{
-                            Text("Notes")
+                        if leftBtnType == .notes
+                            || leftBtnType == .memow
+                        {
+                            Text(leftBtnType.rawValue)
                                 .foregroundColor(.customFont)
                                 .fontWeight(.bold)
                                 .padding()
                             
+                        } else if leftBtnType == .home {
+                            Image(systemName: leftBtnType.rawValue)
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                                .padding()
+                                .foregroundColor(.customFont)
                         } else {
                             Image(leftBtnType.rawValue)
                         }
@@ -67,7 +75,6 @@ struct CustomNavigationBar: View {
                     label: {
                         if rightBtnType == .complete
                             || rightBtnType == .update
-                            || rightBtnType == .home
                         {
                             Text(rightBtnType.rawValue)
                                 .foregroundColor(.customFont)

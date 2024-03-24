@@ -17,7 +17,7 @@ struct HomeView: View {
                 leftBtnAction: {
                     pathModel.paths.append(.noteListView)
                 },
-                leftBtnType: .notes
+                leftBtnType: .memow
                 // 오른쪽 버튼 클릭시 작동 함수 필요
             )
             

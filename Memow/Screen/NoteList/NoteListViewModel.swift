@@ -13,6 +13,14 @@ class NoteListViewModel: ObservableObject {
     @Published var removeNotes: [Note]
     @Published var isDisplayRemoveNoteAlert: Bool
     
+    var navigationBarRightMode: NavigationBtnType {
+        isEditNoteMode ? .delete : .select
+    }
+    
+    var removeNoteCount: Int {
+        return removeNotes.count
+    }
+    
     init(
         // notes의 값은 테스트를 위한 것이므로 테스트 종료 후 빈 배열로 되돌려놓기
         notes: [Note] = [
@@ -86,5 +94,19 @@ extension NoteListViewModel {
         // 삭제된 노트들은 removeNotes에서 삭제
         removeNotes.removeAll()
         isEditNoteMode = false
+    }
+    
+    func navigationSelectBtnTapped() {
+        if isEditNoteMode {
+            // 삭제 모드시 삭제 버튼 눌렀을 때 removeNotes가 비어있으면 삭제모드 취소
+            // removeNotes에 값이 있으면 setIsDisplayRemoveNoteAlert를 실행하여 알람 생성
+            if removeNotes.isEmpty {
+                isEditNoteMode = false
+            } else {
+                setIsDisplayRemoveNoteAlert(true)
+            }
+        } else {
+            isEditNoteMode = true
+        }
     }
 }
