@@ -62,6 +62,10 @@ private struct ChatListView: View {
                 }
             }
         }
+        // 키보드 화면 밖 선택시 키보드 내림
+        .onTapGesture {
+            UIApplication.shared.keyboardDown()
+        }
     }
 }
 
@@ -184,6 +188,8 @@ private struct MessageFieldView: View {
                     if text != "" {
                         homeViewModel.sendMessage(text)
                         text = ""
+                        // 전송 버튼 클릭시 키보드 내림
+                        UIApplication.shared.keyboardDown()
                     }
                 } label: {
                     Image("SendMessage")

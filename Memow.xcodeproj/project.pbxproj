@@ -25,9 +25,10 @@
 		0E53A6BB2BA452D8002C37C5 /* NavigationBtnType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53A6BA2BA452D8002C37C5 /* NavigationBtnType.swift */; };
 		0E53A6BD2BA45889002C37C5 /* CustomNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53A6BC2BA45889002C37C5 /* CustomNavigationBar.swift */; };
 		0E53A6C02BA4605B002C37C5 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53A6BF2BA4605B002C37C5 /* Message.swift */; };
-		0E53A6C32BA4613C002C37C5 /* Date+Extenstions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53A6C22BA4613C002C37C5 /* Date+Extenstions.swift */; };
+		0E53A6C32BA4613C002C37C5 /* Date+ Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53A6C22BA4613C002C37C5 /* Date+ Extension.swift */; };
 		0E53A6F42BA68D8F002C37C5 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53A6F32BA68D8F002C37C5 /* HomeViewModel.swift */; };
 		0E53A6F62BA6A8C1002C37C5 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53A6F52BA6A8C1002C37C5 /* CustomTextField.swift */; };
+		0E88158D2BB010AC002667DA /* UIApplication+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E88158C2BB010AC002667DA /* UIApplication+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,9 +51,10 @@
 		0E53A6BA2BA452D8002C37C5 /* NavigationBtnType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBtnType.swift; sourceTree = "<group>"; };
 		0E53A6BC2BA45889002C37C5 /* CustomNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationBar.swift; sourceTree = "<group>"; };
 		0E53A6BF2BA4605B002C37C5 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
-		0E53A6C22BA4613C002C37C5 /* Date+Extenstions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extenstions.swift"; sourceTree = "<group>"; };
+		0E53A6C22BA4613C002C37C5 /* Date+ Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+ Extension.swift"; sourceTree = "<group>"; };
 		0E53A6F32BA68D8F002C37C5 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		0E53A6F52BA6A8C1002C37C5 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
+		0E88158C2BB010AC002667DA /* UIApplication+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -233,7 +235,8 @@
 		0E53A6C12BA46124002C37C5 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				0E53A6C22BA4613C002C37C5 /* Date+Extenstions.swift */,
+				0E53A6C22BA4613C002C37C5 /* Date+ Extension.swift */,
+				0E88158C2BB010AC002667DA /* UIApplication+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -310,7 +313,7 @@
 			files = (
 				0E437E632BAD85E10069252D /* Onboarding.swift in Sources */,
 				0E437E652BAD9C940069252D /* settingBtn.swift in Sources */,
-				0E53A6C32BA4613C002C37C5 /* Date+Extenstions.swift in Sources */,
+				0E53A6C32BA4613C002C37C5 /* Date+ Extension.swift in Sources */,
 				0E53A6BD2BA45889002C37C5 /* CustomNavigationBar.swift in Sources */,
 				0E08771D2BA83F4E0090FD14 /* NoteListView.swift in Sources */,
 				0E53A6F42BA68D8F002C37C5 /* HomeViewModel.swift in Sources */,
@@ -326,6 +329,7 @@
 				0E437E172BA898010069252D /* Path.swift in Sources */,
 				0E437E5E2BAD84C10069252D /* OnboardingView.swift in Sources */,
 				0E437E592BAD5FE00069252D /* NoteView.swift in Sources */,
+				0E88158D2BB010AC002667DA /* UIApplication+Extension.swift in Sources */,
 				0E53A6A72BA4509F002C37C5 /* MemowApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
