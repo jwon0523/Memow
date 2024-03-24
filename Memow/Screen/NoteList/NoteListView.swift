@@ -86,6 +86,7 @@ private struct NoteListCellView: View {
 // MARK: - 노트 컨텐트 뷰
 private struct NoteContentView: View {
     @EnvironmentObject private var pathModel: PathModel
+    @EnvironmentObject private var noteListViewModel: NoteListViewModel
     private var note: Note
     
     fileprivate init(note: Note) {
@@ -122,10 +123,12 @@ private struct NoteContentView: View {
         .frame(minHeight: 50)
         // 스와이프 기능 추가
         .swipeActions {
+            // 리스트 삭제
             Button(
                 action: {
-                    // 삭제 기능 추가 필요
-                    print("Delete")
+                    withAnimation {
+                        noteListViewModel.removeNote(note)
+                    }
                 },
                 label: {
                     Text("삭제")
