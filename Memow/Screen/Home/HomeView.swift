@@ -7,8 +7,10 @@
 
 import SwiftUI
 
+private let screenWidth: CGFloat = UIScreen.main.bounds.size.width
+
 struct HomeView: View {
-    @StateObject private var homeViewModel = HomeViewModel()
+    @EnvironmentObject private var homeViewModel: HomeViewModel
     @EnvironmentObject private var pathModel: PathModel
     
     var body: some View {
@@ -17,13 +19,17 @@ struct HomeView: View {
                 leftBtnAction: {
                     pathModel.paths.append(.noteListView)
                 },
-                leftBtnType: .memow
+                rightBtnAction: {
+                    homeViewModel.navigationRightBtnTapped()
+                },
+                leftBtnType: .memow,
+                rightBtnType: .select
                 // 오른쪽 버튼 클릭시 작동 함수 필요
             )
             
-            ChatListView(homeViewModel: homeViewModel)
+            ChatListView()
             
-            MessageFieldView(homeViewModel: homeViewModel)
+            MessageFieldView()
         }
         .background(.customBackground)
     }
@@ -31,11 +37,10 @@ struct HomeView: View {
 
 // MARK: - 채팅 리스트 뷰
 private struct ChatListView: View {
-    @ObservedObject private var homeViewModel: HomeViewModel
+    @EnvironmentObject private var homeViewModel: HomeViewModel
     private var date: Date
     
-    fileprivate init(homeViewModel: HomeViewModel, date: Date = Date()) {
-        self.homeViewModel = homeViewModel
+    fileprivate init(date: Date = Date()) {
         self.date = date
     }
     
@@ -71,18 +76,26 @@ private struct ChatListView: View {
 
 // MARK: - 메세지 버블 뷰
 private struct MessageBubbleView: View {
-    private let screenWidth: CGFloat = UIScreen.main.bounds.size.width
     private var message: Message
+    @EnvironmentObject private var homeViewModel: HomeViewModel
     @State private var showRightIcon: Bool = false
     @State private var dragOffset: CGSize = .zero
     @State private var moveLeft: Bool = false
+    @State private var isRemoveSelected: Bool = false
     
     fileprivate init(message: Message) {
         self.message = message
     }
     
     fileprivate var body: some View {
-        VStack {
+        HStack {
+            if homeViewModel.isEditMessageMode {
+                Button(action: {
+                    isRemoveSelected.toggle()
+                }, label: {
+                    isRemoveSelected ? Image("SelectedBox") : Image("unSelectedBox")
+                })
+            }
             HStack {
                 HStack {
                     VStack {
@@ -101,11 +114,12 @@ private struct MessageBubbleView: View {
                         .cornerRadius(10)
                     
                 }
+                // 삭제모드일 때 투명도 0.3 지정하고, 삭제박스 선택시 투명도 없음
+                .opacity(homeViewModel.isEditMessageMode ? isRemoveSelected ? 1: 0.3 : 1)
                 // 메세지의 최대 너비는 화면의 68%로 지정
                 .frame(maxWidth: screenWidth * 0.68, alignment: .trailing)
                 // 왼쪽으로 당기면 x축으로 전체 width범위의 -10까지 이동
                 .offset(x: moveLeft ? -10 : 0)
-                .animation(.default)
                 // 왼쪽으로 당기는 제스처
                 .gesture(
                     DragGesture(minimumDistance: 50)
@@ -163,12 +177,8 @@ private struct MessageBubbleView: View {
 
 // MARK: - 메세지 입력 뷰
 private struct MessageFieldView: View {
-    @ObservedObject private var homeViewModel: HomeViewModel
+    @EnvironmentObject private var homeViewModel: HomeViewModel
     @State private var text: String = ""
-    
-    fileprivate init(homeViewModel: HomeViewModel) {
-        self.homeViewModel = homeViewModel
-    }
     
     fileprivate var body: some View {
         HStack {
@@ -207,4 +217,6 @@ private struct MessageFieldView: View {
 
 #Preview {
     HomeView()
+        .environmentObject(PathModel())
+        .environmentObject(HomeViewModel())
 }
