@@ -13,7 +13,12 @@ struct Message: Hashable {
     let received: Bool
     let date: Date
     
-    init(id: String, content: String, received: Bool = false, date: Date) {
+    init(
+        id: String,
+        content: String,
+        received: Bool = false,
+        date: Date
+    ) {
         self.id = id
         self.content = content
         self.received = received

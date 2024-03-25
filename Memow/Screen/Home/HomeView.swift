@@ -20,12 +20,20 @@ struct HomeView: View {
                     pathModel.paths.append(.noteListView)
                 },
                 rightBtnAction: {
-                    homeViewModel.navigationRightBtnTapped()
+                    withAnimation {
+                        // 선택모드 해제시 선택된 체크박스 삭제되지 않고 남아있는 오류 해결 필요
+                        homeViewModel.navigationRightBtnTapped()
+                    }
                 },
                 leftBtnType: .memow,
-                rightBtnType: .select
+                rightBtnType: homeViewModel.navigationBarRightMode
                 // 오른쪽 버튼 클릭시 작동 함수 필요
             )
+            
+            if homeViewModel.isEditMessageMode {
+                OptionMenuBar()
+            }
+            
             
             ChatListView()
             
@@ -46,13 +54,12 @@ private struct ChatListView: View {
     
     fileprivate var body: some View {
         VStack {
-            // 메세지가 작성된 날짜를 보여줌
-            Text(date.formattedDay)
-                .font(.system(size: 12, weight: .bold))
-                .foregroundStyle(.customFont)
-            
             ScrollViewReader { proxy in
                 ScrollView {
+                    // 메세지가 작성된 날짜를 보여줌
+                    Text(date.formattedDay)
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundStyle(.customFont)
                     ForEach(homeViewModel.messages, id:\.id) { message in
                         MessageBubbleView(message: message)
                     }
@@ -81,7 +88,7 @@ private struct MessageBubbleView: View {
     @State private var showRightIcon: Bool = false
     @State private var dragOffset: CGSize = .zero
     @State private var moveLeft: Bool = false
-    @State private var isRemoveSelected: Bool = false
+    @State private var isSelected: Bool = false
     
     fileprivate init(message: Message) {
         self.message = message
@@ -91,11 +98,13 @@ private struct MessageBubbleView: View {
         HStack {
             if homeViewModel.isEditMessageMode {
                 Button(action: {
-                    isRemoveSelected.toggle()
+                    isSelected.toggle()
+                    homeViewModel.messageSelectedBoxTapped(message)
                 }, label: {
-                    isRemoveSelected ? Image("SelectedBox") : Image("unSelectedBox")
+                    isSelected ? Image("SelectedBox") : Image("unSelectedBox")
                 })
             }
+            
             HStack {
                 HStack {
                     VStack {
@@ -114,8 +123,8 @@ private struct MessageBubbleView: View {
                         .cornerRadius(10)
                     
                 }
-                // 삭제모드일 때 투명도 0.3 지정하고, 삭제박스 선택시 투명도 없음
-                .opacity(homeViewModel.isEditMessageMode ? isRemoveSelected ? 1: 0.3 : 1)
+                // 선택모드일 때 투명도 0.3 지정하고, 선택박스 선택시 투명도 없음
+                .opacity(homeViewModel.isEditMessageMode ? isSelected ? 1: 0.3 : 1)
                 // 메세지의 최대 너비는 화면의 68%로 지정
                 .frame(maxWidth: screenWidth * 0.68, alignment: .trailing)
                 // 왼쪽으로 당기면 x축으로 전체 width범위의 -10까지 이동
@@ -213,6 +222,48 @@ private struct MessageFieldView: View {
         .cornerRadius(50)
         .padding()
     }
+}
+
+// MARK: - 선택모드시 네비게이션바 아래에 나타나는 옵션뷰
+fileprivate struct OptionMenuBar: View {
+    fileprivate var body: some View {
+        HStack {
+            Spacer()
+            
+            Button(action: {
+                print("Delete")
+            }, label: {
+                Text("Delete")
+                    .foregroundColor(.customDelete)
+                Image("Trash")
+            })
+            
+            Spacer()
+            
+            Button(action: {
+                print("Share")
+            }, label: {
+                Text("Share")
+                    .foregroundColor(.customFont)
+                Image("Share")
+            })
+            
+            Spacer()
+            
+            Button(action: {
+                print("Move")
+            }, label: {
+                Text("Move")
+                    .foregroundColor(.customFont)
+                Image("AddFile")
+            })
+            
+            Spacer()
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.bottom, 10)
+    }
+    
 }
 
 #Preview {

@@ -10,9 +10,13 @@ import Foundation
 class HomeViewModel: ObservableObject {
     @Published private(set) var lastMessageId: String = ""
     @Published var messages: [Message]
-    @Published var removeMessages: [Message]
+    @Published var selectedMessages: [Message]
     @Published var isEditMessageMode: Bool
     @Published var isDisplayRemoveNoteAlert: Bool
+    
+    var navigationBarRightMode: NavigationBtnType {
+        return isEditMessageMode ? .close : .select
+    }
     
     // 앱 실행시 빈 배열로 messages 배열 초기화
     // 추후 로컬이나 서버 DB에서 메세지를 받아올 예정
@@ -23,12 +27,12 @@ class HomeViewModel: ObservableObject {
             Message(id: "3", content: "Hello", date: Date()),
             Message(id: "4", content: "Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!", date: Date()),
         ],
-        removeMessages: [Message] = [],
+        selectedMessages: [Message] = [],
         isEditMessageMode: Bool = false,
         isDisplayRemoveNoteAlert: Bool = false
     ) {
         self.messages = messages
-        self.removeMessages = removeMessages
+        self.selectedMessages = selectedMessages
         self.isEditMessageMode = isEditMessageMode
         self.isDisplayRemoveNoteAlert = isDisplayRemoveNoteAlert
     }
@@ -60,9 +64,9 @@ extension HomeViewModel {
     
     func removeBtnTapped() {
         messages.removeAll { message in
-            removeMessages.contains(message)
+            selectedMessages.contains(message)
         }
-        removeMessages.removeAll()
+        selectedMessages.removeAll()
         isEditMessageMode = false
     }
     
@@ -72,21 +76,23 @@ extension HomeViewModel {
     
     func navigationRightBtnTapped() {
         if isEditMessageMode {
-            if removeMessages.isEmpty {
+            if selectedMessages.isEmpty {
                 isEditMessageMode = false
             } else {
-                setIsDisplayRemoveMessageAlert(true)
+//                setIsDisplayRemoveMessageAlert(true)
+                selectedMessages.removeAll()
+                isEditMessageMode = false
             }
         } else {
             isEditMessageMode = true
         }
     }
     
-    func messageRemoveSelectedBoxTapped(_ message: Message) {
-        if let index = removeMessages.firstIndex(of: message) {
-            removeMessages.remove(at: index)
+    func messageSelectedBoxTapped(_ message: Message) {
+        if let index = selectedMessages.firstIndex(of: message) {
+            selectedMessages.remove(at: index)
         } else {
-            removeMessages.append(message)
+            selectedMessages.append(message)
         }
     }
 }
