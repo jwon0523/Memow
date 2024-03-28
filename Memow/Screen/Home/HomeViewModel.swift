@@ -10,9 +10,10 @@ import Foundation
 class HomeViewModel: ObservableObject {
     @Published private(set) var lastMessageId: String = ""
     @Published var messages: [Message]
-    @Published var selectedMessages: [Message]
+    @Published var removeMessages: [Message]
     @Published var isEditMessageMode: Bool
     @Published var isDisplayRemoveNoteAlert: Bool
+    @Published var selectedMessages: Set<String>
     
     var navigationBarRightMode: NavigationBtnType {
         return isEditMessageMode ? .close : .select
@@ -27,14 +28,16 @@ class HomeViewModel: ObservableObject {
             Message(id: "3", content: "Hello", date: Date()),
             Message(id: "4", content: "Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!", date: Date()),
         ],
-        selectedMessages: [Message] = [],
+        removeMessages: [Message] = [],
         isEditMessageMode: Bool = false,
-        isDisplayRemoveNoteAlert: Bool = false
+        isDisplayRemoveNoteAlert: Bool = false,
+        selectedMessages: Set<String> = []
     ) {
         self.messages = messages
-        self.selectedMessages = selectedMessages
+        self.removeMessages = removeMessages
         self.isEditMessageMode = isEditMessageMode
         self.isDisplayRemoveNoteAlert = isDisplayRemoveNoteAlert
+        self.selectedMessages = selectedMessages
     }
 }
 
@@ -64,9 +67,9 @@ extension HomeViewModel {
     
     func removeBtnTapped() {
         messages.removeAll { message in
-            selectedMessages.contains(message)
+            removeMessages.contains(message)
         }
-        selectedMessages.removeAll()
+        removeMessages.removeAll()
         isEditMessageMode = false
     }
     
@@ -80,6 +83,7 @@ extension HomeViewModel {
                 isEditMessageMode = false
             } else {
 //                setIsDisplayRemoveMessageAlert(true)
+                // close(x) 버튼을 누르면 선택된 내용들 모두 삭제하고 편집 모드 종료
                 selectedMessages.removeAll()
                 isEditMessageMode = false
             }
@@ -88,11 +92,13 @@ extension HomeViewModel {
         }
     }
     
-    func messageSelectedBoxTapped(_ message: Message) {
-        if let index = selectedMessages.firstIndex(of: message) {
-            selectedMessages.remove(at: index)
+    // 메세지의 id값이 들어왔을 때 selectedMessages에 같은 값이 있으면
+    // 삭제하면서 선택 취소하고, 없다면 Set배열에 넣어주면서 선택 체크
+    func messageSelectedBoxTapped(id: String) {
+        if selectedMessages.contains(id) {
+            selectedMessages.remove(id)
         } else {
-            selectedMessages.append(message)
+            selectedMessages.insert(id)
         }
     }
 }

@@ -88,7 +88,6 @@ private struct MessageBubbleView: View {
     @State private var showRightIcon: Bool = false
     @State private var dragOffset: CGSize = .zero
     @State private var moveLeft: Bool = false
-    @State private var isSelected: Bool = false
     
     fileprivate init(message: Message) {
         self.message = message
@@ -98,10 +97,13 @@ private struct MessageBubbleView: View {
         HStack {
             if homeViewModel.isEditMessageMode {
                 Button(action: {
-                    isSelected.toggle()
-                    homeViewModel.messageSelectedBoxTapped(message)
+                    homeViewModel.messageSelectedBoxTapped(id: message.id)
                 }, label: {
-                    isSelected ? Image("SelectedBox") : Image("unSelectedBox")
+                    if homeViewModel.selectedMessages.contains(message.id) {
+                        Image("SelectedBox")
+                    } else {
+                        Image("unSelectedBox")
+                    }
                 })
             }
             
@@ -124,7 +126,7 @@ private struct MessageBubbleView: View {
                     
                 }
                 // 선택모드일 때 투명도 0.3 지정하고, 선택박스 선택시 투명도 없음
-                .opacity(homeViewModel.isEditMessageMode ? isSelected ? 1: 0.3 : 1)
+                .opacity(homeViewModel.isEditMessageMode ? 0.3 : 1)
                 // 메세지의 최대 너비는 화면의 68%로 지정
                 .frame(maxWidth: screenWidth * 0.68, alignment: .trailing)
                 // 왼쪽으로 당기면 x축으로 전체 width범위의 -10까지 이동
@@ -133,20 +135,23 @@ private struct MessageBubbleView: View {
                 .gesture(
                     DragGesture(minimumDistance: 50)
                         .onChanged { value in
-                            self.dragOffset = value.translation
-                            // 오른쪽에서 왼쪽으로 드래그
-                            if self.dragOffset.width < 0 {
-                                // 애니메이션으로 부드럽게 보여줌
-                                withAnimation {
-                                    self.showRightIcon = true
-                                    self.moveLeft = true
-                                }
-                                // 왼쪽에서 오른쪽으로 드래그
-                            } else if self.dragOffset.width > 0 {
-                                // 애니메이션으로 부드럽게 보여줌
-                                withAnimation {
-                                    self.showRightIcon = false
-                                    self.moveLeft = false
+                            // 편집 모드가 아닌 경우에만 메세지 드래그 가능
+                            if !homeViewModel.isEditMessageMode {
+                                self.dragOffset = value.translation
+                                // 오른쪽에서 왼쪽으로 드래그
+                                if self.dragOffset.width < 0 {
+                                    // 애니메이션으로 부드럽게 보여줌
+                                    withAnimation {
+                                        self.showRightIcon = true
+                                        self.moveLeft = true
+                                    }
+                                    // 왼쪽에서 오른쪽으로 드래그
+                                } else if self.dragOffset.width > 0 {
+                                    // 애니메이션으로 부드럽게 보여줌
+                                    withAnimation {
+                                        self.showRightIcon = false
+                                        self.moveLeft = false
+                                    }
                                 }
                             }
                         }

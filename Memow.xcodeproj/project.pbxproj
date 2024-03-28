@@ -226,6 +226,7 @@
 		0E53A6BE2BA458C2002C37C5 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				0ED1D6642BB3FF350097CE2C /* EditHome */,
 				0E53A6A82BA4509F002C37C5 /* HomeView.swift */,
 				0E53A6F32BA68D8F002C37C5 /* HomeViewModel.swift */,
 			);
@@ -239,6 +240,13 @@
 				0E88158C2BB010AC002667DA /* UIApplication+Extension.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		0ED1D6642BB3FF350097CE2C /* EditHome */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = EditHome;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
