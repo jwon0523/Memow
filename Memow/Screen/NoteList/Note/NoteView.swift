@@ -68,7 +68,7 @@ private struct NoteTitleView: View {
             "제목을 입력하세요",
             text: $noteViewModel.note.title
         )
-        .font(.system(size: 16))
+        .font(.system(size: 25))
         .padding(.horizontal, noteHorizontalPaddingSize)
         .focused($isTitleFieldFocused)
         .onAppear {
