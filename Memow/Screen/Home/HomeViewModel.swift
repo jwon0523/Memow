@@ -13,7 +13,7 @@ class HomeViewModel: ObservableObject {
     @Published var removeMessages: [Message]
     @Published var isEditMessageMode: Bool
     @Published var isDisplayRemoveNoteAlert: Bool
-    @Published var selectedMessages: Set<String>
+    @Published var selectedMessages: Set<Message>
     
     var navigationBarRightMode: NavigationBtnType {
         return isEditMessageMode ? .close : .select
@@ -31,7 +31,7 @@ class HomeViewModel: ObservableObject {
         removeMessages: [Message] = [],
         isEditMessageMode: Bool = false,
         isDisplayRemoveNoteAlert: Bool = false,
-        selectedMessages: Set<String> = []
+        selectedMessages: Set<Message> = []
     ) {
         self.messages = messages
         self.removeMessages = removeMessages
@@ -67,9 +67,9 @@ extension HomeViewModel {
     
     func removeBtnTapped() {
         messages.removeAll { message in
-            removeMessages.contains(message)
+            selectedMessages.contains(message)
         }
-        removeMessages.removeAll()
+        selectedMessages.removeAll()
         isEditMessageMode = false
     }
     
@@ -94,11 +94,11 @@ extension HomeViewModel {
     
     // 메세지의 id값이 들어왔을 때 selectedMessages에 같은 값이 있으면
     // 삭제하면서 선택 취소하고, 없다면 Set배열에 넣어주면서 선택 체크
-    func messageSelectedBoxTapped(id: String) {
-        if selectedMessages.contains(id) {
-            selectedMessages.remove(id)
+    func messageSelectedBoxTapped(_ message: Message) {
+        if selectedMessages.contains(message) {
+            selectedMessages.remove(message)
         } else {
-            selectedMessages.insert(id)
+            selectedMessages.insert(message)
         }
     }
 }

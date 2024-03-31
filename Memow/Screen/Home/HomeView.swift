@@ -37,7 +37,9 @@ struct HomeView: View {
             
             ChatListView()
             
-            MessageFieldView()
+            if !homeViewModel.isEditMessageMode {
+                MessageFieldView()
+            }
         }
         .background(.customBackground)
     }
@@ -97,9 +99,9 @@ private struct MessageBubbleView: View {
         HStack {
             if homeViewModel.isEditMessageMode {
                 Button(action: {
-                    homeViewModel.messageSelectedBoxTapped(id: message.id)
+                    homeViewModel.messageSelectedBoxTapped(message)
                 }, label: {
-                    if homeViewModel.selectedMessages.contains(message.id) {
+                    if homeViewModel.selectedMessages.contains(message) {
                         Image("SelectedBox")
                     } else {
                         Image("unSelectedBox")
@@ -232,12 +234,15 @@ private struct MessageFieldView: View {
 
 // MARK: - 선택모드시 네비게이션바 아래에 나타나는 옵션뷰
 fileprivate struct OptionMenuBar: View {
+    @EnvironmentObject private var homeViewModel: HomeViewModel
     fileprivate var body: some View {
         HStack {
             Spacer()
             
             Button(action: {
-                print("Delete")
+                withAnimation {
+                    homeViewModel.removeBtnTapped()
+                }
             }, label: {
                 Text("Delete")
                     .foregroundColor(.customDelete)
