@@ -163,19 +163,18 @@ private struct MessageBubbleView: View {
                 if showRightIcon {
                     HStack {
                         Image("Alarm")
-                            .frame(width: 35, height: 35)
-                            .background(.customWhite)
-                            .cornerRadius(20)
-                            .shadow(radius: 2)
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .background(.customBackground)
                         
                         Spacer()
                             .frame(width: 15)
                         
                         Image("AddFile")
-                            .frame(width: 35, height: 35)
-                            .background(.customWhite)
-                            .cornerRadius(20)
-                            .shadow(radius: 2)
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .padding()
+                            .background(.customBackground)
                         
                         Spacer()
                             .frame(width: 5)
@@ -217,6 +216,8 @@ private struct MessageFieldView: View {
                     }
                 } label: {
                     Image("SendMessage")
+                        .resizable()
+                        .frame(width: 20, height: 20)
                 }
             }
         }
@@ -224,8 +225,8 @@ private struct MessageFieldView: View {
         .padding(.vertical, 5)
         .frame(minHeight: 40)
         .background(.customTextField)
-        .cornerRadius(50)
-        .padding()
+        .cornerRadius(10)
+        .padding(.horizontal)
     }
 }
 
@@ -241,6 +242,8 @@ fileprivate struct OptionMenuBar: View {
                 Text("Delete")
                     .foregroundColor(.customDelete)
                 Image("Trash")
+                    .resizable()
+                    .frame(width: 20, height: 20)
             })
             
             Spacer()
@@ -251,6 +254,8 @@ fileprivate struct OptionMenuBar: View {
                 Text("Share")
                     .foregroundColor(.customFont)
                 Image("Share")
+                    .resizable()
+                    .frame(width: 20, height: 20)
             })
             
             Spacer()
@@ -261,6 +266,8 @@ fileprivate struct OptionMenuBar: View {
                 Text("Move")
                     .foregroundColor(.customFont)
                 Image("AddFile")
+                    .resizable()
+                    .frame(width: 20, height: 20)
             })
             
             Spacer()

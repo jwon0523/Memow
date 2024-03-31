@@ -61,6 +61,7 @@ struct NoteListView: View {
 private struct SearchBarView: View {
     @Binding var text: String
     @State private var isEditing = false
+    @FocusState private var isSearchBarFocused: Bool
 
     fileprivate var body: some View {
         HStack {
@@ -70,21 +71,27 @@ private struct SearchBarView: View {
                 .background(.customBorder)
                 .cornerRadius(8)
                 .padding(.horizontal, 15)
+                .focused($isSearchBarFocused)
                 .onTapGesture {
-                    self.isEditing = true
+                    withAnimation {
+                        self.isEditing = true
+                        self.isSearchBarFocused = true
+                    }
                 }
 
             // 검색 바 터치하면 오른쪽에 취소 버튼 생성
             if isEditing {
                 Button(action: {
-                    self.isEditing = false
-                    self.text = ""
+                    withAnimation {
+                        self.isEditing = false
+                        self.text = ""
+                        self.isSearchBarFocused = false
+                    }
                 }) {
                     Text("Cancel")
                 }
                 .padding(.trailing, 10)
                 .transition(.move(edge: .trailing))
-                .animation(.default)
             }
         }
     }

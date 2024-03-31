@@ -27,7 +27,7 @@ struct CustomNavigationBar: View {
         isDisplayLogo: Bool = true,
         leftBtnAction: @escaping () -> Void = {},
         rightBtnAction: @escaping () -> Void = {},
-        leftBtnType: NavigationBtnType = .hamburgerMenuIcon,
+        leftBtnType: NavigationBtnType = .leftBack,
         rightBtnType: NavigationBtnType = .kebabMenuIcon
     ) {
         self.isDisplayLeftBtn = isDisplayLeftBtn
@@ -62,6 +62,9 @@ struct CustomNavigationBar: View {
                                 .foregroundColor(.customFont)
                         } else {
                             Image(leftBtnType.rawValue)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 20, height: 20)
                         }
                     }
                 )
@@ -82,6 +85,9 @@ struct CustomNavigationBar: View {
                                 .padding(.vertical)
                         } else {
                             Image(rightBtnType.rawValue)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 20, height: 20)
                         }
                 })
             }

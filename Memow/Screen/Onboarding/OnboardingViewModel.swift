@@ -18,7 +18,7 @@ class OnboardingViewModel: ObservableObject {
                 tabBarImageFileName: ["OnboardingTabBar.fill", "OnboardingTabBar", "OnboardingTabBar", "OnboardingTabBar"],
                 settingBtnContents: [
                     SettingBtn(
-                        buttonContent: ["가볍고, 밝게", "차분하고 어둡게"],
+                        buttonContent: [],
                         isSelectedBtn: [true, false]
                     )
                 ]
@@ -40,7 +40,7 @@ class OnboardingViewModel: ObservableObject {
                 tabBarImageFileName: ["OnboardingTabBar.fill", "OnboardingTabBar.fill", "OnboardingTabBar.fill", "OnboardingTabBar"],
                 settingBtnContents: [
                     SettingBtn(
-                        buttonContent: ["가볍고, 밝게", "차분하고 어둡게"],
+                        buttonContent: ["깔끔하게 지울게요", "기록인데, 남길게요"],
                         isSelectedBtn: [true, false]
                     )
                 ]
@@ -51,7 +51,7 @@ class OnboardingViewModel: ObservableObject {
                 tabBarImageFileName: ["OnboardingTabBar.fill", "OnboardingTabBar.fill", "OnboardingTabBar.fill", "OnboardingTabBar.fill"],
                 settingBtnContents: [
                     SettingBtn(
-                        buttonContent: ["가볍고, 밝게", "차분하고 어둡게"],
+                        buttonContent: [],
                         isSelectedBtn: [true, false]
                     )
                 ]
