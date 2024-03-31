@@ -34,7 +34,6 @@ struct HomeView: View {
                 OptionMenuBar()
             }
             
-            
             ChatListView()
             
             if !homeViewModel.isEditMessageMode {
@@ -162,11 +161,13 @@ private struct MessageBubbleView: View {
                             // 드래그 완료시 작동할 코드 추가 가능.
                         }
                 )
-                if showRightIcon {
+                
+                if showRightIcon && !homeViewModel.isEditMessageMode {
                     HStack {
                         Image("Alarm")
                             .resizable()
                             .frame(width: 20, height: 20)
+                            .padding(3)
                             .background(.customBackground)
                         
                         Spacer()
@@ -175,7 +176,7 @@ private struct MessageBubbleView: View {
                         Image("AddFile")
                             .resizable()
                             .frame(width: 20, height: 20)
-                            .padding()
+                            .padding(3)
                             .background(.customBackground)
                         
                         Spacer()
@@ -235,6 +236,7 @@ private struct MessageFieldView: View {
 // MARK: - 선택모드시 네비게이션바 아래에 나타나는 옵션뷰
 fileprivate struct OptionMenuBar: View {
     @EnvironmentObject private var homeViewModel: HomeViewModel
+    
     fileprivate var body: some View {
         HStack {
             Spacer()
