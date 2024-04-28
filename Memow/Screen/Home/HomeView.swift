@@ -41,6 +41,10 @@ struct HomeView: View {
             }
         }
         .background(.customBackground)
+        .sheet(isPresented: $homeViewModel.isShowNoteListModal) {
+//            NoteListView()
+            Text("Modal")
+        }
     }
 }
 
@@ -268,7 +272,9 @@ fileprivate struct OptionMenuBar: View {
             Spacer()
             
             Button(action: {
-                print("Move")
+                if(!homeViewModel.selectedMessages.isEmpty) {
+                    homeViewModel.moveMessageToNoteListBtnTapped()
+                }
             }, label: {
                 Text("Move")
                     .foregroundColor(.customFont)
@@ -289,4 +295,5 @@ fileprivate struct OptionMenuBar: View {
     HomeView()
         .environmentObject(PathModel())
         .environmentObject(HomeViewModel())
+        .environmentObject(NoteListViewModel())
 }

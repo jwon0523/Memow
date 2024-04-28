@@ -14,6 +14,7 @@ class HomeViewModel: ObservableObject {
     @Published var isEditMessageMode: Bool
     @Published var isDisplayRemoveNoteAlert: Bool
     @Published var selectedMessages: Set<Message>
+    @Published var isShowNoteListModal: Bool
     
     var navigationBarRightMode: NavigationBtnType {
         return isEditMessageMode ? .close : .select
@@ -31,13 +32,15 @@ class HomeViewModel: ObservableObject {
         removeMessages: [Message] = [],
         isEditMessageMode: Bool = false,
         isDisplayRemoveNoteAlert: Bool = false,
-        selectedMessages: Set<Message> = []
+        selectedMessages: Set<Message> = [],
+        isShowNoteListModal: Bool = false
     ) {
         self.messages = messages
         self.removeMessages = removeMessages
         self.isEditMessageMode = isEditMessageMode
         self.isDisplayRemoveNoteAlert = isDisplayRemoveNoteAlert
         self.selectedMessages = selectedMessages
+        self.isShowNoteListModal = isShowNoteListModal
     }
 }
 
@@ -99,6 +102,16 @@ extension HomeViewModel {
             selectedMessages.remove(message)
         } else {
             selectedMessages.insert(message)
+        }
+    }
+    
+    func moveMessageToNoteListBtnTapped() {
+        if isEditMessageMode {
+            if(isShowNoteListModal) {
+                isShowNoteListModal = false
+            } else {
+                isShowNoteListModal = true
+            }
         }
     }
 }
