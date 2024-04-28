@@ -24,15 +24,18 @@ struct OnboardingView: View {
             // 테스트 완료 후 OnboardingContentView 다시 추가
             HomeView()
                 .environmentObject(homeViewModel)
+                .environmentObject(noteListViewModel)
                 .navigationDestination(for: PathType.self) { pathType in
                     switch pathType {
                     case .homeView:
                         HomeView()
                             .navigationBarBackButtonHidden()
                             .environmentObject(homeViewModel)
+                            .environmentObject(noteListViewModel)
                     case .noteListView:
                         NoteListView()
                             .navigationBarBackButtonHidden()
+                            .environmentObject(homeViewModel)
                             .environmentObject(noteListViewModel)
                     case let .noteView(isCreateMode, note):
                         NoteView(

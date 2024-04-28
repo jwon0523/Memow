@@ -10,25 +10,40 @@ import SwiftUI
 struct NoteListView: View {
     @EnvironmentObject private var pathModel: PathModel
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
+    @EnvironmentObject private var homeViewModel: HomeViewModel
     @State private var searchText = ""
     
     var body: some View {
         ZStack {
             VStack {
-                CustomNavigationBar(
-                    leftBtnAction: {
-                        pathModel.paths.removeLast()
-                    },
-                    rightBtnAction: {
-                        // 버튼 선택시 리스트 왼쪽 다중 선택 활성화
-                        withAnimation {
-                            noteListViewModel.navigationSelectBtnTapped()
-                        }
-                    },
-                    leftBtnType: .memow,
-                    // 버튼 클릭할 때마다 선택 이미지와 삭제 전환
-                    rightBtnType: noteListViewModel.navigationBarRightMode
-                )
+                if(!homeViewModel.isShowNoteListModal) {
+                    CustomNavigationBar(
+                        leftBtnAction: {
+                            pathModel.paths.removeLast()
+                        },
+                        rightBtnAction: {
+                            // 버튼 선택시 리스트 왼쪽 다중 선택 활성화
+                            withAnimation {
+                                noteListViewModel.navigationSelectBtnTapped()
+                            }
+                        },
+                        leftBtnType: .memow,
+                        // 버튼 클릭할 때마다 선택 이미지와 삭제 전환
+                        rightBtnType: noteListViewModel.navigationBarRightMode
+                    )
+                } else {
+                    CustomNavigationBar(
+                        rightBtnAction: {
+                            // 버튼 선택시 리스트 왼쪽 다중 선택 활성화
+                            withAnimation {
+                                homeViewModel.closeModalBtnTappded()
+                            }
+                        },
+                        leftBtnType: .memow,
+                        // 버튼 클릭할 때마다 선택 이미지와 삭제 전환
+                        rightBtnType: .close
+                    )
+                }
                 
                 SearchBarView(text: $searchText)
                 
@@ -37,9 +52,11 @@ struct NoteListView: View {
             }
             .background(.customBackground)
             
-            WriteNoteBtnView()
-                .padding(.trailing, 20)
-                .padding(.bottom, 30)
+            if(!homeViewModel.isShowNoteListModal) {
+                WriteNoteBtnView()
+                    .padding(.trailing, 20)
+                    .padding(.bottom, 30)
+            }
         }
         // 오른쪽 네비게이션바 삭제 버튼 클릭시 실행
         .alert(
@@ -114,6 +131,7 @@ private struct NoteListCellView: View {
 private struct NoteContentView: View {
     @EnvironmentObject private var pathModel: PathModel
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
+    @EnvironmentObject private var homeViewModel: HomeViewModel
     @State private var isRemoveSelected: Bool
     private var note: Note
     
@@ -128,14 +146,20 @@ private struct NoteContentView: View {
     fileprivate var body: some View {
         VStack {
             Button(action: {
-                pathModel.paths.append(.noteView(
-                    isCreateMode: false,
-                    note: note
-                ))
+                // 노트 리스트 편집 모드가 아니고 HomeView에서
+                // 모달 뷰를 띄우지 않았을 때만 노트로 이동 가능
+                if(!noteListViewModel.isEditNoteMode
+                   && !homeViewModel.isShowNoteListModal) {
+                    pathModel.paths.append(.noteView(
+                        isCreateMode: false,
+                        note: note
+                    ))
+                }
             }, label: {
                 HStack(alignment:.top) {
-                    // 메모 선택 버튼 클릭시 활성
-                    if noteListViewModel.isEditNoteMode {
+                    // 리스트 수정 모드시 선택 버튼 활성
+                    if noteListViewModel.isEditNoteMode
+                        || homeViewModel.isShowNoteListModal {
                         Button(action: {
                             isRemoveSelected.toggle()
                             // 삭제 버튼 클릭시 해당 노트 noteListViewModel의 removeNotes에 추가
@@ -221,4 +245,5 @@ private struct WriteNoteBtnView: View {
     NoteListView()
         .environmentObject(NoteListViewModel())
         .environmentObject(PathModel())
+        .environmentObject(HomeViewModel())
 }

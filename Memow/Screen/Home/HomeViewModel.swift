@@ -114,4 +114,12 @@ extension HomeViewModel {
             }
         }
     }
+    
+    func closeModalBtnTappded() {
+        if(isShowNoteListModal) {
+            isShowNoteListModal = false
+        } else {
+            isShowNoteListModal = true
+        }
+    }
 }

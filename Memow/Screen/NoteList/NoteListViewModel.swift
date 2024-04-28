@@ -14,7 +14,7 @@ class NoteListViewModel: ObservableObject {
     @Published var isDisplayRemoveNoteAlert: Bool
     
     var navigationBarRightMode: NavigationBtnType {
-        isEditNoteMode ? .delete : .select
+        return isEditNoteMode ? .delete : .select
     }
     
     var removeNoteCount: Int {

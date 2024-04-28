@@ -12,6 +12,7 @@ private let screenWidth: CGFloat = UIScreen.main.bounds.size.width
 struct HomeView: View {
     @EnvironmentObject private var homeViewModel: HomeViewModel
     @EnvironmentObject private var pathModel: PathModel
+    @EnvironmentObject private var noteListViewModel: NoteListViewModel
     
     var body: some View {
         VStack {
@@ -42,8 +43,7 @@ struct HomeView: View {
         }
         .background(.customBackground)
         .sheet(isPresented: $homeViewModel.isShowNoteListModal) {
-//            NoteListView()
-            Text("Modal")
+            NoteListView()
         }
     }
 }
