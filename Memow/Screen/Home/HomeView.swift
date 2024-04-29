@@ -42,7 +42,10 @@ struct HomeView: View {
             }
         }
         .background(.customBackground)
-        .sheet(isPresented: $homeViewModel.isShowNoteListModal) {
+        .sheet(
+            isPresented: $homeViewModel.isShowNoteListModal,
+            onDismiss: noteListViewModel.removeAllSelectedNote
+        ) {
             NoteListView()
         }
     }

@@ -10,15 +10,16 @@ import Foundation
 class NoteListViewModel: ObservableObject {
     @Published var notes: [Note]
     @Published var isEditNoteMode: Bool
-    @Published var removeNotes: [Note]
+//    @Published var removeNotes: [Note]
     @Published var isDisplayRemoveNoteAlert: Bool
+    @Published var selectedNote: Set<Note>
     
     var navigationBarRightMode: NavigationBtnType {
         return isEditNoteMode ? .delete : .select
     }
     
     var removeNoteCount: Int {
-        return removeNotes.count
+        return selectedNote.count
     }
     
     init(
@@ -45,13 +46,15 @@ class NoteListViewModel: ObservableObject {
             ),
         ],
         isEditNoteMode: Bool = false,
-        removeNotes: [Note] = [],
-        isDisplayRemoveNoteAlert: Bool = false
+//        removeNotes: [Note] = [],
+        isDisplayRemoveNoteAlert: Bool = false,
+        selectedNote: Set<Note> = []
     ) {
         self.notes = notes
         self.isEditNoteMode = isEditNoteMode
-        self.removeNotes = removeNotes
+//        self.removeNotes = removeNotes
         self.isDisplayRemoveNoteAlert = isDisplayRemoveNoteAlert
+        self.selectedNote = selectedNote
     }
 }
 
@@ -78,21 +81,21 @@ extension NoteListViewModel {
     
     func noteRemoveSelectedBoxTapped(_ note: Note) {
         // 삭제 버튼 재클릭시 취소
-        if let index = removeNotes.firstIndex(where: { $0.id == note.id }) {
-            removeNotes.remove(at: index)
+        if selectedNote.contains(note) {
+            selectedNote.remove(note)
         } else {
-            removeNotes.append(note)
+            selectedNote.insert(note)
         }
     }
     
     func removeBtnTapped() {
         // notes에서 removeNotes와 일치한 노트만 삭제
         notes.removeAll { note in
-            removeNotes.contains(note)
+            selectedNote.contains(note)
         }
         
         // 삭제된 노트들은 removeNotes에서 삭제
-        removeNotes.removeAll()
+        removeAllSelectedNote()
         isEditNoteMode = false
     }
     
@@ -100,7 +103,7 @@ extension NoteListViewModel {
         if isEditNoteMode {
             // 삭제 모드시 삭제 버튼 눌렀을 때 removeNotes가 비어있으면 삭제모드 취소
             // removeNotes에 값이 있으면 setIsDisplayRemoveNoteAlert를 실행하여 알람 생성
-            if removeNotes.isEmpty {
+            if selectedNote.isEmpty {
                 isEditNoteMode = false
             } else {
                 setIsDisplayRemoveNoteAlert(true)
@@ -108,5 +111,9 @@ extension NoteListViewModel {
         } else {
             isEditNoteMode = true
         }
+    }
+    
+    func removeAllSelectedNote() {
+        selectedNote.removeAll()
     }
 }

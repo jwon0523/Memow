@@ -37,6 +37,7 @@ struct NoteListView: View {
                             // 버튼 선택시 리스트 왼쪽 다중 선택 활성화
                             withAnimation {
                                 homeViewModel.closeModalBtnTappded()
+                                noteListViewModel.removeAllSelectedNote()
                             }
                         },
                         leftBtnType: .memow,
@@ -143,6 +144,8 @@ private struct NoteContentView: View {
         self.isRemoveSelected = isRemoveSelected
     }
     
+    
+    // 모달창에서 노트리스트를 선택하면 숫자 꼬이는 버그 고치기
     fileprivate var body: some View {
         VStack {
             Button(action: {
