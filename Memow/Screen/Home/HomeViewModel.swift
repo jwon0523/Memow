@@ -80,7 +80,7 @@ extension HomeViewModel {
         isDisplayRemoveNoteAlert = isDisplay
     }
     
-    func navigationRightBtnTapped() {
+    func toggleEditMessageMode() {
         if isEditMessageMode {
             if selectedMessages.isEmpty {
                 isEditMessageMode = false
@@ -105,21 +105,13 @@ extension HomeViewModel {
         }
     }
     
-    func moveMessageToNoteListBtnTapped() {
+    func toggleNoteListModal() {
         if isEditMessageMode {
             if(isShowNoteListModal) {
                 isShowNoteListModal = false
             } else {
                 isShowNoteListModal = true
             }
-        }
-    }
-    
-    func closeModalBtnTappded() {
-        if(isShowNoteListModal) {
-            isShowNoteListModal = false
-        } else {
-            isShowNoteListModal = true
         }
     }
 }

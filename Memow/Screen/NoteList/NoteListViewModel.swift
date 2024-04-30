@@ -10,7 +10,6 @@ import Foundation
 class NoteListViewModel: ObservableObject {
     @Published var notes: [Note]
     @Published var isEditNoteMode: Bool
-//    @Published var removeNotes: [Note]
     @Published var isDisplayRemoveNoteAlert: Bool
     @Published var selectedNote: Set<Note>
     
@@ -66,6 +65,20 @@ extension NoteListViewModel {
     func updateNote(_ note: Note) {
         if let index = notes.firstIndex(where: { $0.id == note.id }) {
             notes[index] = note
+        }
+    }
+    
+    // 메세지 노트로 옮김
+    func addSelectedMessageToNote(
+        selectedNotes: Set<Note>,
+        selectedMessages: Set<Message>
+    ) {
+        for selectedNote in selectedNotes {
+            for selectedMessage in selectedMessages {
+                if let index = notes.firstIndex(where: { $0.id == selectedNote.id }) {
+                    notes[index].content += "\n" + selectedMessage.content
+                }
+            }
         }
     }
     

@@ -18,12 +18,13 @@ struct HomeView: View {
         VStack {
             CustomNavigationBar(
                 leftBtnAction: {
-                    pathModel.paths.append(.noteListView)
+                    if !homeViewModel.isEditMessageMode {
+                        pathModel.paths.append(.noteListView)
+                    }
                 },
                 rightBtnAction: {
                     withAnimation {
-                        // 선택모드 해제시 선택된 체크박스 삭제되지 않고 남아있는 오류 해결 필요
-                        homeViewModel.navigationRightBtnTapped()
+                        homeViewModel.toggleEditMessageMode()
                     }
                 },
                 leftBtnType: .memow,
@@ -276,7 +277,7 @@ fileprivate struct OptionMenuBar: View {
             
             Button(action: {
                 if(!homeViewModel.selectedMessages.isEmpty) {
-                    homeViewModel.moveMessageToNoteListBtnTapped()
+                    homeViewModel.toggleNoteListModal()
                 }
             }, label: {
                 Text("Move")
@@ -299,4 +300,15 @@ fileprivate struct OptionMenuBar: View {
         .environmentObject(PathModel())
         .environmentObject(HomeViewModel())
         .environmentObject(NoteListViewModel())
+}
+
+#Preview {
+    OnboardingView()
+}
+
+#Preview {
+    NoteListView()
+        .environmentObject(NoteListViewModel())
+        .environmentObject(PathModel())
+        .environmentObject(HomeViewModel())
 }

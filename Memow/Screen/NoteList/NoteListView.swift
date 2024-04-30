@@ -19,7 +19,9 @@ struct NoteListView: View {
                 if(!homeViewModel.isShowNoteListModal) {
                     CustomNavigationBar(
                         leftBtnAction: {
-                            pathModel.paths.removeLast()
+                            if(!noteListViewModel.isEditNoteMode) {
+                                pathModel.paths.removeLast()
+                            }
                         },
                         rightBtnAction: {
                             // 버튼 선택시 리스트 왼쪽 다중 선택 활성화
@@ -36,8 +38,7 @@ struct NoteListView: View {
                         rightBtnAction: {
                             // 버튼 선택시 리스트 왼쪽 다중 선택 활성화
                             withAnimation {
-                                homeViewModel.closeModalBtnTappded()
-                                noteListViewModel.removeAllSelectedNote()
+                                homeViewModel.toggleNoteListModal()
                             }
                         },
                         leftBtnType: .memow,
@@ -53,7 +54,12 @@ struct NoteListView: View {
             }
             .background(.customBackground)
             
-            if(!homeViewModel.isShowNoteListModal) {
+            if(homeViewModel.isShowNoteListModal) {
+                MoveMessageToNoteListBtnView()
+                    .padding(.trailing)
+                    .padding(.bottom)
+                
+            } else {
                 WriteNoteBtnView()
                     .padding(.trailing, 20)
                     .padding(.bottom, 30)
@@ -244,9 +250,49 @@ private struct WriteNoteBtnView: View {
     }
 }
 
+// MARK: - 모달 뷰에서 보여줄 메세지 이동 버튼 뷰
+private struct MoveMessageToNoteListBtnView: View {
+    @EnvironmentObject private var homeViewModel: HomeViewModel
+    @EnvironmentObject private var noteListViewModel: NoteListViewModel
+    
+    fileprivate var body: some View {
+        VStack {
+            Spacer()
+            HStack {
+                Button(action: {
+                    noteListViewModel.addSelectedMessageToNote(
+                        selectedNotes: noteListViewModel.selectedNote,
+                        selectedMessages: homeViewModel.selectedMessages
+                    )
+                    homeViewModel.toggleNoteListModal()
+                    homeViewModel.toggleEditMessageMode()
+                }, label: {
+                    Text("Move text to selected Note")
+                        .foregroundStyle(.customFont)
+                        .frame(width: 250)
+                        .padding()
+                        .background(.customBackground)
+                        .cornerRadius(20)
+                })
+            }
+        }
+    }
+}
+
 #Preview {
     NoteListView()
         .environmentObject(NoteListViewModel())
         .environmentObject(PathModel())
         .environmentObject(HomeViewModel())
+}
+
+#Preview {
+    OnboardingView()
+}
+
+#Preview {
+    HomeView()
+        .environmentObject(PathModel())
+        .environmentObject(HomeViewModel())
+        .environmentObject(NoteListViewModel())
 }
