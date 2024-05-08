@@ -15,7 +15,7 @@ struct HomeView: View {
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             CustomNavigationBar(
                 leftBtnAction: {
                     if !homeViewModel.isEditMessageMode {
@@ -55,37 +55,51 @@ struct HomeView: View {
 // MARK: - 채팅 리스트 뷰
 private struct ChatListView: View {
     @EnvironmentObject private var homeViewModel: HomeViewModel
-    private var date: Date
-    
-    fileprivate init(date: Date = Date()) {
-        self.date = date
-    }
-    
+
     fileprivate var body: some View {
-        VStack {
-            ScrollViewReader { proxy in
-                ScrollView {
+        GeometryReader(content: { geometry in
+            ScrollView {
+                ScrollViewReader { proxy in
                     // 메세지가 작성된 날짜를 보여줌
-                    Text(date.formattedDay)
-                        .font(.system(size: 12, weight: .bold))
-                        .foregroundStyle(.customFont)
-                    ForEach(homeViewModel.messages, id:\.id) { message in
-                        MessageBubbleView(message: message)
-                    }
-                }
-                .padding(.top, 10)
-                .background(.customBackground)
-                .onChange(of: homeViewModel.lastMessageId) { id in
-                    // 메세지의 lastMessageId가 변경되면 대화의 마지막 부분으로 이동
-                    withAnimation {
-                        proxy.scrollTo(id, anchor: .bottom)
+                    ChatListCellView()
+                        .padding(.top, 10)
+                        .padding(.horizontal)
+                        .background(.customBackground)
+                        .onChange(of: homeViewModel.lastMessageId) { id in
+                        // 메세지의 lastMessageId가 변경되면 대화의 마지막 부분으로 이동
+                        withAnimation {
+                            proxy.scrollTo(id, anchor: .bottom)
+                        }
                     }
                 }
             }
-        }
+        })
         // 키보드 화면 밖 선택시 키보드 내림
         .onTapGesture {
             UIApplication.shared.keyboardDown()
+        }
+    }
+}
+
+private struct ChatListCellView: View {
+    @EnvironmentObject private var homeViewModel: HomeViewModel
+    private let columns = [GridItem(.flexible())]
+    
+    fileprivate var body: some View {
+        LazyVGrid(
+            columns: columns,
+            spacing: 0
+//            pinnedViews: [.sectionHeaders]
+        ) {
+            let sectionMessages = homeViewModel.getDateSectionMessages()
+            ForEach(sectionMessages.indices, id:\.self) { selectionIndex in
+                let messages = sectionMessages[selectionIndex]
+                Section(header: Text(messages.first!.date.formattedDay)) {
+                    ForEach(messages, id:\.id) { message in
+                        MessageBubbleView(message: message)
+                    }
+                }
+            }
         }
     }
 }
@@ -296,19 +310,5 @@ fileprivate struct OptionMenuBar: View {
 }
 
 #Preview {
-    HomeView()
-        .environmentObject(PathModel())
-        .environmentObject(HomeViewModel())
-        .environmentObject(NoteListViewModel())
-}
-
-#Preview {
     OnboardingView()
-}
-
-#Preview {
-    NoteListView()
-        .environmentObject(NoteListViewModel())
-        .environmentObject(PathModel())
-        .environmentObject(HomeViewModel())
 }

@@ -24,10 +24,11 @@ class HomeViewModel: ObservableObject {
     // 추후 로컬이나 서버 DB에서 메세지를 받아올 예정
     init(
         messages: [Message] = [
-            Message(id: "1", content: "Hello", date: Date()),
-            Message(id: "2", content: "Nice!", date: Date()),
-            Message(id: "3", content: "Hello", date: Date()),
-            Message(id: "4", content: "Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!Good!!", date: Date()),
+            Message(id: "1", content: "Hey hakim", date: Date(timeIntervalSince1970: 0)),
+            Message(id: "2", content: "I'm just developing", date: Date(timeIntervalSinceNow: -86400 * 30)),
+            Message(id: "3", content: "Please I need your help🙂", date: Date(timeIntervalSinceNow: -86400 * 30)),
+            Message(id: "4", content: "Maybe you send me mom \"good\" jokes", date: Date(timeIntervalSinceNow: -86400 * 2)),
+            Message(id: "5", content: "Sure I can do that. No problem.", date: Date()),
         ],
         removeMessages: [Message] = [],
         isEditMessageMode: Bool = false,
@@ -85,7 +86,7 @@ extension HomeViewModel {
             if selectedMessages.isEmpty {
                 isEditMessageMode = false
             } else {
-//                setIsDisplayRemoveMessageAlert(true)
+                //                setIsDisplayRemoveMessageAlert(true)
                 // close(x) 버튼을 누르면 선택된 내용들 모두 삭제하고 편집 모드 종료
                 selectedMessages.removeAll()
                 isEditMessageMode = false
@@ -113,5 +114,28 @@ extension HomeViewModel {
                 isShowNoteListModal = true
             }
         }
+    }
+    
+    func getDateSectionMessages() -> [[Message]] {
+        var res = [[Message]]()
+        var tmp = [Message]()
+        
+        for message in messages {
+            if let firstMessage = tmp.first {
+                let daysBetween = firstMessage.date.daysBetween(date: message.date)
+                if daysBetween >= 1 {
+                    res.append(tmp)
+                    tmp.removeAll()
+                    tmp.append(message)
+                } else {
+                    tmp.append(message)
+                }
+            } else {
+                tmp.append(message)
+            }
+        }
+        res.append(tmp)
+        
+        return res
     }
 }
