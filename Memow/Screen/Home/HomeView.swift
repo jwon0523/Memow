@@ -81,6 +81,7 @@ private struct ChatListView: View {
     }
 }
 
+// MARK: - 날짜별 섹션 뷰
 private struct ChatListCellView: View {
     @EnvironmentObject private var homeViewModel: HomeViewModel
     private let columns = [GridItem(.flexible())]
@@ -94,13 +95,29 @@ private struct ChatListCellView: View {
             let sectionMessages = homeViewModel.getDateSectionMessages()
             ForEach(sectionMessages.indices, id:\.self) { selectionIndex in
                 let messages = sectionMessages[selectionIndex]
-                Section(header: Text(messages.first!.date.formattedDay)) {
+                Section(
+                    header: DateSectionHeader(firstMessage: messages.first!)
+                ) {
                     ForEach(messages, id:\.id) { message in
                         MessageBubbleView(message: message)
                     }
                 }
             }
         }
+    }
+}
+
+// MARK: - 날짜 헤더 뷰
+private struct DateSectionHeader: View {
+    let firstMessage: Message
+    
+    fileprivate var body: some View {
+        Text(firstMessage.date.formattedDay)
+            .foregroundStyle(.customFont)
+            .font(.system(size: 14, weight: .regular))
+            .frame(height: 24)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 10)
     }
 }
 
