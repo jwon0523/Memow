@@ -8,7 +8,7 @@
 import Foundation
 
 class HomeViewModel: ObservableObject {
-    @Published private(set) var lastMessageId: String = ""
+    @Published private(set) var lastMessageId: UUID?
     @Published var messages: [Message]
     @Published var removeMessages: [Message]
     @Published var isEditMessageMode: Bool
@@ -24,11 +24,11 @@ class HomeViewModel: ObservableObject {
     // 추후 로컬이나 서버 DB에서 메세지를 받아올 예정
     init(
         messages: [Message] = [
-            Message(id: "1", content: "Hey hakim", date: Date(timeIntervalSince1970: 0)),
-            Message(id: "2", content: "I'm just developing", date: Date(timeIntervalSinceNow: -86400 * 30)),
-            Message(id: "3", content: "Please I need your help🙂", date: Date(timeIntervalSinceNow: -86400 * 30)),
-            Message(id: "4", content: "Maybe you send me mom \"good\" jokes", date: Date(timeIntervalSinceNow: -86400 * 2)),
-            Message(id: "5", content: "Sure I can do that. No problem.", date: Date()),
+            Message(id: UUID(), content: "Hey hakim", date: Date(timeIntervalSince1970: 0)),
+            Message(id: UUID(), content: "I'm just developing", date: Date(timeIntervalSinceNow: -86400 * 30)),
+            Message(id: UUID(), content: "Please I need your help🙂", date: Date(timeIntervalSinceNow: -86400 * 30)),
+            Message(id: UUID(), content: "Maybe you send me mom \"good\" jokes", date: Date(timeIntervalSinceNow: -86400 * 2)),
+            Message(id: UUID(), content: "Sure I can do that. No problem.", date: Date()),
         ],
         removeMessages: [Message] = [],
         isEditMessageMode: Bool = false,
@@ -50,7 +50,7 @@ extension HomeViewModel {
     // 텍스트 문자열만 받아서 messages 배열에 추가
     func sendMessage(_ text: String) {
         // 새로운 Message 생성
-        let newMessage = Message(id: "\(UUID())", content: text, date: Date())
+        let newMessage = Message(id: UUID(), content: text, date: Date())
         messages.append(newMessage)
         
         getLastMessageId()

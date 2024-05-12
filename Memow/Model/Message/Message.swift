@@ -8,13 +8,13 @@
 import Foundation
 
 struct Message: Hashable {
-    let id: String
+    let id: UUID
     var content: String
     let received: Bool
     let date: Date
     
     init(
-        id: String,
+        id: UUID,
         content: String,
         received: Bool = false,
         date: Date

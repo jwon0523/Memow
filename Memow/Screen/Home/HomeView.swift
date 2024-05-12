@@ -112,12 +112,13 @@ private struct DateSectionHeader: View {
     let firstMessage: Message
     
     fileprivate var body: some View {
+        // 바인딩 필요
         Text(firstMessage.date.formattedDay)
             .foregroundStyle(.customFont)
             .font(.system(size: 14, weight: .regular))
             .frame(height: 24)
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 10)
+            .padding(.vertical, 20)
     }
 }
 
