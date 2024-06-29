@@ -55,7 +55,7 @@ struct HomeView: View {
 // MARK: - 채팅 리스트 뷰
 private struct ChatListView: View {
     @EnvironmentObject private var homeViewModel: HomeViewModel
-
+    
     fileprivate var body: some View {
         GeometryReader(content: { geometry in
             ScrollView {
@@ -235,15 +235,15 @@ private struct MessageBubbleView: View {
 private struct MessageFieldView: View {
     @EnvironmentObject private var homeViewModel: HomeViewModel
     @State private var text: String = ""
+    @EnvironmentObject private var messageDataController: MessageDataController
     
     fileprivate var body: some View {
         HStack {
             // TextField를 커스텀한 뷰
             CustomTextField(
-                placeholder:
+                placeholder: 
                     Text("내용을 입력하세요")
-                    .foregroundColor(.customFont)
-                ,
+                    .foregroundColor(.customFont),
                 text: $text
             )
             
@@ -252,10 +252,11 @@ private struct MessageFieldView: View {
                 Button {
                     // 입력된 내용이 없을 경우 전송되지 않음
                     if text != "" {
-                        homeViewModel.sendMessage(text)
+                        MessageDataController().addMessage(content: text)
+                        //homeViewModel.sendMessage(text)
                         text = ""
                         // 전송 버튼 클릭시 키보드 내림
-                        UIApplication.shared.keyboardDown()
+                        // UIApplication.shared.keyboardDown()
                     }
                 } label: {
                     Image("SendMessage")
@@ -267,7 +268,7 @@ private struct MessageFieldView: View {
         .padding(.horizontal)
         .padding(.vertical, 5)
         .frame(minHeight: 40)
-        .background(.customTextField)
+        .background(Color.customTextField)
         .cornerRadius(10)
         .padding(.horizontal)
     }
