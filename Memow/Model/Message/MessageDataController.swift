@@ -29,16 +29,16 @@ class MessageDataController: ObservableObject {
 }
 
 extension MessageDataController {
-    func addMessage(content: String) {
+    func addMessage(content: String, context: NSManagedObjectContext) {
         let newMessage = MessageEntity(context: context)
         newMessage.id = UUID()
         newMessage.content = content
         newMessage.date = Date()
         
-        saveContext()
+        saveContext(context: context)
     }
     
-    func saveContext() {
+    private func saveContext(context: NSManagedObjectContext) {
         if context.hasChanges {
             do {
                 try context.save()
