@@ -85,6 +85,13 @@ private struct ChatListView: View {
 private struct ChatListCellView: View {
     @EnvironmentObject private var homeViewModel: HomeViewModel
     private let columns = [GridItem(.flexible())]
+    @FetchRequest(
+        entity: MessageEntity.entity(),
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \MessageEntity.date, ascending: true)
+        ],
+        animation: .default
+    ) private var messages: FetchedResults<MessageEntity>
     
     fileprivate var body: some View {
         LazyVGrid(
@@ -92,17 +99,25 @@ private struct ChatListCellView: View {
             spacing: 0
 //            pinnedViews: [.sectionHeaders]
         ) {
-            let sectionMessages = homeViewModel.getDateSectionMessages()
-            ForEach(sectionMessages.indices, id:\.self) { selectionIndex in
-                let messages = sectionMessages[selectionIndex]
-                Section(
-                    header: DateSectionHeader(firstMessage: messages.first!)
-                ) {
-                    ForEach(messages, id:\.id) { message in
-                        MessageBubbleView(message: message)
-                    }
-                }
+            ForEach(messages) { message in
+                Text(message.content ?? "No content")
+                    .font(.system(size: 12))
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(Color.customYellow)
+                    .cornerRadius(10)
             }
+//            let sectionMessages = homeViewModel.getDateSectionMessages()
+//            ForEach(sectionMessages.indices, id:\.self) { selectionIndex in
+//                let messages = sectionMessages[selectionIndex]
+//                Section(
+//                    header: DateSectionHeader(firstMessage: messages.first!)
+//                ) {
+//                    ForEach(messages, id:\.id) { message in
+//                        MessageBubbleView(message: message)
+//                    }
+//                }
+//            }
         }
     }
 }
@@ -236,6 +251,7 @@ private struct MessageFieldView: View {
     @EnvironmentObject private var homeViewModel: HomeViewModel
     @State private var text: String = ""
     @EnvironmentObject private var messageDataController: MessageDataController
+    @Environment(\.managedObjectContext) private var viewContext
     
     fileprivate var body: some View {
         HStack {
@@ -252,7 +268,10 @@ private struct MessageFieldView: View {
                 Button {
                     // 입력된 내용이 없을 경우 전송되지 않음
                     if text != "" {
-                        MessageDataController().addMessage(content: text)
+                        MessageDataController().addMessage(
+                            content: text,
+                            context: viewContext
+                        )
                         //homeViewModel.sendMessage(text)
                         text = ""
                         // 전송 버튼 클릭시 키보드 내림
