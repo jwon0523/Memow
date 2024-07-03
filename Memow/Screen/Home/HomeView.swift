@@ -13,6 +13,7 @@ struct HomeView: View {
     @EnvironmentObject private var homeViewModel: HomeViewModel
     @EnvironmentObject private var pathModel: PathModel
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
+    @EnvironmentObject private var messageDataController: MessageDataController
     
     var body: some View {
         VStack(spacing: 0) {
@@ -31,6 +32,12 @@ struct HomeView: View {
                 rightBtnType: homeViewModel.navigationBarRightMode
                 // 오른쪽 버튼 클릭시 작동 함수 필요
             )
+            
+            Button(action: {
+                messageDataController.deleteAllData()
+            }, label: {
+                Text("Delete all message")
+            })
             
             if homeViewModel.isEditMessageMode {
                 OptionMenuBar()

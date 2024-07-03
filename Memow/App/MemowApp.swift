@@ -15,6 +15,7 @@ struct MemowApp: App {
         WindowGroup {
             OnboardingView()
                 .environment(\.managedObjectContext, messageDataController.container.viewContext)
+                .environmentObject(messageDataController)
         }
     }
 }

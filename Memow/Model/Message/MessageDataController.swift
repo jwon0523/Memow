@@ -69,13 +69,27 @@ extension MessageDataController {
         addMessage(content: "Please I need your help🙂")
         saveContext(context: context)
     }
+    
+    // 모든 데이터를 삭제하는 함수
+    func deleteAllData() {
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = MessageEntity.fetchRequest()
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        
+        do {
+            try container.viewContext.execute(deleteRequest)
+            saveContext(context: container.viewContext) // 변경사항 저장
+        } catch {
+            let nserror = error as NSError
+            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+        }
+    }
 }
 
 // preview에 sampleMessage 추가
 extension MessageDataController {
     static var preview: MessageDataController = {
         let controller = MessageDataController()
-        controller.sampleMessageData()
+        controller.addMessage(content: "Hello, World!")
         return controller
     }()
 }
