@@ -83,6 +83,7 @@ private struct ChatListView: View {
 
 // MARK: - 날짜별 섹션 뷰
 private struct ChatListCellView: View {
+    @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var homeViewModel: HomeViewModel
     private let columns = [GridItem(.flexible())]
     @FetchRequest(
@@ -348,5 +349,17 @@ fileprivate struct OptionMenuBar: View {
 }
 
 #Preview {
-    OnboardingView()
+    let controller = MessageDataController.preview
+    let context = controller.context
+    
+    let homeViewModel = HomeViewModel()
+    let pathModel = PathModel()
+    let noteListViewModel = NoteListViewModel()
+    
+    return HomeView()
+        .environment(\.managedObjectContext, context)
+        .environmentObject(homeViewModel)
+        .environmentObject(pathModel)
+        .environmentObject(noteListViewModel)
+        .environmentObject(controller)
 }

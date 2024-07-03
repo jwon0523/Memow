@@ -29,7 +29,8 @@ class MessageDataController: ObservableObject {
 }
 
 extension MessageDataController {
-    func addMessage(content: String, context: NSManagedObjectContext) {
+    func addMessage(content: String, context: NSManagedObjectContext? = nil) {
+        let context = context ?? self.context
         let newMessage = MessageEntity(context: context)
         newMessage.id = UUID()
         newMessage.content = content
@@ -50,7 +51,7 @@ extension MessageDataController {
     }
     
     func fetchMessages() -> [MessageEntity]? {
-        let context = MessageDataController.shared.context
+        let context = self.context
         let fetchRequest = NSFetchRequest<MessageEntity>(entityName: "MessageEntity")
         
         do {
@@ -61,4 +62,20 @@ extension MessageDataController {
             return nil
         }
     }
+    
+    func sampleMessageData() {
+        addMessage(content: "Hello, World!")
+        addMessage(content: "I'm just developing")
+        addMessage(content: "Please I need your help🙂")
+        saveContext(context: context)
+    }
+}
+
+// preview에 sampleMessage 추가
+extension MessageDataController {
+    static var preview: MessageDataController = {
+        let controller = MessageDataController()
+        controller.sampleMessageData()
+        return controller
+    }()
 }
