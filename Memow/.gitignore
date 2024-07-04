@@ -24,7 +24,7 @@ xcuserdata/
 *.perspectivev3
 
 # Xcode 사용자 설정 파일 무시
-*.xcuserstate
-*.xcworkspace/xcuserdata/
-Memow.xcodeproj/
-Memow.xcodeproj/project.xcworkspace/xcuserdata/
+# *.xcuserstate
+# *.xcworkspace/xcuserdata/
+# Memow.xcodeproj/
+# Memow.xcodeproj/project.xcworkspace/xcuserdata/

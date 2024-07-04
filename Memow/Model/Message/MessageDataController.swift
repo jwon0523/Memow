@@ -83,13 +83,18 @@ extension MessageDataController {
             fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
         }
     }
+    
+    func initializePreviewData() {
+        deleteAllData()
+        sampleMessageData()
+    }
 }
 
 // preview에 sampleMessage 추가
 extension MessageDataController {
     static var preview: MessageDataController = {
         let controller = MessageDataController()
-        controller.addMessage(content: "Hello, World!")
+        controller.initializePreviewData()
         return controller
     }()
 }
