@@ -33,12 +33,6 @@ struct HomeView: View {
                 // 오른쪽 버튼 클릭시 작동 함수 필요
             )
             
-            Button(action: {
-                messageDataController.deleteAllData()
-            }, label: {
-                Text("Delete all message")
-            })
-            
             if homeViewModel.isEditMessageMode {
                 OptionMenuBar()
             }
@@ -119,12 +113,7 @@ private struct ChatListCellView: View {
                     ForEach(
                         groupedMessages[dateComponents]!, id: \.self
                     ) { message in
-                        Text(message.content ?? "No content")
-                            .font(.system(size: 12))
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 8)
-                            .background(Color.customYellow)
-                            .cornerRadius(10)
+                        MessageBubbleView(message: message)
                     }
                 }
             }
@@ -150,13 +139,13 @@ private struct DateSectionHeader: View {
 
 // MARK: - 메세지 버블 뷰
 private struct MessageBubbleView: View {
-    private var message: Message
+    private var message: MessageEntity
     @EnvironmentObject private var homeViewModel: HomeViewModel
     @State private var showRightIcon: Bool = false
     @State private var dragOffset: CGSize = .zero
     @State private var moveLeft: Bool = false
     
-    fileprivate init(message: Message) {
+    fileprivate init(message: MessageEntity) {
         self.message = message
     }
     
@@ -178,13 +167,13 @@ private struct MessageBubbleView: View {
                 HStack {
                     VStack {
                         Spacer()
-                        Text(message.date.formattedTime)
+                        Text(message.date!.formattedTime)
                             .foregroundColor(.customFont)
                             .font(.system(size: 8))
                             .padding(.top)
                     }
                     
-                    Text(message.content)
+                    Text(message.content!)
                         .font(.system(size: 12))
                         .padding(.horizontal, 12)
                         .padding(.vertical, 8)
@@ -279,11 +268,10 @@ private struct MessageFieldView: View {
                 Button {
                     // 입력된 내용이 없을 경우 전송되지 않음
                     if text != "" {
-                        MessageDataController().addMessage(
+                        messageDataController.addMessage(
                             content: text,
                             context: viewContext
                         )
-                        //homeViewModel.sendMessage(text)
                         text = ""
                         // 전송 버튼 클릭시 키보드 내림
                         // UIApplication.shared.keyboardDown()
@@ -307,6 +295,8 @@ private struct MessageFieldView: View {
 // MARK: - 선택모드시 네비게이션바 아래에 나타나는 옵션뷰
 fileprivate struct OptionMenuBar: View {
     @EnvironmentObject private var homeViewModel: HomeViewModel
+    @EnvironmentObject private var messageDataController: MessageDataController
+    @Environment(\.managedObjectContext) private var viewContext
     
     fileprivate var body: some View {
         HStack {
@@ -314,7 +304,9 @@ fileprivate struct OptionMenuBar: View {
             
             Button(action: {
                 withAnimation {
-                    homeViewModel.removeBtnTapped()
+                    homeViewModel.removeBtnTapped(
+                        messageDataController: messageDataController, context: viewContext
+                    )
                 }
             }, label: {
                 Text("Delete")

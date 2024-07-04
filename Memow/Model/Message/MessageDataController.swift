@@ -39,6 +39,13 @@ extension MessageDataController {
         saveContext(context: context)
     }
     
+    func deleteMessage(_ message: MessageEntity, context: NSManagedObjectContext? = nil) {
+        let context = context ?? self.context
+        context.delete(message)
+        
+        saveContext(context: context)
+    }
+    
     private func saveContext(context: NSManagedObjectContext) {
         if context.hasChanges {
             do {
@@ -77,7 +84,7 @@ extension MessageDataController {
         
         do {
             try container.viewContext.execute(deleteRequest)
-            saveContext(context: container.viewContext) // 변경사항 저장
+            saveContext(context: container.viewContext)
         } catch {
             let nserror = error as NSError
             fatalError("Unresolved error \(nserror), \(nserror.userInfo)")

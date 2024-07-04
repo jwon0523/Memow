@@ -6,14 +6,15 @@
 //
 
 import Foundation
+import CoreData
 
 class HomeViewModel: ObservableObject {
     @Published private(set) var lastMessageId: UUID?
-    @Published var messages: [Message]
-    @Published var removeMessages: [Message]
+    @Published var messages: [MessageEntity]
+    @Published var removeMessages: [MessageEntity]
     @Published var isEditMessageMode: Bool
     @Published var isDisplayRemoveNoteAlert: Bool
-    @Published var selectedMessages: Set<Message>
+    @Published var selectedMessages: Set<MessageEntity>
     @Published var isShowNoteListModal: Bool
     
     var navigationBarRightMode: NavigationBtnType {
@@ -23,17 +24,11 @@ class HomeViewModel: ObservableObject {
     // 앱 실행시 빈 배열로 messages 배열 초기화
     // 추후 로컬이나 서버 DB에서 메세지를 받아올 예정
     init(
-        messages: [Message] = [
-            Message(id: UUID(), content: "Hey hakim", date: Date(timeIntervalSince1970: 0)),
-            Message(id: UUID(), content: "I'm just developing", date: Date(timeIntervalSinceNow: -86400 * 30)),
-            Message(id: UUID(), content: "Please I need your help🙂", date: Date(timeIntervalSinceNow: -86400 * 30)),
-            Message(id: UUID(), content: "Maybe you send me mom \"good\" jokes", date: Date(timeIntervalSinceNow: -86400 * 2)),
-            Message(id: UUID(), content: "Sure I can do that. No problem.", date: Date()),
-        ],
-        removeMessages: [Message] = [],
+        messages: [MessageEntity] = [],
+        removeMessages: [MessageEntity] = [],
         isEditMessageMode: Bool = false,
         isDisplayRemoveNoteAlert: Bool = false,
-        selectedMessages: Set<Message> = [],
+        selectedMessages: Set<MessageEntity> = [],
         isShowNoteListModal: Bool = false
     ) {
         self.messages = messages
@@ -47,15 +42,6 @@ class HomeViewModel: ObservableObject {
 
 // 함수 기능 추가
 extension HomeViewModel {
-    // 텍스트 문자열만 받아서 messages 배열에 추가
-    func sendMessage(_ text: String) {
-        // 새로운 Message 생성
-        let newMessage = Message(id: UUID(), content: text, date: Date())
-        messages.append(newMessage)
-        
-        getLastMessageId()
-    }
-    
     // HomeView 안에서 마지막 메세지로 자동 스크롤 하기 위해 lastMessageId 얻는 함수
     func getLastMessageId() {
         if let id = self.messages.last?.id {
@@ -63,18 +49,19 @@ extension HomeViewModel {
         }
     }
     
-    func removeMessage(_ message: Message) {
+    func removeMessage(_ message: MessageEntity) {
         if let index = messages.firstIndex(where: { $0.id == message.id }) {
             messages.remove(at: index)
         }
     }
     
-    func removeBtnTapped() {
-        messages.removeAll { message in
-            selectedMessages.contains(message)
+    func removeBtnTapped(
+        messageDataController: MessageDataController,
+        context: NSManagedObjectContext? = nil
+    ) {
+        for message in selectedMessages {
+            messageDataController.deleteMessage(message, context: context)
         }
-        selectedMessages.removeAll()
-        isEditMessageMode = false
     }
     
     func setIsDisplayRemoveMessageAlert(_ isDisplay: Bool) {
@@ -98,7 +85,7 @@ extension HomeViewModel {
     
     // 메세지의 id값이 들어왔을 때 selectedMessages에 같은 값이 있으면
     // 삭제하면서 선택 취소하고, 없다면 Set배열에 넣어주면서 선택 체크
-    func messageSelectedBoxTapped(_ message: Message) {
+    func messageSelectedBoxTapped(_ message: MessageEntity) {
         if selectedMessages.contains(message) {
             selectedMessages.remove(message)
         } else {
@@ -114,29 +101,6 @@ extension HomeViewModel {
                 isShowNoteListModal = true
             }
         }
-    }
-    
-    func getDateSectionMessages() -> [[Message]] {
-        var res = [[Message]]()
-        var tmp = [Message]()
-        
-        for message in messages {
-            if let firstMessage = tmp.first {
-                let daysBetween = firstMessage.date.daysBetween(date: message.date)
-                if daysBetween >= 1 {
-                    res.append(tmp)
-                    tmp.removeAll()
-                    tmp.append(message)
-                } else {
-                    tmp.append(message)
-                }
-            } else {
-                tmp.append(message)
-            }
-        }
-        res.append(tmp)
-        
-        return res
     }
     
     func groupMessagesByDate(messages: [MessageEntity]) -> [DateComponents: [MessageEntity]] {

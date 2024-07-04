@@ -253,5 +253,17 @@ private struct ContinueBtnView: View {
 }
 
 #Preview {
-    OnboardingView()
+    let controller = MessageDataController.preview
+    let context = controller.context
+    
+    let homeViewModel = HomeViewModel()
+    let pathModel = PathModel()
+    let noteListViewModel = NoteListViewModel()
+    
+    return OnboardingView()
+        .environment(\.managedObjectContext, context)
+        .environmentObject(homeViewModel)
+        .environmentObject(pathModel)
+        .environmentObject(noteListViewModel)
+        .environmentObject(controller)
 }
