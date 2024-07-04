@@ -138,4 +138,23 @@ extension HomeViewModel {
         
         return res
     }
+    
+    func groupMessagesByDate(messages: [MessageEntity]) -> [DateComponents: [MessageEntity]] {
+        var groupedMessages = [DateComponents: [MessageEntity]]()
+        for message in messages {
+            let components = Calendar.current.dateComponents([.year, .month, .day], from: message.date!)
+            if groupedMessages[components] == nil {
+                groupedMessages[components] = [MessageEntity]()
+            }
+            groupedMessages[components]?.append(message)
+        }
+        return groupedMessages
+    }
+    
+    func formattedDateComponents(_ dateComponents: DateComponents) -> String {
+        let year = dateComponents.year ?? 0
+        let month = String(format: "%02d", dateComponents.month ?? 0)
+        let day = String(format: "%02d", dateComponents.day ?? 0)
+        return "\(year)년 \(month)월 \(day)일"
+    }
 }

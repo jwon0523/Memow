@@ -102,44 +102,47 @@ private struct ChatListCellView: View {
     ) private var messages: FetchedResults<MessageEntity>
     
     fileprivate var body: some View {
+        let groupedMessages = homeViewModel.groupMessagesByDate(
+            messages: messages.map { $0 }
+        )
         LazyVGrid(
             columns: columns,
             spacing: 0
 //            pinnedViews: [.sectionHeaders]
         ) {
-            ForEach(messages) { message in
-                Text(message.content ?? "No content")
-                    .font(.system(size: 12))
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .background(Color.customYellow)
-                    .cornerRadius(10)
+            ForEach(
+                groupedMessages.sortedKeys(), id: \.self
+            ) { dateComponents in
+                Section(
+                    header: DateSectionHeader(dateComponents: dateComponents)
+                ) {
+                    ForEach(
+                        groupedMessages[dateComponents]!, id: \.self
+                    ) { message in
+                        Text(message.content ?? "No content")
+                            .font(.system(size: 12))
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .background(Color.customYellow)
+                            .cornerRadius(10)
+                    }
+                }
             }
-//            let sectionMessages = homeViewModel.getDateSectionMessages()
-//            ForEach(sectionMessages.indices, id:\.self) { selectionIndex in
-//                let messages = sectionMessages[selectionIndex]
-//                Section(
-//                    header: DateSectionHeader(firstMessage: messages.first!)
-//                ) {
-//                    ForEach(messages, id:\.id) { message in
-//                        MessageBubbleView(message: message)
-//                    }
-//                }
-//            }
         }
     }
 }
 
 // MARK: - 날짜 헤더 뷰
 private struct DateSectionHeader: View {
-    let firstMessage: Message
+    @EnvironmentObject private var homeViewModel: HomeViewModel
+    let dateComponents: DateComponents
     
     fileprivate var body: some View {
         // 바인딩 필요
-        Text(firstMessage.date.formattedDay)
+        Text(homeViewModel.formattedDateComponents(dateComponents))
             .foregroundStyle(.customFont)
             .font(.system(size: 14, weight: .regular))
-            .frame(height: 24)
+            .frame(height: 20)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 20)
     }
