@@ -13,8 +13,11 @@ class MessageDataController: ObservableObject {
     
     let container: NSPersistentContainer
     
-    init() {
+    init(inMemory: Bool = false) {
         container = NSPersistentContainer(name: "MessageEntity")
+        if inMemory {
+            container.persistentStoreDescriptions.first?.url = URL(fileURLWithPath: "/dev/null")
+        }
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
                 print("Unresolved error \(error), \(error.userInfo)")
@@ -100,7 +103,7 @@ extension MessageDataController {
 // preview에 sampleMessage 추가
 extension MessageDataController {
     static var preview: MessageDataController = {
-        let controller = MessageDataController()
+        let controller = MessageDataController(inMemory: true)
         controller.initializePreviewData()
         return controller
     }()

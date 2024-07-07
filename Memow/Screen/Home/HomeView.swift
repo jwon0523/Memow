@@ -14,6 +14,7 @@ struct HomeView: View {
     @EnvironmentObject private var pathModel: PathModel
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
     @EnvironmentObject private var messageDataController: MessageDataController
+    @EnvironmentObject private var noteDataController: NoteDataController
     
     var body: some View {
         VStack(spacing: 0) {
@@ -49,6 +50,10 @@ struct HomeView: View {
             onDismiss: noteListViewModel.removeAllSelectedNote
         ) {
             NoteListView()
+                .environment(
+                    \.managedObjectContext,
+                     noteDataController.container.viewContext
+                )
         }
     }
 }
@@ -305,7 +310,8 @@ fileprivate struct OptionMenuBar: View {
             Button(action: {
                 withAnimation {
                     homeViewModel.removeBtnTapped(
-                        messageDataController: messageDataController, context: viewContext
+                        messageDataController: messageDataController, 
+                        context: viewContext
                     )
                 }
             }, label: {

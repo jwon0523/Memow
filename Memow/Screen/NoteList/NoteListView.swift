@@ -134,18 +134,11 @@ private struct NoteListCellView: View {
     ) private var notes: FetchedResults<NoteEntity>
     
     fileprivate var body: some View {
-//        List(noteListViewModel.notes, id:\.id) { note in
-//            NoteContentView(note: note)
-//        }
-//        // 리스트 간격 벌려주는 속성
-//        .listRowSpacing(20)
-        ForEach(notes, id:\.id) { note in
-            Text(note.title ?? "No title")
-                .lineLimit(1)
-                .font(.system(size: 16))
-                .foregroundColor(.customYellow)
-                .padding(.bottom, 8)
+        List(notes.map { $0.note }, id:\.id) { note in
+            NoteContentView(note: note)
         }
+        // 리스트 간격 벌려주는 속성
+        .listRowSpacing(20)
     }
 }
 
@@ -269,6 +262,8 @@ private struct WriteNoteBtnView: View {
 private struct MoveMessageToNoteListBtnView: View {
     @EnvironmentObject private var homeViewModel: HomeViewModel
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
+    @EnvironmentObject private var noteDataController: NoteDataController
+    @Environment(\.managedObjectContext) private var viewContext
     
     fileprivate var body: some View {
         VStack {
@@ -277,7 +272,9 @@ private struct MoveMessageToNoteListBtnView: View {
                 Button(action: {
                     noteListViewModel.addSelectedMessageToNote(
                         selectedNotes: noteListViewModel.selectedNote,
-                        selectedMessages: homeViewModel.selectedMessages
+                        selectedMessages: homeViewModel.selectedMessages,
+                        noteDataController: noteDataController,
+                        context: viewContext
                     )
                     homeViewModel.toggleNoteListModal()
                     homeViewModel.toggleEditMessageMode()
@@ -295,8 +292,21 @@ private struct MoveMessageToNoteListBtnView: View {
 }
 
 #Preview {
-    NoteListView()
-        .environmentObject(PathModel())
-        .environmentObject(HomeViewModel())
-        .environmentObject(NoteListViewModel())
+    let context = NoteDataController.preview.container.viewContext
+    
+    for _ in 0..<10 {
+        let newNote = NoteEntity(context: context)
+        newNote.id = UUID()
+        newNote.title = "Sample Note"
+        newNote.content = "This is a sample content for the note."
+        newNote.date = Date()
+    }
+    
+    return Group {
+        NoteListView()
+            .environment(\.managedObjectContext, context)
+            .environmentObject(PathModel())
+            .environmentObject(HomeViewModel())
+            .environmentObject(NoteListViewModel())
+    }
 }

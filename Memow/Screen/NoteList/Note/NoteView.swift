@@ -33,7 +33,10 @@ struct NoteView: View {
                                 context: viewContext
                             )
                         } else {
-                            noteListViewModel.updateNote(noteViewModel.note
+                            noteListViewModel.updateNote(
+                                noteViewModel.note,
+                                noteDataController: noteDataController,
+                                context: viewContext
                             )
                         }
                         pathModel.paths.removeLast()

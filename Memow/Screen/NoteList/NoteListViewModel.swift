@@ -24,27 +24,7 @@ class NoteListViewModel: ObservableObject {
     
     init(
         // notes의 값은 테스트를 위한 것이므로 테스트 종료 후 빈 배열로 되돌려놓기
-        notes: [Note] = [
-            Note(
-                title: "생각의 플로우",
-                content: "메모장을 만들어 보자!메모장을 만들어 보자!메모장을 만들어 보자!메모장을 만들어 보자!",
-                date: Date()
-            ),
-            Note(
-                title: "생각의 플로우",
-                content: "메모장을 만들어 보자!메모장을 만들어 보자!메모장을 만들어 보자!메모장을 만들어 보자!",
-                date: Date()
-            ),
-            Note(
-                title: "생각의 플로우",
-                content: "메모장을 만들어 보자!메모장을 만들어 보자!메모장을 만들어 보자!메모장을 만들어 보자!",
-                date: Date()
-            ),Note(
-                title: "생각의 플로우",
-                content: "메모장을 만들어 보자!",
-                date: Date()
-            ),
-        ],
+        notes: [Note] = [],
         isEditNoteMode: Bool = false,
 //        removeNotes: [Note] = [],
         isDisplayRemoveNoteAlert: Bool = false,
@@ -64,26 +44,41 @@ extension NoteListViewModel {
         noteDataController: NoteDataController,
         context: NSManagedObjectContext
     ) {
-        noteDataController.addNote(note: note, context: context)
+        noteDataController.addNoteData(note: note, context: context)
     }
     
-    func updateNote(_ note: Note) {
-        if let index = notes.firstIndex(where: { $0.id == note.id }) {
-            notes[index] = note
-        }
+    func updateNote(
+        _ note: Note,
+        noteDataController: NoteDataController,
+        context: NSManagedObjectContext
+    ) {
+        noteDataController.updateNoteData(
+            id: note.id,
+            updateTitle: note.title,
+            updateContent: note.content,
+            context: context
+        )
     }
     
     // 메세지 노트로 옮김
     func addSelectedMessageToNote(
         selectedNotes: Set<Note>,
-        selectedMessages: Set<MessageEntity>
+        selectedMessages: Set<MessageEntity>,
+        noteDataController: NoteDataController,
+        context: NSManagedObjectContext
     ) {
+        print(selectedMessages.count)
         for selectedNote in selectedNotes {
+            var combinedContent = selectedNote.content
             for selectedMessage in selectedMessages {
-                if let index = notes.firstIndex(where: { $0.id == selectedNote.id }) {
-                    notes[index].content += "\n" + selectedMessage.content!
-                }
+                combinedContent += "\n" + (selectedMessage.content ?? "")
             }
+            noteDataController.updateNoteData(
+                id: selectedNote.id,
+                updateTitle: selectedNote.title,
+                updateContent: combinedContent,
+                context: context
+            )
         }
     }
     

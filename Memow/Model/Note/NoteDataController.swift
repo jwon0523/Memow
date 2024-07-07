@@ -13,8 +13,11 @@ class NoteDataController: ObservableObject {
     
     let container: NSPersistentContainer
     
-    init() {
+    init(inMemory: Bool = false) {
         container = NSPersistentContainer(name: "NoteEntity")
+        if inMemory {
+            container.persistentStoreDescriptions.first?.url = URL(fileURLWithPath: "/dev/null")
+        }
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
                 print("Unresolved error \(error), \(error.userInfo)")
@@ -29,7 +32,7 @@ class NoteDataController: ObservableObject {
 }
 
 extension NoteDataController {
-    func addNote(
+    func addNoteData(
         note: Note,
         context: NSManagedObjectContext? = nil
     ) {
@@ -41,6 +44,32 @@ extension NoteDataController {
         newNote.date = note.date
         
         saveContext(context: context)
+    }
+    
+    func updateNoteData(
+        id: UUID,
+        updateTitle: String,
+        updateContent: String,
+        context: NSManagedObjectContext? = nil
+    ) {
+        let context = context ?? self.context
+        let fetchRequest: NSFetchRequest<NoteEntity> = NoteEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        
+        do {
+            let notes = try context.fetch(fetchRequest)
+            if let noteToUpdate = notes.first {
+                noteToUpdate.title = updateTitle
+                noteToUpdate.content = updateContent
+                
+                saveContext(context: context)
+            } else {
+                print("No note found with the specified ID.")
+            }
+        } catch {
+            let nserror = error as NSError
+            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+        }
     }
     
     func deleteMessage(
@@ -77,28 +106,26 @@ extension NoteDataController {
             fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
         }
     }
-    
-    func sampleNoteData() {
-        let note = Note(
-            title: "생각의 플로우",
-            content: "메모장을 만들어 보자!메모장을 만들어 보자!메모장을 만들어 보자!메모장을 만들어 보자!",
-            date: Date()
-        )
-        addNote(note: note)
-    }
-    
-    func initializePreviewData() {
-        sampleNoteData()
-        deleteAllData()
-    }
 }
 
 // preview에 sampleMessage 추가
 extension NoteDataController {
     static var preview: NoteDataController = {
-        let controller = NoteDataController()
-        controller.initializePreviewData()
-        return controller
+        let result = NoteDataController(inMemory: true)
+        let viewContext = result.container.viewContext
+        for _ in 0..<10 {
+            let newNote = NoteEntity(context: viewContext)
+            newNote.id = UUID()
+            newNote.title = "Sample Note"
+            newNote.content = "This is a sample content for the note."
+            newNote.date = Date()
+        }
+        do {
+            try viewContext.save()
+        } catch {
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+        return result
     }()
 }
-
