@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreData
 
 class NoteListViewModel: ObservableObject {
     @Published var notes: [Note]
@@ -58,8 +59,12 @@ class NoteListViewModel: ObservableObject {
 }
 
 extension NoteListViewModel {
-    func addNote(_ note: Note) {
-        notes.append(note)
+    func addNote(
+        _ note: Note,
+        noteDataController: NoteDataController,
+        context: NSManagedObjectContext
+    ) {
+        noteDataController.addNote(note: note, context: context)
     }
     
     func updateNote(_ note: Note) {

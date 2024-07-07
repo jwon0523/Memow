@@ -32,6 +32,8 @@
 		0EB623292C3015DF00262EF6 /* MessageEntity.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0EB623272C3015DF00262EF6 /* MessageEntity.xcdatamodeld */; };
 		0EB6232B2C30168C00262EF6 /* MessageDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB6232A2C30168C00262EF6 /* MessageDataController.swift */; };
 		0ED1D68C2BB84A3A0097CE2C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0ED1D68B2BB84A3A0097CE2C /* LaunchScreen.storyboard */; };
+		0ED6177C2C3A6DB00062E5C9 /* NoteEntity.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0ED6177A2C3A6DB00062E5C9 /* NoteEntity.xcdatamodeld */; };
+		0ED6177E2C3A6DE30062E5C9 /* NoteDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED6177D2C3A6DE30062E5C9 /* NoteDataController.swift */; };
 		0EE2DB2A2C36BA99000413EC /* Dictionary+ Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE2DB292C36BA99000413EC /* Dictionary+ Extension.swift */; };
 /* End PBXBuildFile section */
 
@@ -62,6 +64,8 @@
 		0EB623282C3015DF00262EF6 /* MessageEntity.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MessageEntity.xcdatamodel; sourceTree = "<group>"; };
 		0EB6232A2C30168C00262EF6 /* MessageDataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDataController.swift; sourceTree = "<group>"; };
 		0ED1D68B2BB84A3A0097CE2C /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		0ED6177B2C3A6DB00062E5C9 /* NoteEntity.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = NoteEntity.xcdatamodel; sourceTree = "<group>"; };
+		0ED6177D2C3A6DE30062E5C9 /* NoteDataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDataController.swift; sourceTree = "<group>"; };
 		0EE2DB292C36BA99000413EC /* Dictionary+ Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+ Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -90,6 +94,8 @@
 			isa = PBXGroup;
 			children = (
 				0E08771F2BA83F610090FD14 /* Note.swift */,
+				0ED6177A2C3A6DB00062E5C9 /* NoteEntity.xcdatamodeld */,
+				0ED6177D2C3A6DE30062E5C9 /* NoteDataController.swift */,
 			);
 			path = Note;
 			sourceTree = "<group>";
@@ -326,6 +332,7 @@
 			files = (
 				0E437E632BAD85E10069252D /* Onboarding.swift in Sources */,
 				0E437E652BAD9C940069252D /* settingBtn.swift in Sources */,
+				0ED6177E2C3A6DE30062E5C9 /* NoteDataController.swift in Sources */,
 				0E53A6C32BA4613C002C37C5 /* Date+ Extension.swift in Sources */,
 				0E53A6BD2BA45889002C37C5 /* CustomNavigationBar.swift in Sources */,
 				0E08771D2BA83F4E0090FD14 /* NoteListView.swift in Sources */,
@@ -334,6 +341,7 @@
 				0E437E5B2BAD61DE0069252D /* NoteViewModel.swift in Sources */,
 				0E0877202BA83F610090FD14 /* Note.swift in Sources */,
 				0EB6232B2C30168C00262EF6 /* MessageDataController.swift in Sources */,
+				0ED6177C2C3A6DB00062E5C9 /* NoteEntity.xcdatamodeld in Sources */,
 				0E53A6F62BA6A8C1002C37C5 /* CustomTextField.swift in Sources */,
 				0EE2DB2A2C36BA99000413EC /* Dictionary+ Extension.swift in Sources */,
 				0E53A6BB2BA452D8002C37C5 /* NavigationBtnType.swift in Sources */,
@@ -565,6 +573,17 @@
 			);
 			currentVersion = 0EB623282C3015DF00262EF6 /* MessageEntity.xcdatamodel */;
 			path = MessageEntity.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		0ED6177A2C3A6DB00062E5C9 /* NoteEntity.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				0ED6177B2C3A6DB00062E5C9 /* NoteEntity.xcdatamodel */,
+			);
+			currentVersion = 0ED6177B2C3A6DB00062E5C9 /* NoteEntity.xcdatamodel */;
+			name = NoteEntity.xcdatamodeld;
+			path = /Users/jaewonlee/Development/IOS/Memow/Memow/Model/Note/NoteEntity.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

@@ -124,13 +124,28 @@ private struct SearchBarView: View {
 // MARK: - 노트 리스트 셀 뷰
 private struct NoteListCellView: View {
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
+    @Environment(\.managedObjectContext) private var viewContext
+    @FetchRequest(
+        entity: NoteEntity.entity(),
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \NoteEntity.date, ascending: true)
+        ],
+        animation: .default
+    ) private var notes: FetchedResults<NoteEntity>
     
     fileprivate var body: some View {
-        List(noteListViewModel.notes, id:\.id) { note in
-            NoteContentView(note: note)
+//        List(noteListViewModel.notes, id:\.id) { note in
+//            NoteContentView(note: note)
+//        }
+//        // 리스트 간격 벌려주는 속성
+//        .listRowSpacing(20)
+        ForEach(notes, id:\.id) { note in
+            Text(note.title ?? "No title")
+                .lineLimit(1)
+                .font(.system(size: 16))
+                .foregroundColor(.customYellow)
+                .padding(.bottom, 8)
         }
-        // 리스트 간격 벌려주는 속성
-        .listRowSpacing(20)
     }
 }
 
@@ -281,17 +296,6 @@ private struct MoveMessageToNoteListBtnView: View {
 
 #Preview {
     NoteListView()
-        .environmentObject(NoteListViewModel())
-        .environmentObject(PathModel())
-        .environmentObject(HomeViewModel())
-}
-
-#Preview {
-    OnboardingView()
-}
-
-#Preview {
-    HomeView()
         .environmentObject(PathModel())
         .environmentObject(HomeViewModel())
         .environmentObject(NoteListViewModel())

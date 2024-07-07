@@ -13,6 +13,8 @@ private let noteHorizontalPaddingSize: CGFloat = 20
 struct NoteView: View {
     @EnvironmentObject private var pathModel: PathModel
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
+    @EnvironmentObject private var noteDataController: NoteDataController
+    @Environment(\.managedObjectContext) private var viewContext
     @StateObject var noteViewModel: NoteViewModel
     @State var isCreateMode: Bool = true
     
@@ -25,7 +27,11 @@ struct NoteView: View {
                     },
                     rightBtnAction: {
                         if isCreateMode {
-                            noteListViewModel.addNote(noteViewModel.note)
+                            noteListViewModel.addNote(
+                                noteViewModel.note,
+                                noteDataController: noteDataController,
+                                context: viewContext
+                            )
                         } else {
                             noteListViewModel.updateNote(noteViewModel.note
                             )

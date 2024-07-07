@@ -10,12 +10,13 @@ import SwiftUI
 @main
 struct MemowApp: App {
     let messageDataController = MessageDataController.shared
+    let noteDataController = NoteDataController.shared
     
     var body: some Scene {
         WindowGroup {
             OnboardingView()
-                .environment(\.managedObjectContext, messageDataController.container.viewContext)
                 .environmentObject(messageDataController)
+                .environmentObject(noteDataController)
         }
     }
 }
