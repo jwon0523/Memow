@@ -67,10 +67,9 @@ extension NoteListViewModel {
         noteDataController: NoteDataController,
         context: NSManagedObjectContext
     ) {
-        print(selectedMessages.count)
         for selectedNote in selectedNotes {
             var combinedContent = selectedNote.content
-            for selectedMessage in selectedMessages {
+            for selectedMessage in selectedMessages.sorted(by: { $0.date! < $1.date! }) {
                 if combinedContent == "" {
                     combinedContent = selectedMessage.content ?? ""
                 } else {
