@@ -198,7 +198,6 @@ private struct NoteContentView: View {
                             .foregroundColor(.customYellow)
                             .padding(.bottom, 8)
                         
-                        
                         Text(note.content)
                             .multilineTextAlignment(.leading)
                             .lineLimit(1)

@@ -71,7 +71,11 @@ extension NoteListViewModel {
         for selectedNote in selectedNotes {
             var combinedContent = selectedNote.content
             for selectedMessage in selectedMessages {
-                combinedContent += "\n" + (selectedMessage.content ?? "")
+                if combinedContent == "" {
+                    combinedContent = selectedMessage.content ?? ""
+                } else {
+                    combinedContent += "\n" + (selectedMessage.content ?? "")
+                }
             }
             noteDataController.updateNoteData(
                 id: selectedNote.id,
