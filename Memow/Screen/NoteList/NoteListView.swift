@@ -124,9 +124,17 @@ private struct SearchBarView: View {
 // MARK: - 노트 리스트 셀 뷰
 private struct NoteListCellView: View {
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
+    @Environment(\.managedObjectContext) private var viewContext
+    @FetchRequest(
+        entity: NoteEntity.entity(),
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \NoteEntity.date, ascending: true)
+        ],
+        animation: .default
+    ) private var notes: FetchedResults<NoteEntity>
     
     fileprivate var body: some View {
-        List(noteListViewModel.notes, id:\.id) { note in
+        List(notes.map { $0.note }, id:\.id) { note in
             NoteContentView(note: note)
         }
         // 리스트 간격 벌려주는 속성
@@ -189,7 +197,6 @@ private struct NoteContentView: View {
                             .font(.system(size: 16))
                             .foregroundColor(.customYellow)
                             .padding(.bottom, 8)
-                        
                         
                         Text(note.content)
                             .multilineTextAlignment(.leading)
@@ -254,6 +261,8 @@ private struct WriteNoteBtnView: View {
 private struct MoveMessageToNoteListBtnView: View {
     @EnvironmentObject private var homeViewModel: HomeViewModel
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
+    @EnvironmentObject private var noteDataController: NoteDataController
+    @Environment(\.managedObjectContext) private var viewContext
     
     fileprivate var body: some View {
         VStack {
@@ -262,7 +271,9 @@ private struct MoveMessageToNoteListBtnView: View {
                 Button(action: {
                     noteListViewModel.addSelectedMessageToNote(
                         selectedNotes: noteListViewModel.selectedNote,
-                        selectedMessages: homeViewModel.selectedMessages
+                        selectedMessages: homeViewModel.selectedMessages,
+                        noteDataController: noteDataController,
+                        context: viewContext
                     )
                     homeViewModel.toggleNoteListModal()
                     homeViewModel.toggleEditMessageMode()
@@ -280,19 +291,21 @@ private struct MoveMessageToNoteListBtnView: View {
 }
 
 #Preview {
-    NoteListView()
-        .environmentObject(NoteListViewModel())
-        .environmentObject(PathModel())
-        .environmentObject(HomeViewModel())
-}
-
-#Preview {
-    OnboardingView()
-}
-
-#Preview {
-    HomeView()
-        .environmentObject(PathModel())
-        .environmentObject(HomeViewModel())
-        .environmentObject(NoteListViewModel())
+    let context = NoteDataController.preview.container.viewContext
+    
+    for _ in 0..<10 {
+        let newNote = NoteEntity(context: context)
+        newNote.id = UUID()
+        newNote.title = "Sample Note"
+        newNote.content = "This is a sample content for the note."
+        newNote.date = Date()
+    }
+    
+    return Group {
+        NoteListView()
+            .environment(\.managedObjectContext, context)
+            .environmentObject(PathModel())
+            .environmentObject(HomeViewModel())
+            .environmentObject(NoteListViewModel())
+    }
 }

@@ -16,7 +16,11 @@ DerivedData/
 .DS_Store
 
 # Various settings
+<<<<<<< HEAD
 xcuserdata/
+=======
+# xcuserdata/
+>>>>>>> origin/feature
 *.moved-aside
 *.pbxuser
 *.mode1v3

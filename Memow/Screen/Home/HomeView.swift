@@ -13,6 +13,8 @@ struct HomeView: View {
     @EnvironmentObject private var homeViewModel: HomeViewModel
     @EnvironmentObject private var pathModel: PathModel
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
+    @EnvironmentObject private var messageDataController: MessageDataController
+    @EnvironmentObject private var noteDataController: NoteDataController
     
     var body: some View {
         VStack(spacing: 0) {
@@ -48,6 +50,10 @@ struct HomeView: View {
             onDismiss: noteListViewModel.removeAllSelectedNote
         ) {
             NoteListView()
+                .environment(
+                    \.managedObjectContext,
+                     noteDataController.container.viewContext
+                )
         }
     }
 }
@@ -83,6 +89,7 @@ private struct ChatListView: View {
 
 // MARK: - 날짜별 섹션 뷰
 private struct ChatListCellView: View {
+    @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var homeViewModel: HomeViewModel
     private let columns = [GridItem(.flexible())]
     @FetchRequest(
@@ -94,44 +101,42 @@ private struct ChatListCellView: View {
     ) private var messages: FetchedResults<MessageEntity>
     
     fileprivate var body: some View {
+        let groupedMessages = homeViewModel.groupMessagesByDate(
+            messages: messages.map { $0 }
+        )
         LazyVGrid(
             columns: columns,
             spacing: 0
 //            pinnedViews: [.sectionHeaders]
         ) {
-            ForEach(messages) { message in
-                Text(message.content ?? "No content")
-                    .font(.system(size: 12))
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .background(Color.customYellow)
-                    .cornerRadius(10)
+            ForEach(
+                groupedMessages.sortedKeys(), id: \.self
+            ) { dateComponents in
+                Section(
+                    header: DateSectionHeader(dateComponents: dateComponents)
+                ) {
+                    ForEach(
+                        groupedMessages[dateComponents]!, id: \.self
+                    ) { message in
+                        MessageBubbleView(message: message)
+                    }
+                }
             }
-//            let sectionMessages = homeViewModel.getDateSectionMessages()
-//            ForEach(sectionMessages.indices, id:\.self) { selectionIndex in
-//                let messages = sectionMessages[selectionIndex]
-//                Section(
-//                    header: DateSectionHeader(firstMessage: messages.first!)
-//                ) {
-//                    ForEach(messages, id:\.id) { message in
-//                        MessageBubbleView(message: message)
-//                    }
-//                }
-//            }
         }
     }
 }
 
 // MARK: - 날짜 헤더 뷰
 private struct DateSectionHeader: View {
-    let firstMessage: Message
+    @EnvironmentObject private var homeViewModel: HomeViewModel
+    let dateComponents: DateComponents
     
     fileprivate var body: some View {
         // 바인딩 필요
-        Text(firstMessage.date.formattedDay)
+        Text(homeViewModel.formattedDateComponents(dateComponents))
             .foregroundStyle(.customFont)
             .font(.system(size: 14, weight: .regular))
-            .frame(height: 24)
+            .frame(height: 20)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 20)
     }
@@ -139,13 +144,13 @@ private struct DateSectionHeader: View {
 
 // MARK: - 메세지 버블 뷰
 private struct MessageBubbleView: View {
-    private var message: Message
+    private var message: MessageEntity
     @EnvironmentObject private var homeViewModel: HomeViewModel
     @State private var showRightIcon: Bool = false
     @State private var dragOffset: CGSize = .zero
     @State private var moveLeft: Bool = false
     
-    fileprivate init(message: Message) {
+    fileprivate init(message: MessageEntity) {
         self.message = message
     }
     
@@ -167,13 +172,13 @@ private struct MessageBubbleView: View {
                 HStack {
                     VStack {
                         Spacer()
-                        Text(message.date.formattedTime)
+                        Text(message.date!.formattedTime)
                             .foregroundColor(.customFont)
                             .font(.system(size: 8))
                             .padding(.top)
                     }
                     
-                    Text(message.content)
+                    Text(message.content!)
                         .font(.system(size: 12))
                         .padding(.horizontal, 12)
                         .padding(.vertical, 8)
@@ -268,11 +273,10 @@ private struct MessageFieldView: View {
                 Button {
                     // 입력된 내용이 없을 경우 전송되지 않음
                     if text != "" {
-                        MessageDataController().addMessage(
+                        messageDataController.addMessage(
                             content: text,
                             context: viewContext
                         )
-                        //homeViewModel.sendMessage(text)
                         text = ""
                         // 전송 버튼 클릭시 키보드 내림
                         // UIApplication.shared.keyboardDown()
@@ -296,6 +300,8 @@ private struct MessageFieldView: View {
 // MARK: - 선택모드시 네비게이션바 아래에 나타나는 옵션뷰
 fileprivate struct OptionMenuBar: View {
     @EnvironmentObject private var homeViewModel: HomeViewModel
+    @EnvironmentObject private var messageDataController: MessageDataController
+    @Environment(\.managedObjectContext) private var viewContext
     
     fileprivate var body: some View {
         HStack {
@@ -303,7 +309,10 @@ fileprivate struct OptionMenuBar: View {
             
             Button(action: {
                 withAnimation {
-                    homeViewModel.removeBtnTapped()
+                    homeViewModel.removeBtnTapped(
+                        messageDataController: messageDataController, 
+                        context: viewContext
+                    )
                 }
             }, label: {
                 Text("Delete")
@@ -348,5 +357,17 @@ fileprivate struct OptionMenuBar: View {
 }
 
 #Preview {
-    OnboardingView()
+    let controller = MessageDataController.preview
+    let context = controller.context
+    
+    let homeViewModel = HomeViewModel()
+    let pathModel = PathModel()
+    let noteListViewModel = NoteListViewModel()
+    
+    return HomeView()
+        .environment(\.managedObjectContext, context)
+        .environmentObject(homeViewModel)
+        .environmentObject(pathModel)
+        .environmentObject(noteListViewModel)
+        .environmentObject(controller)
 }

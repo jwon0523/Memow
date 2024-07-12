@@ -16,6 +16,8 @@ struct OnboardingView: View {
     @StateObject private var onboardingViewModel = OnboardingViewModel()
     @StateObject private var homeViewModel = HomeViewModel()
     @StateObject private var noteListViewModel = NoteListViewModel()
+    @EnvironmentObject var messageDataController: MessageDataController
+    @EnvironmentObject var noteDataController: NoteDataController
     
     var body: some View {
         NavigationStack(path: $pathModel.paths) {
@@ -25,6 +27,7 @@ struct OnboardingView: View {
             HomeView()
                 .environmentObject(homeViewModel)
                 .environmentObject(noteListViewModel)
+                .environment(\.managedObjectContext, messageDataController.container.viewContext)
                 .navigationDestination(for: PathType.self) { pathType in
                     switch pathType {
                     case .homeView:
@@ -32,11 +35,13 @@ struct OnboardingView: View {
                             .navigationBarBackButtonHidden()
                             .environmentObject(homeViewModel)
                             .environmentObject(noteListViewModel)
+                            .environment(\.managedObjectContext, messageDataController.container.viewContext)
                     case .noteListView:
                         NoteListView()
                             .navigationBarBackButtonHidden()
                             .environmentObject(homeViewModel)
                             .environmentObject(noteListViewModel)
+                            .environment(\.managedObjectContext, noteDataController.container.viewContext)
                     case let .noteView(isCreateMode, note):
                         NoteView(
                             noteViewModel: isCreateMode
@@ -46,6 +51,7 @@ struct OnboardingView: View {
                         )
                         .navigationBarBackButtonHidden()
                         .environmentObject(noteListViewModel)
+                        .environment(\.managedObjectContext, noteDataController.container.viewContext)
                     }
                 }
         }
@@ -253,5 +259,17 @@ private struct ContinueBtnView: View {
 }
 
 #Preview {
-    OnboardingView()
+    let controller = MessageDataController.preview
+    let context = controller.context
+    
+    let homeViewModel = HomeViewModel()
+    let pathModel = PathModel()
+    let noteListViewModel = NoteListViewModel()
+    
+    return OnboardingView()
+        .environment(\.managedObjectContext, context)
+        .environmentObject(homeViewModel)
+        .environmentObject(pathModel)
+        .environmentObject(noteListViewModel)
+        .environmentObject(controller)
 }
