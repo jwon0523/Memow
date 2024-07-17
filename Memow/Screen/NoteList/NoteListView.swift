@@ -11,6 +11,8 @@ struct NoteListView: View {
     @EnvironmentObject private var pathModel: PathModel
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
     @EnvironmentObject private var homeViewModel: HomeViewModel
+    @EnvironmentObject private var noteDataController: NoteDataController
+    @Environment(\.managedObjectContext) private var viewContext
     @State private var searchText = ""
     
     var body: some View {
@@ -72,7 +74,10 @@ struct NoteListView: View {
         ) {
             Button("삭제", role: .destructive) {
                 withAnimation {
-                    noteListViewModel.removeBtnTapped()
+                    noteListViewModel.removeBtnTapped(
+                        noteDataController: noteDataController,
+                        context: viewContext
+                    )
                 }
             }
             
@@ -147,6 +152,8 @@ private struct NoteContentView: View {
     @EnvironmentObject private var pathModel: PathModel
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
     @EnvironmentObject private var homeViewModel: HomeViewModel
+    @EnvironmentObject private var noteDataController: NoteDataController
+    @Environment(\.managedObjectContext) private var viewContext
     @State private var isRemoveSelected: Bool
     private var note: Note
     
@@ -218,7 +225,11 @@ private struct NoteContentView: View {
             Button(
                 action: {
                     withAnimation {
-                        noteListViewModel.removeNote(note)
+                        noteListViewModel.swipeRemoveNote(
+                            note: note,
+                            noteDataController: noteDataController,
+                            context: viewContext
+                        )
                     }
                 },
                 label: {
@@ -270,7 +281,7 @@ private struct MoveMessageToNoteListBtnView: View {
             HStack {
                 Button(action: {
                     noteListViewModel.addSelectedMessageToNote(
-                        selectedNotes: noteListViewModel.selectedNote,
+                        selectedNotes: noteListViewModel.selectedNotes,
                         selectedMessages: homeViewModel.selectedMessages,
                         noteDataController: noteDataController,
                         context: viewContext

@@ -72,14 +72,23 @@ extension NoteDataController {
         }
     }
     
-    func deleteMessage(
-        _ note: NoteEntity,
+    func deleteNoteData(
+        noteId: UUID,
         context: NSManagedObjectContext? = nil
     ) {
         let context = context ?? self.context
-        context.delete(note)
+        let fetchRequest: NSFetchRequest<NoteEntity> = NoteEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", noteId as CVarArg)
         
-        saveContext(context: context)
+        do {
+            let noteEntities = try context.fetch(fetchRequest)
+            for noteEntity in noteEntities {
+                context.delete(noteEntity)
+            }
+            try context.save()
+        } catch {
+            print("Failed to delete note: \(error)")
+        }
     }
     
     private func saveContext(context: NSManagedObjectContext) {
