@@ -18,7 +18,7 @@ class OnboardingViewModel: ObservableObject {
                 tabBarImageFileName: ["OnboardingTabBar.fill", "OnboardingTabBar", "OnboardingTabBar", "OnboardingTabBar"],
                 settingBtnContents: [
                     SettingBtn(
-                        buttonContent: [],
+                        buttonContent: ["",""],
                         isSelectedBtn: [true, false]
                     )
                 ]
@@ -51,7 +51,7 @@ class OnboardingViewModel: ObservableObject {
                 tabBarImageFileName: ["OnboardingTabBar.fill", "OnboardingTabBar.fill", "OnboardingTabBar.fill", "OnboardingTabBar.fill"],
                 settingBtnContents: [
                     SettingBtn(
-                        buttonContent: [],
+                        buttonContent: ["", ""],
                         isSelectedBtn: [true, false]
                     )
                 ]

@@ -12,6 +12,7 @@ private var screenHeight: CGFloat = UIScreen.main.bounds.height
 private var screenWidth: CGFloat = UIScreen.main.bounds.width
 
 struct OnboardingView: View {
+    @AppStorage("hasShownOnboarding") var hasShownOnboarding: Bool = false
     @StateObject private var pathModel = PathModel()
     @StateObject private var onboardingViewModel = OnboardingViewModel()
     @StateObject private var homeViewModel = HomeViewModel()
@@ -22,42 +23,47 @@ struct OnboardingView: View {
     
     var body: some View {
         NavigationStack(path: $pathModel.paths) {
-//            OnboardingContentView(onboardingViewModel: onboardingViewModel)
-            // 작동 확인을 위한 임시 코드
-            // 테스트 완료 후 OnboardingContentView 다시 추가
-            HomeView()
-                .environmentObject(homeViewModel)
-                .environmentObject(noteListViewModel)
-                .environment(\.managedObjectContext, messageDataController.container.viewContext)
-                .environmentObject(notificationManager)
-                .navigationDestination(for: PathType.self) { pathType in
-                    switch pathType {
-                    case .homeView:
-                        HomeView()
-                            .navigationBarBackButtonHidden()
-                            .environmentObject(homeViewModel)
-                            .environmentObject(noteListViewModel)
-                            .environmentObject(notificationManager)
-                            .environment(\.managedObjectContext, messageDataController.container.viewContext)
-                    case .noteListView:
-                        NoteListView()
-                            .navigationBarBackButtonHidden()
-                            .environmentObject(homeViewModel)
-                            .environmentObject(noteListViewModel)
-                            .environmentObject(notificationManager)
-                            .environment(\.managedObjectContext, noteDataController.container.viewContext)
-                    case let .noteView(isCreateMode, note):
-                        NoteView(
-                            noteViewModel: isCreateMode
-                            ? .init(note: .init(title: "", content: "", date: Date()))
-                            : .init(note: note ?? .init(title: "", content: "", date: Date())),
-                            isCreateMode: isCreateMode
-                        )
-                        .navigationBarBackButtonHidden()
-                        .environmentObject(noteListViewModel)
-                        .environment(\.managedObjectContext, noteDataController.container.viewContext)
+            // Onboarding 최초 한번만 실행
+            if !hasShownOnboarding {
+                OnboardingContentView(onboardingViewModel: onboardingViewModel)
+                    .onDisappear {
+                        hasShownOnboarding = true
                     }
-                }
+            } else {
+                HomeView()
+                    .environmentObject(homeViewModel)
+                    .environmentObject(noteListViewModel)
+                    .environment(\.managedObjectContext, messageDataController.container.viewContext)
+                    .environmentObject(notificationManager)
+                    .navigationDestination(for: PathType.self) { pathType in
+                        switch pathType {
+                        case .homeView:
+                            HomeView()
+                                .navigationBarBackButtonHidden()
+                                .environmentObject(homeViewModel)
+                                .environmentObject(noteListViewModel)
+                                .environmentObject(notificationManager)
+                                .environment(\.managedObjectContext, messageDataController.container.viewContext)
+                        case .noteListView:
+                            NoteListView()
+                                .navigationBarBackButtonHidden()
+                                .environmentObject(homeViewModel)
+                                .environmentObject(noteListViewModel)
+                                .environmentObject(notificationManager)
+                                .environment(\.managedObjectContext, noteDataController.container.viewContext)
+                        case let .noteView(isCreateMode, note):
+                            NoteView(
+                                noteViewModel: isCreateMode
+                                ? .init(note: .init(title: "", content: "", date: Date()))
+                                : .init(note: note ?? .init(title: "", content: "", date: Date())),
+                                isCreateMode: isCreateMode
+                            )
+                            .navigationBarBackButtonHidden()
+                            .environmentObject(noteListViewModel)
+                            .environment(\.managedObjectContext, noteDataController.container.viewContext)
+                        }
+                    }
+            }
         }
         .environmentObject(pathModel)
     }
@@ -264,11 +270,15 @@ private struct ContinueBtnView: View {
 
 #Preview {
     let controller = MessageDataController.preview
-    let context = controller.context
+    let context = controller.container.viewContext
     
     let homeViewModel = HomeViewModel()
     let pathModel = PathModel()
     let noteListViewModel = NoteListViewModel()
+    let notificationManager = NotificationManager.instance
+    
+    let userDefaults = UserDefaults.standard
+    userDefaults.set(false, forKey: "hasShownOnboarding")
     
     return OnboardingView()
         .environment(\.managedObjectContext, context)
@@ -276,4 +286,9 @@ private struct ContinueBtnView: View {
         .environmentObject(pathModel)
         .environmentObject(noteListViewModel)
         .environmentObject(controller)
+        .environmentObject(notificationManager)
+        .onAppear {
+            UserDefaults.standard.set(false, forKey: "hasShownOnboarding")
+        }
 }
+        
