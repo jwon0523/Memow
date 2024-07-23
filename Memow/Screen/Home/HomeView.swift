@@ -15,7 +15,6 @@ struct HomeView: View {
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
     @EnvironmentObject private var messageDataController: MessageDataController
     @EnvironmentObject private var noteDataController: NoteDataController
-    @EnvironmentObject private var notificationManager: NotificationManager
     
     var body: some View {
         VStack(spacing: 0) {
@@ -36,7 +35,7 @@ struct HomeView: View {
             )
             
             if homeViewModel.isEditMessageMode {
-                OptionMenuBar()
+                OptionMenuBarView()
             }
             
             ChatListView()
@@ -59,21 +58,11 @@ struct HomeView: View {
         .sheet(
             isPresented: $homeViewModel.isShowDatePickerModal
         ) {
-            VStack {
-                DatePicker("Select Date and Time:", selection: $homeViewModel.selectedAlarmDate, displayedComponents: [.date, .hourAndMinute])
-                    .padding()
-                
-                Button("Schedule notification") {
-                    notificationManager.scheduleNotification(date: homeViewModel.selectedAlarmDate)
-                }
-                .buttonStyle(.bordered)
-                
-                Button("Cancel notification") {
-                    notificationManager.cancelNotification()
-                }
-                .buttonStyle(.bordered)
-            }
-            }
+           SelectedAlarmDatePicerView()
+        }
+        .onAppear {
+            NotificationManager.instance.resetBadgeCount()
+        }
     }
 }
 
@@ -329,7 +318,7 @@ private struct MessageFieldView: View {
 }
 
 // MARK: - 선택모드시 네비게이션바 아래에 나타나는 옵션뷰
-fileprivate struct OptionMenuBar: View {
+fileprivate struct OptionMenuBarView: View {
     @EnvironmentObject private var homeViewModel: HomeViewModel
     @EnvironmentObject private var messageDataController: MessageDataController
     @Environment(\.managedObjectContext) private var viewContext
@@ -384,7 +373,34 @@ fileprivate struct OptionMenuBar: View {
         .frame(maxWidth: .infinity)
         .padding(.bottom, 10)
     }
+}
+
+fileprivate struct SelectedAlarmDatePicerView: View {
+    @EnvironmentObject private var notificationManager: NotificationManager
+    @EnvironmentObject private var homeViewModel: HomeViewModel
     
+    fileprivate var body: some View {
+        VStack(spacing: 20) {
+            DatePicker(
+                "Select Alarm",
+                selection: $homeViewModel.selectedAlarmDate,
+                displayedComponents: [.date, .hourAndMinute]
+            )
+            .padding()
+            
+            Button("Schedule notification") {
+                notificationManager.scheduleNotification(
+                    date: homeViewModel.selectedAlarmDate
+                )
+            }
+            .buttonStyle(.bordered)
+            
+//            Button("Cancel notification") {
+//                notificationManager.cancelNotification()
+//            }
+//            .buttonStyle(.bordered)
+        }
+    }
 }
 
 #Preview {

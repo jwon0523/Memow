@@ -39,11 +39,12 @@ extension NotificationManager {
     }
     
     func scheduleNotification(date: Date) {
+        incrementBadgeCount()
         let content = UNMutableNotificationContent()
-        content.title = "Scheduled Alert"
+        content.title = "Don't forget this"
         content.subtitle = "This is your custom notification!"
         content.sound = .default
-        content.badge = 1
+        content.badge = NSNumber(value: UserDefaults.standard.integer(forKey: "badgeCount"))
         
         let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
         let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
@@ -54,6 +55,20 @@ extension NotificationManager {
                 print("Error scheduling notification: \(error)")
             } else {
                 print("Notification scheduled for \(date)!")
+            }
+        }
+    }
+    
+    func incrementBadgeCount() {
+        let currentCount = UserDefaults.standard.integer(forKey: "badgeCount")
+        UserDefaults.standard.set(currentCount + 1, forKey: "badgeCount")
+    }
+    
+    func resetBadgeCount() {
+        UserDefaults.standard.set(0, forKey: "badgeCount")
+        UNUserNotificationCenter.current().setBadgeCount(0) { error in
+            if let error = error {
+                print("Failed to reset badge count: \(error)")
             }
         }
     }
