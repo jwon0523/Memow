@@ -18,6 +18,7 @@ class HomeViewModel: ObservableObject {
     @Published var isShowNoteListModal: Bool
     @Published var isShowDatePickerModal: Bool
     @Published var selectedAlarmDate: Date
+    @Published var selectedAlarmMessage: String
     
     var navigationBarRightMode: NavigationBtnType {
         return isEditMessageMode ? .close : .select
@@ -33,7 +34,8 @@ class HomeViewModel: ObservableObject {
         selectedMessages: Set<MessageEntity> = [],
         isShowNoteListModal: Bool = false,
         isShowDatePickerModal: Bool = false,
-        selectedAlarmDate: Date = Date()
+        selectedAlarmDate: Date = Date(),
+        selectedAlarmMessage: String = ""
     ) {
         self.messages = messages
         self.removeMessages = removeMessages
@@ -43,6 +45,7 @@ class HomeViewModel: ObservableObject {
         self.isShowNoteListModal = isShowNoteListModal
         self.isShowDatePickerModal = isShowDatePickerModal
         self.selectedAlarmDate = selectedAlarmDate
+        self.selectedAlarmMessage = selectedAlarmMessage
     }
 }
 
@@ -97,6 +100,11 @@ extension HomeViewModel {
         } else {
             selectedMessages.insert(message)
         }
+    }
+    
+    func selectedMessageAlarmBtnTapped(message: MessageEntity) {
+        isShowDatePickerModal = true
+        selectedAlarmMessage = message.content!
     }
     
     func toggleNoteListModal() {

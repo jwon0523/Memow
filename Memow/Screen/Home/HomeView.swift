@@ -239,8 +239,9 @@ private struct MessageBubbleView: View {
                             } else if notificationManager.authorizationStatus == .denied {
                                 print("Notification permission denied.")
                             } else {
-                                homeViewModel.isShowDatePickerModal.toggle()
-                                print(homeViewModel.selectedAlarmDate)
+                                homeViewModel.selectedMessageAlarmBtnTapped(
+                                    message: message
+                                )
                             }
                         } label: {
                             Image("Alarm")
@@ -390,7 +391,8 @@ fileprivate struct SelectedAlarmDatePicerView: View {
             
             Button("Schedule notification") {
                 notificationManager.scheduleNotification(
-                    date: homeViewModel.selectedAlarmDate
+                    date: homeViewModel.selectedAlarmDate,
+                    subtitle: homeViewModel.selectedAlarmMessage
                 )
             }
             .buttonStyle(.bordered)

@@ -38,11 +38,11 @@ extension NotificationManager {
         }
     }
     
-    func scheduleNotification(date: Date) {
+    func scheduleNotification(date: Date, subtitle: String = "") {
         incrementBadgeCount()
         let content = UNMutableNotificationContent()
         content.title = "Don't forget this"
-        content.subtitle = "This is your custom notification!"
+        content.subtitle = subtitle
         content.sound = .default
         content.badge = NSNumber(value: UserDefaults.standard.integer(forKey: "badgeCount"))
         
