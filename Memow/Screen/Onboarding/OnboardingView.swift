@@ -16,6 +16,7 @@ struct OnboardingView: View {
     @StateObject private var onboardingViewModel = OnboardingViewModel()
     @StateObject private var homeViewModel = HomeViewModel()
     @StateObject private var noteListViewModel = NoteListViewModel()
+    @StateObject private var notificationManager = NotificationManager.instance
     @EnvironmentObject var messageDataController: MessageDataController
     @EnvironmentObject var noteDataController: NoteDataController
     
@@ -28,6 +29,7 @@ struct OnboardingView: View {
                 .environmentObject(homeViewModel)
                 .environmentObject(noteListViewModel)
                 .environment(\.managedObjectContext, messageDataController.container.viewContext)
+                .environmentObject(notificationManager)
                 .navigationDestination(for: PathType.self) { pathType in
                     switch pathType {
                     case .homeView:
@@ -35,12 +37,14 @@ struct OnboardingView: View {
                             .navigationBarBackButtonHidden()
                             .environmentObject(homeViewModel)
                             .environmentObject(noteListViewModel)
+                            .environmentObject(notificationManager)
                             .environment(\.managedObjectContext, messageDataController.container.viewContext)
                     case .noteListView:
                         NoteListView()
                             .navigationBarBackButtonHidden()
                             .environmentObject(homeViewModel)
                             .environmentObject(noteListViewModel)
+                            .environmentObject(notificationManager)
                             .environment(\.managedObjectContext, noteDataController.container.viewContext)
                     case let .noteView(isCreateMode, note):
                         NoteView(

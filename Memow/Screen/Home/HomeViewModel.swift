@@ -16,6 +16,8 @@ class HomeViewModel: ObservableObject {
     @Published var isDisplayRemoveNoteAlert: Bool
     @Published var selectedMessages: Set<MessageEntity>
     @Published var isShowNoteListModal: Bool
+    @Published var isShowDatePickerModal: Bool
+    @Published var selectedAlarmDate: Date
     
     var navigationBarRightMode: NavigationBtnType {
         return isEditMessageMode ? .close : .select
@@ -29,7 +31,9 @@ class HomeViewModel: ObservableObject {
         isEditMessageMode: Bool = false,
         isDisplayRemoveNoteAlert: Bool = false,
         selectedMessages: Set<MessageEntity> = [],
-        isShowNoteListModal: Bool = false
+        isShowNoteListModal: Bool = false,
+        isShowDatePickerModal: Bool = false,
+        selectedAlarmDate: Date = Date()
     ) {
         self.messages = messages
         self.removeMessages = removeMessages
@@ -37,6 +41,8 @@ class HomeViewModel: ObservableObject {
         self.isDisplayRemoveNoteAlert = isDisplayRemoveNoteAlert
         self.selectedMessages = selectedMessages
         self.isShowNoteListModal = isShowNoteListModal
+        self.isShowDatePickerModal = isShowDatePickerModal
+        self.selectedAlarmDate = selectedAlarmDate
     }
 }
 

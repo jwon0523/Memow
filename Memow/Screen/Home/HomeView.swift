@@ -15,6 +15,7 @@ struct HomeView: View {
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
     @EnvironmentObject private var messageDataController: MessageDataController
     @EnvironmentObject private var noteDataController: NoteDataController
+    @EnvironmentObject private var notificationManager: NotificationManager
     
     var body: some View {
         VStack(spacing: 0) {
@@ -55,6 +56,24 @@ struct HomeView: View {
                      noteDataController.container.viewContext
                 )
         }
+        .sheet(
+            isPresented: $homeViewModel.isShowDatePickerModal
+        ) {
+            VStack {
+                DatePicker("Select Date and Time:", selection: $homeViewModel.selectedAlarmDate, displayedComponents: [.date, .hourAndMinute])
+                    .padding()
+                
+                Button("Schedule notification") {
+                    notificationManager.scheduleNotification(date: homeViewModel.selectedAlarmDate)
+                }
+                .buttonStyle(.bordered)
+                
+                Button("Cancel notification") {
+                    notificationManager.cancelNotification()
+                }
+                .buttonStyle(.bordered)
+            }
+            }
     }
 }
 
@@ -146,6 +165,7 @@ private struct DateSectionHeader: View {
 private struct MessageBubbleView: View {
     private var message: MessageEntity
     @EnvironmentObject private var homeViewModel: HomeViewModel
+    @EnvironmentObject private var notificationManager: NotificationManager
     @State private var showRightIcon: Bool = false
     @State private var dragOffset: CGSize = .zero
     @State private var moveLeft: Bool = false
@@ -224,11 +244,22 @@ private struct MessageBubbleView: View {
                 
                 if showRightIcon && !homeViewModel.isEditMessageMode {
                     HStack {
-                        Image("Alarm")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                            .padding(3)
-                            .background(.customBackground)
+                        Button {
+                            if notificationManager.authorizationStatus == .notDetermined {
+                                notificationManager.requestAuthorization()
+                            } else if notificationManager.authorizationStatus == .denied {
+                                print("Notification permission denied.")
+                            } else {
+                                homeViewModel.isShowDatePickerModal.toggle()
+                                print(homeViewModel.selectedAlarmDate)
+                            }
+                        } label: {
+                            Image("Alarm")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                                .padding(3)
+                                .background(.customBackground)
+                        }
                         
                         Spacer()
                             .frame(width: 15)
@@ -363,6 +394,7 @@ fileprivate struct OptionMenuBar: View {
     let homeViewModel = HomeViewModel()
     let pathModel = PathModel()
     let noteListViewModel = NoteListViewModel()
+    let notificationManager = NotificationManager()
     
     return HomeView()
         .environment(\.managedObjectContext, context)
@@ -370,4 +402,5 @@ fileprivate struct OptionMenuBar: View {
         .environmentObject(pathModel)
         .environmentObject(noteListViewModel)
         .environmentObject(controller)
+        .environmentObject(notificationManager)
 }
