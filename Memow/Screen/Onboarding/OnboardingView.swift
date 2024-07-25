@@ -36,36 +36,41 @@ struct OnboardingView: View {
                     .environment(\.managedObjectContext, messageDataController.container.viewContext)
                     .environmentObject(notificationManager)
                     .navigationDestination(for: PathType.self) { pathType in
-                        switch pathType {
-                        case .homeView:
-                            HomeView()
-                                .navigationBarBackButtonHidden()
-                                .environmentObject(homeViewModel)
-                                .environmentObject(noteListViewModel)
-                                .environmentObject(notificationManager)
-                                .environment(\.managedObjectContext, messageDataController.container.viewContext)
-                        case .noteListView:
-                            NoteListView()
-                                .navigationBarBackButtonHidden()
-                                .environmentObject(homeViewModel)
-                                .environmentObject(noteListViewModel)
-                                .environmentObject(notificationManager)
-                                .environment(\.managedObjectContext, noteDataController.container.viewContext)
-                        case let .noteView(isCreateMode, note):
-                            NoteView(
-                                noteViewModel: isCreateMode
-                                ? .init(note: .init(title: "", content: "", date: Date()))
-                                : .init(note: note ?? .init(title: "", content: "", date: Date())),
-                                isCreateMode: isCreateMode
-                            )
-                            .navigationBarBackButtonHidden()
-                            .environmentObject(noteListViewModel)
-                            .environment(\.managedObjectContext, noteDataController.container.viewContext)
-                        }
+                        destinationView(for: pathType)
                     }
             }
         }
         .environmentObject(pathModel)
+    }
+    
+    @ViewBuilder
+    private func destinationView(for pathType: PathType) -> some View {
+        switch pathType {
+        case .homeView:
+            HomeView()
+                .navigationBarBackButtonHidden()
+                .environmentObject(homeViewModel)
+                .environmentObject(noteListViewModel)
+                .environmentObject(notificationManager)
+                .environment(\.managedObjectContext, messageDataController.container.viewContext)
+        case .noteListView:
+            NoteListView()
+                .navigationBarBackButtonHidden()
+                .environmentObject(homeViewModel)
+                .environmentObject(noteListViewModel)
+                .environmentObject(notificationManager)
+                .environment(\.managedObjectContext, noteDataController.container.viewContext)
+        case let .noteView(isCreateMode, note):
+            NoteView(
+                noteViewModel: isCreateMode
+                ? .init(note: .init(title: "", content: "", date: Date()))
+                : .init(note: note ?? .init(title: "", content: "", date: Date())),
+                isCreateMode: isCreateMode
+            )
+            .navigationBarBackButtonHidden()
+            .environmentObject(noteListViewModel)
+            .environment(\.managedObjectContext, noteDataController.container.viewContext)
+        }
     }
 }
 
@@ -113,7 +118,7 @@ private struct OnboardingCellListView: View {
                     // 마지막 온보딩이라면 계속하기 버튼을 보여줌
                     isShowContinueBtn: index == lastOnboading ? true: false
                 )
-                    .tag(index)
+                .tag(index)
             }
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
@@ -291,4 +296,4 @@ private struct ContinueBtnView: View {
             UserDefaults.standard.set(false, forKey: "hasShownOnboarding")
         }
 }
-        
+
