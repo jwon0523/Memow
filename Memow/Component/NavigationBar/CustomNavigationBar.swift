@@ -27,7 +27,7 @@ struct CustomNavigationBar: View {
         isDisplayLogo: Bool = true,
         leftBtnAction: @escaping () -> Void = {},
         rightBtnAction: @escaping () -> Void = {},
-        leftBtnType: NavigationBtnType = .leftBack,
+        leftBtnType: NavigationBtnType = .sideMenuIcon,
         rightBtnType: NavigationBtnType = .kebabMenuIcon
     ) {
         self.isDisplayLeftBtn = isDisplayLeftBtn
@@ -54,11 +54,12 @@ struct CustomNavigationBar: View {
                                 .fontWeight(.bold)
                                 .padding()
                             
-                        } else if leftBtnType == .home {
+                        } else if leftBtnType == .home
+                                    || leftBtnType == .sideMenuIcon
+                        {
                             Image(systemName: leftBtnType.rawValue)
-                                .resizable()
-                                .frame(width: 20, height: 20)
-                                .padding()
+                                .font(.system(size: 20, weight: .ultraLight))
+                                .padding(8)
                                 .foregroundColor(.customFont)
                         } else {
                             Image(leftBtnType.rawValue)

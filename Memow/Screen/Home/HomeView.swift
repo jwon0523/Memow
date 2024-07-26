@@ -15,53 +15,60 @@ struct HomeView: View {
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
     @EnvironmentObject private var messageDataController: MessageDataController
     @EnvironmentObject private var noteDataController: NoteDataController
+    @State private var isSideMenuShowing: Bool = false
     
     var body: some View {
-        VStack(spacing: 0) {
-            CustomNavigationBar(
-                leftBtnAction: {
-                    if !homeViewModel.isEditMessageMode {
-                        pathModel.paths.append(.noteListView)
-                    }
-                },
-                rightBtnAction: {
-                    withAnimation {
-                        homeViewModel.toggleEditMessageMode()
-                    }
-                },
-                leftBtnType: .memow,
-                rightBtnType: homeViewModel.navigationBarRightMode
-                // 오른쪽 버튼 클릭시 작동 함수 필요
-            )
-            
-            if homeViewModel.isEditMessageMode {
-                OptionMenuBarView()
-            }
-            
-            ChatListView()
-            
-            if !homeViewModel.isEditMessageMode {
-                MessageFieldView()
-            }
-        }
-        .background(.customBackground)
-        .sheet(
-            isPresented: $homeViewModel.isShowNoteListModal,
-            onDismiss: noteListViewModel.removeAllSelectedNote
-        ) {
-            NoteListView()
-                .environment(
-                    \.managedObjectContext,
-                     noteDataController.container.viewContext
+        ZStack {
+            VStack(spacing: 0) {
+                CustomNavigationBar(
+                    leftBtnAction: {
+                        if !homeViewModel.isEditMessageMode {
+                            withAnimation {
+                                isSideMenuShowing.toggle()
+                            }
+                        }
+                    },
+                    rightBtnAction: {
+                        withAnimation {
+                            homeViewModel.toggleEditMessageMode()
+                        }
+                    },
+                    leftBtnType: .sideMenuIcon,
+                    rightBtnType: homeViewModel.navigationBarRightMode
+                    // 오른쪽 버튼 클릭시 작동 함수 필요
                 )
-        }
-        .sheet(
-            isPresented: $homeViewModel.isShowDatePickerModal
-        ) {
-           SelectedAlarmDatePicerView()
-        }
-        .onAppear {
-            NotificationManager.instance.resetBadgeCount()
+                
+                if homeViewModel.isEditMessageMode {
+                    OptionMenuBarView()
+                }
+                
+                ChatListView()
+                
+                if !homeViewModel.isEditMessageMode {
+                    MessageFieldView()
+                }
+            }
+            .background(.customBackground)
+            .sheet(
+                isPresented: $homeViewModel.isShowNoteListModal,
+                onDismiss: noteListViewModel.removeAllSelectedNote
+            ) {
+                NoteListView()
+                    .environment(
+                        \.managedObjectContext,
+                         noteDataController.container.viewContext
+                    )
+            }
+            .sheet(
+                isPresented: $homeViewModel.isShowDatePickerModal
+            ) {
+                SelectedAlarmDatePicerView()
+            }
+            .onAppear {
+                NotificationManager.instance.resetBadgeCount()
+            }
+            
+            SideMenuView(isShowing: $isSideMenuShowing)
         }
     }
 }
@@ -80,11 +87,11 @@ private struct ChatListView: View {
                         .padding(.horizontal)
                         .background(.customBackground)
                         .onChange(of: homeViewModel.lastMessageId) { id in
-                        // 메세지의 lastMessageId가 변경되면 대화의 마지막 부분으로 이동
-                        withAnimation {
-                            proxy.scrollTo(id, anchor: .bottom)
+                            // 메세지의 lastMessageId가 변경되면 대화의 마지막 부분으로 이동
+                            withAnimation {
+                                proxy.scrollTo(id, anchor: .bottom)
+                            }
                         }
-                    }
                 }
             }
         })
@@ -115,7 +122,7 @@ private struct ChatListCellView: View {
         LazyVGrid(
             columns: columns,
             spacing: 0
-//            pinnedViews: [.sectionHeaders]
+            //            pinnedViews: [.sectionHeaders]
         ) {
             ForEach(
                 groupedMessages.sortedKeys(), id: \.self
@@ -283,7 +290,7 @@ private struct MessageFieldView: View {
         HStack {
             // TextField를 커스텀한 뷰
             CustomTextField(
-                placeholder: 
+                placeholder:
                     Text("내용을 입력하세요")
                     .foregroundColor(.customFont),
                 text: $text
@@ -331,7 +338,7 @@ fileprivate struct OptionMenuBarView: View {
             Button(action: {
                 withAnimation {
                     homeViewModel.removeBtnTapped(
-                        messageDataController: messageDataController, 
+                        messageDataController: messageDataController,
                         context: viewContext
                     )
                 }
@@ -397,10 +404,10 @@ fileprivate struct SelectedAlarmDatePicerView: View {
             }
             .buttonStyle(.bordered)
             
-//            Button("Cancel notification") {
-//                notificationManager.cancelNotification()
-//            }
-//            .buttonStyle(.bordered)
+            //            Button("Cancel notification") {
+            //                notificationManager.cancelNotification()
+            //            }
+            //            .buttonStyle(.bordered)
         }
     }
 }
