@@ -15,45 +15,60 @@ struct HomeView: View {
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
     @EnvironmentObject private var messageDataController: MessageDataController
     @EnvironmentObject private var noteDataController: NoteDataController
+    @State private var isSideMenuShowing: Bool = false
     
     var body: some View {
-        VStack(spacing: 0) {
-            CustomNavigationBar(
-                leftBtnAction: {
-                    if !homeViewModel.isEditMessageMode {
-                        pathModel.paths.append(.noteListView)
-                    }
-                },
-                rightBtnAction: {
-                    withAnimation {
-                        homeViewModel.toggleEditMessageMode()
-                    }
-                },
-                leftBtnType: .memow,
-                rightBtnType: homeViewModel.navigationBarRightMode
-                // 오른쪽 버튼 클릭시 작동 함수 필요
-            )
-            
-            if homeViewModel.isEditMessageMode {
-                OptionMenuBar()
-            }
-            
-            ChatListView()
-            
-            if !homeViewModel.isEditMessageMode {
-                MessageFieldView()
-            }
-        }
-        .background(.customBackground)
-        .sheet(
-            isPresented: $homeViewModel.isShowNoteListModal,
-            onDismiss: noteListViewModel.removeAllSelectedNote
-        ) {
-            NoteListView()
-                .environment(
-                    \.managedObjectContext,
-                     noteDataController.container.viewContext
+        ZStack {
+            VStack(spacing: 0) {
+                CustomNavigationBar(
+                    leftBtnAction: {
+                        if !homeViewModel.isEditMessageMode {
+                            withAnimation {
+                                isSideMenuShowing.toggle()
+                            }
+                        }
+                    },
+                    rightBtnAction: {
+                        withAnimation {
+                            homeViewModel.toggleEditMessageMode()
+                        }
+                    },
+                    leftBtnType: .sideMenuIcon,
+                    rightBtnType: homeViewModel.navigationBarRightMode
+                    // 오른쪽 버튼 클릭시 작동 함수 필요
                 )
+                
+                if homeViewModel.isEditMessageMode {
+                    OptionMenuBarView()
+                }
+                
+                ChatListView()
+                
+                if !homeViewModel.isEditMessageMode {
+                    MessageFieldView()
+                }
+            }
+            .background(.customBackground)
+            .sheet(
+                isPresented: $homeViewModel.isShowNoteListModal,
+                onDismiss: noteListViewModel.removeAllSelectedNote
+            ) {
+                NoteListView()
+                    .environment(
+                        \.managedObjectContext,
+                         noteDataController.container.viewContext
+                    )
+            }
+            .sheet(
+                isPresented: $homeViewModel.isShowDatePickerModal
+            ) {
+                SelectedAlarmDatePicerView()
+            }
+            .onAppear {
+                NotificationManager.instance.resetBadgeCount()
+            }
+            
+            SideMenuView(isShowing: $isSideMenuShowing)
         }
     }
 }
@@ -72,11 +87,11 @@ private struct ChatListView: View {
                         .padding(.horizontal)
                         .background(.customBackground)
                         .onChange(of: homeViewModel.lastMessageId) { id in
-                        // 메세지의 lastMessageId가 변경되면 대화의 마지막 부분으로 이동
-                        withAnimation {
-                            proxy.scrollTo(id, anchor: .bottom)
+                            // 메세지의 lastMessageId가 변경되면 대화의 마지막 부분으로 이동
+                            withAnimation {
+                                proxy.scrollTo(id, anchor: .bottom)
+                            }
                         }
-                    }
                 }
             }
         })
@@ -107,7 +122,7 @@ private struct ChatListCellView: View {
         LazyVGrid(
             columns: columns,
             spacing: 0
-//            pinnedViews: [.sectionHeaders]
+            //            pinnedViews: [.sectionHeaders]
         ) {
             ForEach(
                 groupedMessages.sortedKeys(), id: \.self
@@ -146,6 +161,7 @@ private struct DateSectionHeader: View {
 private struct MessageBubbleView: View {
     private var message: MessageEntity
     @EnvironmentObject private var homeViewModel: HomeViewModel
+    @EnvironmentObject private var notificationManager: NotificationManager
     @State private var showRightIcon: Bool = false
     @State private var dragOffset: CGSize = .zero
     @State private var moveLeft: Bool = false
@@ -224,11 +240,23 @@ private struct MessageBubbleView: View {
                 
                 if showRightIcon && !homeViewModel.isEditMessageMode {
                     HStack {
-                        Image("Alarm")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                            .padding(3)
-                            .background(.customBackground)
+                        Button {
+                            if notificationManager.authorizationStatus == .notDetermined {
+                                notificationManager.requestAuthorization()
+                            } else if notificationManager.authorizationStatus == .denied {
+                                print("Notification permission denied.")
+                            } else {
+                                homeViewModel.selectedMessageAlarmBtnTapped(
+                                    message: message
+                                )
+                            }
+                        } label: {
+                            Image("Alarm")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                                .padding(3)
+                                .background(.customBackground)
+                        }
                         
                         Spacer()
                             .frame(width: 15)
@@ -262,7 +290,7 @@ private struct MessageFieldView: View {
         HStack {
             // TextField를 커스텀한 뷰
             CustomTextField(
-                placeholder: 
+                placeholder:
                     Text("내용을 입력하세요")
                     .foregroundColor(.customFont),
                 text: $text
@@ -298,7 +326,7 @@ private struct MessageFieldView: View {
 }
 
 // MARK: - 선택모드시 네비게이션바 아래에 나타나는 옵션뷰
-fileprivate struct OptionMenuBar: View {
+fileprivate struct OptionMenuBarView: View {
     @EnvironmentObject private var homeViewModel: HomeViewModel
     @EnvironmentObject private var messageDataController: MessageDataController
     @Environment(\.managedObjectContext) private var viewContext
@@ -310,7 +338,7 @@ fileprivate struct OptionMenuBar: View {
             Button(action: {
                 withAnimation {
                     homeViewModel.removeBtnTapped(
-                        messageDataController: messageDataController, 
+                        messageDataController: messageDataController,
                         context: viewContext
                     )
                 }
@@ -353,7 +381,35 @@ fileprivate struct OptionMenuBar: View {
         .frame(maxWidth: .infinity)
         .padding(.bottom, 10)
     }
+}
+
+fileprivate struct SelectedAlarmDatePicerView: View {
+    @EnvironmentObject private var notificationManager: NotificationManager
+    @EnvironmentObject private var homeViewModel: HomeViewModel
     
+    fileprivate var body: some View {
+        VStack(spacing: 20) {
+            DatePicker(
+                "Select Alarm",
+                selection: $homeViewModel.selectedAlarmDate,
+                displayedComponents: [.date, .hourAndMinute]
+            )
+            .padding()
+            
+            Button("Schedule notification") {
+                notificationManager.scheduleNotification(
+                    date: homeViewModel.selectedAlarmDate,
+                    subtitle: homeViewModel.selectedAlarmMessage
+                )
+            }
+            .buttonStyle(.bordered)
+            
+            //            Button("Cancel notification") {
+            //                notificationManager.cancelNotification()
+            //            }
+            //            .buttonStyle(.bordered)
+        }
+    }
 }
 
 #Preview {
@@ -363,6 +419,7 @@ fileprivate struct OptionMenuBar: View {
     let homeViewModel = HomeViewModel()
     let pathModel = PathModel()
     let noteListViewModel = NoteListViewModel()
+    let notificationManager = NotificationManager()
     
     return HomeView()
         .environment(\.managedObjectContext, context)
@@ -370,4 +427,5 @@ fileprivate struct OptionMenuBar: View {
         .environmentObject(pathModel)
         .environmentObject(noteListViewModel)
         .environmentObject(controller)
+        .environmentObject(notificationManager)
 }

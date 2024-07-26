@@ -22,5 +22,6 @@ enum NavigationBtnType: String {
     case home = "house"
     case select = "Select"
     case memow = "Memow"
+    case sideMenuIcon = "line.3.horizontal"
     case delete = "Trash"
 }

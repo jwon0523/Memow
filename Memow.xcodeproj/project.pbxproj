@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0E08771D2BA83F4E0090FD14 /* NoteListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E08771C2BA83F4E0090FD14 /* NoteListView.swift */; };
 		0E0877202BA83F610090FD14 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E08771F2BA83F610090FD14 /* Note.swift */; };
+		0E1447012C4FEB4400976F7F /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1447002C4FEB4400976F7F /* NotificationManager.swift */; };
+		0E1447262C54134900976F7F /* SideMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1447252C54134900976F7F /* SideMenuView.swift */; };
 		0E437E142BA84DDB0069252D /* NoteListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E437E132BA84DDB0069252D /* NoteListViewModel.swift */; };
 		0E437E172BA898010069252D /* Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E437E162BA898010069252D /* Path.swift */; };
 		0E437E192BA8980E0069252D /* PathType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E437E182BA8980E0069252D /* PathType.swift */; };
@@ -40,6 +42,8 @@
 /* Begin PBXFileReference section */
 		0E08771C2BA83F4E0090FD14 /* NoteListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteListView.swift; sourceTree = "<group>"; };
 		0E08771F2BA83F610090FD14 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
+		0E1447002C4FEB4400976F7F /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		0E1447252C54134900976F7F /* SideMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuView.swift; sourceTree = "<group>"; };
 		0E437E132BA84DDB0069252D /* NoteListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteListViewModel.swift; sourceTree = "<group>"; };
 		0E437E162BA898010069252D /* Path.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Path.swift; sourceTree = "<group>"; };
 		0E437E182BA8980E0069252D /* PathType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathType.swift; sourceTree = "<group>"; };
@@ -106,6 +110,22 @@
 				0E53A6F52BA6A8C1002C37C5 /* CustomTextField.swift */,
 			);
 			path = CustomTextField;
+			sourceTree = "<group>";
+		};
+		0E1446FF2C4FEB1B00976F7F /* Notification */ = {
+			isa = PBXGroup;
+			children = (
+				0E1447002C4FEB4400976F7F /* NotificationManager.swift */,
+			);
+			path = Notification;
+			sourceTree = "<group>";
+		};
+		0E1447242C5412CF00976F7F /* SideMenuBar */ = {
+			isa = PBXGroup;
+			children = (
+				0E1447252C54134900976F7F /* SideMenuView.swift */,
+			);
+			path = SideMenuBar;
 			sourceTree = "<group>";
 		};
 		0E437E152BA897F60069252D /* Path */ = {
@@ -194,6 +214,7 @@
 		0E53A6B52BA451BA002C37C5 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				0E1446FF2C4FEB1B00976F7F /* Notification */,
 				0E437E612BAD85D40069252D /* Onboarding */,
 				0E437E152BA897F60069252D /* Path */,
 				0E08771E2BA83F530090FD14 /* Note */,
@@ -217,6 +238,7 @@
 				0E437E5C2BAD84AD0069252D /* Onboarding */,
 				0E08771B2BA83F220090FD14 /* NoteList */,
 				0E53A6BE2BA458C2002C37C5 /* Home */,
+				0E1447242C5412CF00976F7F /* SideMenuBar */,
 			);
 			path = Screen;
 			sourceTree = "<group>";
@@ -336,6 +358,7 @@
 				0E53A6C32BA4613C002C37C5 /* Date+ Extension.swift in Sources */,
 				0E53A6BD2BA45889002C37C5 /* CustomNavigationBar.swift in Sources */,
 				0E08771D2BA83F4E0090FD14 /* NoteListView.swift in Sources */,
+				0E1447012C4FEB4400976F7F /* NotificationManager.swift in Sources */,
 				0E53A6F42BA68D8F002C37C5 /* HomeViewModel.swift in Sources */,
 				0E53A6A92BA4509F002C37C5 /* HomeView.swift in Sources */,
 				0E437E5B2BAD61DE0069252D /* NoteViewModel.swift in Sources */,
@@ -344,6 +367,7 @@
 				0ED6177C2C3A6DB00062E5C9 /* NoteEntity.xcdatamodeld in Sources */,
 				0E53A6F62BA6A8C1002C37C5 /* CustomTextField.swift in Sources */,
 				0EE2DB2A2C36BA99000413EC /* Dictionary+ Extension.swift in Sources */,
+				0E1447262C54134900976F7F /* SideMenuView.swift in Sources */,
 				0E53A6BB2BA452D8002C37C5 /* NavigationBtnType.swift in Sources */,
 				0EB623292C3015DF00262EF6 /* MessageEntity.xcdatamodeld in Sources */,
 				0E437E602BAD84C90069252D /* OnboardingViewModel.swift in Sources */,
