@@ -20,11 +20,6 @@ struct NoteListView: View {
             VStack {
                 if(!homeViewModel.isShowNoteListModal) {
                     CustomNavigationBar(
-                        leftBtnAction: {
-                            if(!noteListViewModel.isEditNoteMode) {
-                                pathModel.paths.removeLast()
-                            }
-                        },
                         rightBtnAction: {
                             // 버튼 선택시 리스트 왼쪽 다중 선택 활성화
                             withAnimation {

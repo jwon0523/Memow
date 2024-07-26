@@ -235,10 +235,10 @@
 		0E53A6B72BA45223002C37C5 /* Screen */ = {
 			isa = PBXGroup;
 			children = (
-				0E1447242C5412CF00976F7F /* SideMenuBar */,
 				0E437E5C2BAD84AD0069252D /* Onboarding */,
 				0E08771B2BA83F220090FD14 /* NoteList */,
 				0E53A6BE2BA458C2002C37C5 /* Home */,
+				0E1447242C5412CF00976F7F /* SideMenuBar */,
 			);
 			path = Screen;
 			sourceTree = "<group>";
