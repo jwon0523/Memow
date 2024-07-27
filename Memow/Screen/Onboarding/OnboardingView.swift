@@ -235,16 +235,18 @@ private struct SettingContentBtnView: View {
     }
     
     fileprivate var body: some View {
-        Button(action: {
-            print(title)
-        }, label: {
-            Text(title)
-                .foregroundColor(.black)
-        })
-        .frame(width: 150, height: 50)
-        .background(isSelected ? Color.customYellow : Color.customWhite)
-        .cornerRadius(15)
-        .shadow(radius: 3, y: 2)
+        if title != "" {
+            Button(action: {
+                print(title)
+            }, label: {
+                Text(title)
+                    .foregroundColor(.black)
+            })
+            .frame(width: 150, height: 50)
+            .background(isSelected ? Color.customYellow : Color.customWhite)
+            .cornerRadius(15)
+            .shadow(radius: 3, y: 2)
+        }
     }
 }
 
