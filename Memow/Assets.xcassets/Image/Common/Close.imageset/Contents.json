@@ -1,16 +1,7 @@
 {
   "images" : [
     {
-      "idiom" : "universal"
-    },
-    {
-      "appearances" : [
-        {
-          "appearance" : "luminosity",
-          "value" : "dark"
-        }
-      ],
-      "filename" : "Group 101.svg",
+      "filename" : "CloseBtn.svg",
       "idiom" : "universal"
     }
   ],
