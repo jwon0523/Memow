@@ -1,16 +1,7 @@
 {
   "images" : [
     {
-      "idiom" : "universal"
-    },
-    {
-      "appearances" : [
-        {
-          "appearance" : "luminosity",
-          "value" : "dark"
-        }
-      ],
-      "filename" : "More - Add new icon.svg",
+      "filename" : "AddBtn.svg",
       "idiom" : "universal"
     }
   ],

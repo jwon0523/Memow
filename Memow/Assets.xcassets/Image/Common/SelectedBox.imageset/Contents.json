@@ -1,17 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "Property 1=Group 344.svg",
-      "idiom" : "universal"
-    },
-    {
-      "appearances" : [
-        {
-          "appearance" : "luminosity",
-          "value" : "dark"
-        }
-      ],
-      "filename" : "Property 1=Group 343.svg",
+      "filename" : "Select btn.svg",
       "idiom" : "universal"
     }
   ],

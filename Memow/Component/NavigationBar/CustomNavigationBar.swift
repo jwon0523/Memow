@@ -28,7 +28,7 @@ struct CustomNavigationBar: View {
         leftBtnAction: @escaping () -> Void = {},
         rightBtnAction: @escaping () -> Void = {},
         leftBtnType: NavigationBtnType = .sideMenuIcon,
-        rightBtnType: NavigationBtnType = .kebabMenuIcon
+        rightBtnType: NavigationBtnType = .update
     ) {
         self.isDisplayLeftBtn = isDisplayLeftBtn
         self.isDisplayRightBtn = isDisplayRightBtn
@@ -54,9 +54,7 @@ struct CustomNavigationBar: View {
                                 .fontWeight(.bold)
                                 .padding()
                             
-                        } else if leftBtnType == .home
-                                    || leftBtnType == .sideMenuIcon
-                        {
+                        } else if leftBtnType == .home {
                             Image(systemName: leftBtnType.rawValue)
                                 .font(.system(size: 20, weight: .ultraLight))
                                 .padding(8)
@@ -65,7 +63,8 @@ struct CustomNavigationBar: View {
                             Image(leftBtnType.rawValue)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 20, height: 20)
+                                .frame(width: 25, height: 25)
+                                .padding(.leading, 10)
                         }
                     }
                 )
@@ -83,18 +82,16 @@ struct CustomNavigationBar: View {
                             Text(rightBtnType.rawValue)
                                 .foregroundColor(.customFont)
                                 .fontWeight(.bold)
-                                .padding(.vertical)
+                                .padding(.trailing, 10)
                         } else {
                             Image(rightBtnType.rawValue)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 20, height: 20)
+                                .frame(width: 25, height: 25)
+                                .padding(.trailing, 10)
                         }
                 })
             }
-            
-            Spacer()
-                .frame(width: 20)
         }
     }
 }

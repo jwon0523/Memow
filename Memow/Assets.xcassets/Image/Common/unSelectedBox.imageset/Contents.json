@@ -1,16 +1,7 @@
 {
   "images" : [
     {
-      "idiom" : "universal"
-    },
-    {
-      "appearances" : [
-        {
-          "appearance" : "luminosity",
-          "value" : "dark"
-        }
-      ],
-      "filename" : "Property 1=Rectangle 236unSelectedBox.svg",
+      "filename" : "Select btn.svg",
       "idiom" : "universal"
     }
   ],

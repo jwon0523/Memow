@@ -1,16 +1,7 @@
 {
   "images" : [
     {
-      "idiom" : "universal"
-    },
-    {
-      "appearances" : [
-        {
-          "appearance" : "luminosity",
-          "value" : "dark"
-        }
-      ],
-      "filename" : "Vector (3).svg",
+      "filename" : "Alarm.svg",
       "idiom" : "universal"
     }
   ],
