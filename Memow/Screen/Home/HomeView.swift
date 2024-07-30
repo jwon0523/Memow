@@ -261,11 +261,17 @@ private struct MessageBubbleView: View {
                         Spacer()
                             .frame(width: 15)
                         
-                        Image("AddFile")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                            .padding(3)
-                            .background(.customBackground)
+                        Button {
+                            homeViewModel.messageSelectedBoxTapped(message)
+                            homeViewModel.messageToNoteSwipingTapped()
+                        } label: {
+                            Image("AddFile")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                                .padding(3)
+                                .background(.customBackground)
+                        }
+
                         
                         Spacer()
                             .frame(width: 5)

@@ -17,6 +17,7 @@ class HomeViewModel: ObservableObject {
     @Published var selectedMessages: Set<MessageEntity>
     @Published var isShowNoteListModal: Bool
     @Published var isShowDatePickerModal: Bool
+    @Published var isMessageToNoteSipped: Bool
     @Published var selectedAlarmDate: Date
     @Published var selectedAlarmMessage: String
     
@@ -34,6 +35,7 @@ class HomeViewModel: ObservableObject {
         selectedMessages: Set<MessageEntity> = [],
         isShowNoteListModal: Bool = false,
         isShowDatePickerModal: Bool = false,
+        isMessageToNoteSipped: Bool = false,
         selectedAlarmDate: Date = Date(),
         selectedAlarmMessage: String = ""
     ) {
@@ -44,6 +46,7 @@ class HomeViewModel: ObservableObject {
         self.selectedMessages = selectedMessages
         self.isShowNoteListModal = isShowNoteListModal
         self.isShowDatePickerModal = isShowDatePickerModal
+        self.isMessageToNoteSipped = isMessageToNoteSipped
         self.selectedAlarmDate = selectedAlarmDate
         self.selectedAlarmMessage = selectedAlarmMessage
     }
@@ -78,7 +81,8 @@ extension HomeViewModel {
     }
     
     func toggleEditMessageMode() {
-        if isEditMessageMode {
+        // 메시지 수정 모드이거나 스와이핑을 통한 메시지를 선택한 경우 true
+        if isEditMessageMode || isMessageToNoteSipped {
             if selectedMessages.isEmpty {
                 isEditMessageMode = false
             } else {
@@ -86,9 +90,21 @@ extension HomeViewModel {
                 // close(x) 버튼을 누르면 선택된 내용들 모두 삭제하고 편집 모드 종료
                 selectedMessages.removeAll()
                 isEditMessageMode = false
+                isMessageToNoteSipped = false
             }
         } else {
             isEditMessageMode = true
+        }
+    }
+    
+    func toggleNoteListModal() {
+        // 메시지 수정 모드이거나 스와이핑을 통한 메시지를 선택한 경우 true
+        if isEditMessageMode || isMessageToNoteSipped {
+            if(isShowNoteListModal) {
+                isShowNoteListModal = false
+            } else {
+                isShowNoteListModal = true
+            }
         }
     }
     
@@ -102,19 +118,14 @@ extension HomeViewModel {
         }
     }
     
+    func messageToNoteSwipingTapped() {
+        isMessageToNoteSipped = true
+        isShowNoteListModal = true
+    }
+    
     func selectedMessageAlarmBtnTapped(message: MessageEntity) {
         isShowDatePickerModal = true
         selectedAlarmMessage = message.content!
-    }
-    
-    func toggleNoteListModal() {
-        if isEditMessageMode {
-            if(isShowNoteListModal) {
-                isShowNoteListModal = false
-            } else {
-                isShowNoteListModal = true
-            }
-        }
     }
     
     func groupMessagesByDate(messages: [MessageEntity]) -> [DateComponents: [MessageEntity]] {
