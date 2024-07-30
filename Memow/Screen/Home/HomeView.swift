@@ -401,6 +401,7 @@ fileprivate struct SelectedAlarmDatePicerView: View {
                     date: homeViewModel.selectedAlarmDate,
                     subtitle: homeViewModel.selectedAlarmMessage
                 )
+                homeViewModel.isShowDatePickerModal = false
             }
             .buttonStyle(.bordered)
             
