@@ -352,24 +352,24 @@ fileprivate struct OptionMenuBarView: View {
             
             Spacer()
             
-            Button(action: {
-                print("Share")
-            }, label: {
-                Text("Share")
-                    .foregroundColor(.customFont)
-                Image("Share")
-                    .resizable()
-                    .frame(width: 20, height: 20)
-            })
+//            Button(action: {
+//                print("Share")
+//            }, label: {
+//                Text("Share")
+//                    .foregroundColor(.customFont)
+//                Image("Share")
+//                    .resizable()
+//                    .frame(width: 20, height: 20)
+//            })
             
-            Spacer()
+//            Spacer()
             
             Button(action: {
                 if(!homeViewModel.selectedMessages.isEmpty) {
                     homeViewModel.toggleNoteListModal()
                 }
             }, label: {
-                Text("Move")
+                Text("Connect")
                     .foregroundColor(.customFont)
                 Image("AddFile")
                     .resizable()
