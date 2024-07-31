@@ -18,7 +18,6 @@ class HomeViewModel: ObservableObject {
     @Published var isShowNoteListModal: Bool
     @Published var isShowDatePickerModal: Bool
     @Published var isMessageToNoteSipped: Bool
-    @Published var selectedAlarmDate: Date
     @Published var selectedAlarmMessage: String
     
     var navigationBarRightMode: NavigationBtnType {
@@ -36,7 +35,6 @@ class HomeViewModel: ObservableObject {
         isShowNoteListModal: Bool = false,
         isShowDatePickerModal: Bool = false,
         isMessageToNoteSipped: Bool = false,
-        selectedAlarmDate: Date = Date(),
         selectedAlarmMessage: String = ""
     ) {
         self.messages = messages
@@ -47,7 +45,6 @@ class HomeViewModel: ObservableObject {
         self.isShowNoteListModal = isShowNoteListModal
         self.isShowDatePickerModal = isShowDatePickerModal
         self.isMessageToNoteSipped = isMessageToNoteSipped
-        self.selectedAlarmDate = selectedAlarmDate
         self.selectedAlarmMessage = selectedAlarmMessage
     }
 }

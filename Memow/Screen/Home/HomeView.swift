@@ -392,19 +392,20 @@ fileprivate struct OptionMenuBarView: View {
 fileprivate struct SelectedAlarmDatePicerView: View {
     @EnvironmentObject private var notificationManager: NotificationManager
     @EnvironmentObject private var homeViewModel: HomeViewModel
+    @State private var selectedAlarmDate = Date()
     
     fileprivate var body: some View {
         VStack(spacing: 20) {
             DatePicker(
                 "Select Alarm",
-                selection: $homeViewModel.selectedAlarmDate,
+                selection: $selectedAlarmDate,
                 displayedComponents: [.date, .hourAndMinute]
             )
             .padding()
             
             Button("Schedule notification") {
                 notificationManager.scheduleNotification(
-                    date: homeViewModel.selectedAlarmDate,
+                    date: selectedAlarmDate,
                     subtitle: homeViewModel.selectedAlarmMessage
                 )
                 homeViewModel.isShowDatePickerModal = false
