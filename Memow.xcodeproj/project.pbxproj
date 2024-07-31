@@ -67,6 +67,7 @@
 		0E88158C2BB010AC002667DA /* UIApplication+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Extension.swift"; sourceTree = "<group>"; };
 		0EB623282C3015DF00262EF6 /* MessageEntity.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MessageEntity.xcdatamodel; sourceTree = "<group>"; };
 		0EB6232A2C30168C00262EF6 /* MessageDataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDataController.swift; sourceTree = "<group>"; };
+		0EC834342C59BE170004CFF5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0ED1D68B2BB84A3A0097CE2C /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0ED6177B2C3A6DB00062E5C9 /* NoteEntity.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = NoteEntity.xcdatamodel; sourceTree = "<group>"; };
 		0ED6177D2C3A6DE30062E5C9 /* NoteDataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDataController.swift; sourceTree = "<group>"; };
@@ -183,6 +184,7 @@
 		0E53A6A52BA4509F002C37C5 /* Memow */ = {
 			isa = PBXGroup;
 			children = (
+				0EC834342C59BE170004CFF5 /* Info.plist */,
 				0E53A6B42BA451B3002C37C5 /* App */,
 				0E53A6B62BA451D5002C37C5 /* Component */,
 				0E53A6C12BA46124002C37C5 /* Extension */,
@@ -518,6 +520,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = J8D7JYM8XX;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Memow/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -555,6 +558,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = J8D7JYM8XX;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Memow/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
