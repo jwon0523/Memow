@@ -184,13 +184,13 @@
 		0E53A6A52BA4509F002C37C5 /* Memow */ = {
 			isa = PBXGroup;
 			children = (
-				0EC834342C59BE170004CFF5 /* Info.plist */,
 				0E53A6B42BA451B3002C37C5 /* App */,
 				0E53A6B62BA451D5002C37C5 /* Component */,
 				0E53A6C12BA46124002C37C5 /* Extension */,
 				0E53A6B72BA45223002C37C5 /* Screen */,
 				0E53A6B52BA451BA002C37C5 /* Model */,
 				0E53A6AA2BA450A0002C37C5 /* Assets.xcassets */,
+				0EC834342C59BE170004CFF5 /* Info.plist */,
 				0E53A6AC2BA450A0002C37C5 /* Preview Content */,
 			);
 			path = Memow;

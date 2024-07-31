@@ -44,7 +44,8 @@ struct NoteListView: View {
                     )
                 }
                 
-                SearchBarView(text: $searchText)
+                // 검색 기능 구현 전까지 비활성화
+//                SearchBarView(text: $searchText)
                 
                 NoteListCellView()
                 

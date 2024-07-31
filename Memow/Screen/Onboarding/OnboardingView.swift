@@ -23,22 +23,32 @@ struct OnboardingView: View {
     
     var body: some View {
         NavigationStack(path: $pathModel.paths) {
+            HomeView()
+                .environmentObject(homeViewModel)
+                .environmentObject(noteListViewModel)
+                .environment(\.managedObjectContext, messageDataController.container.viewContext)
+                .environmentObject(notificationManager)
+                .navigationDestination(for: PathType.self) { pathType in
+                    destinationView(for: pathType)
+                }
             // Onboarding 최초 한번만 실행
-            if !hasShownOnboarding {
-                OnboardingContentView(onboardingViewModel: onboardingViewModel)
-                    .onDisappear {
-                        hasShownOnboarding = true
-                    }
-            } else {
-                HomeView()
-                    .environmentObject(homeViewModel)
-                    .environmentObject(noteListViewModel)
-                    .environment(\.managedObjectContext, messageDataController.container.viewContext)
-                    .environmentObject(notificationManager)
-                    .navigationDestination(for: PathType.self) { pathType in
-                        destinationView(for: pathType)
-                    }
-            }
+            // Onboarding 임시 제거(디자인 나오면 재활성화)
+//            if hasShownOnboarding {
+//                HomeView()
+//                    .environmentObject(homeViewModel)
+//                    .environmentObject(noteListViewModel)
+//                    .environment(\.managedObjectContext, messageDataController.container.viewContext)
+//                    .environmentObject(notificationManager)
+//                    .navigationDestination(for: PathType.self) { pathType in
+//                        destinationView(for: pathType)
+//                    }
+//            } 
+//            else {
+//                OnboardingContentView(onboardingViewModel: onboardingViewModel)
+//                    .onDisappear {
+//                        hasShownOnboarding = true
+//                    }
+//            }
         }
         .environmentObject(pathModel)
     }
