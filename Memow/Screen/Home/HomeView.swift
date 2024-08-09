@@ -149,8 +149,8 @@ private struct DateSectionHeader: View {
     fileprivate var body: some View {
         // 바인딩 필요
         Text(homeViewModel.formattedDateComponents(dateComponents))
+            .customFontStyle(.body)
             .foregroundStyle(.customFont)
-            .font(.system(size: 14, weight: .regular))
             .frame(height: 20)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 20)
@@ -189,13 +189,13 @@ private struct MessageBubbleView: View {
                     VStack {
                         Spacer()
                         Text(message.date!.formattedTime)
+                            .customFontStyle(.caption)
                             .foregroundColor(.customFont)
-                            .font(.system(size: 8))
                             .padding(.top)
                     }
                     
                     Text(message.content!)
-                        .font(.system(size: 12))
+                        .customFontStyle(.body)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 8)
                         .background(Color.customYellow)
@@ -293,11 +293,11 @@ private struct MessageFieldView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     fileprivate var body: some View {
-        HStack {
+        HStack(spacing: 10) {
             // TextField를 커스텀한 뷰
             CustomTextField(
                 placeholder:
-                    Text("내용을 입력하세요")
+                    Text("What do you need?")
                     .foregroundColor(.customFont),
                 text: $text
             )
@@ -319,14 +319,13 @@ private struct MessageFieldView: View {
                     Image("SendMessage")
                         .resizable()
                         .frame(width: 25, height: 25)
+                        .padding(.trailing, 8)
                 }
             }
         }
-        .padding(.horizontal)
-        .padding(.vertical, 5)
         .frame(minHeight: 40)
         .background(Color.customTextField)
-        .cornerRadius(10)
+        .cornerRadius(16)
         .padding(.horizontal)
     }
 }
@@ -350,6 +349,7 @@ fileprivate struct OptionMenuBarView: View {
                 }
             }, label: {
                 Text("Delete")
+                    .customFontStyle(.body)
                     .foregroundColor(.customDelete)
                 Image("Trash")
                     .resizable()
@@ -376,6 +376,7 @@ fileprivate struct OptionMenuBarView: View {
                 }
             }, label: {
                 Text("Connect")
+                    .customFontStyle(.body)
                     .foregroundColor(.customFont)
                 Image("AddFile")
                     .resizable()

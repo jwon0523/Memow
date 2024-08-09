@@ -61,7 +61,7 @@ struct CustomFontModifier: ViewModifier {
         content
             .font(style.font(fontName: fontName))
             .kerning(style.kerning)
-            .lineSpacing(style.lineSpacing)
+//            .lineSpacing(style.lineSpacing)
     }
 }
 

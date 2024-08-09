@@ -15,7 +15,7 @@ struct CustomTextField: View {
     var body: some View {
         ZStack(alignment: .leading) {
             if text.isEmpty {
-                placeholder.opacity(0.5)
+                placeholder.opacity(0.5).customFontStyle(.body)
             }
             
             // axis: .vertical로 하여 축이 세로로 늘어나게 설정
@@ -24,5 +24,6 @@ struct CustomTextField: View {
                 .lineLimit(5)
                 .foregroundColor(.customFont)
         }
+        .padding(.horizontal)
     }
 }
