@@ -33,6 +33,8 @@
 		0E88158D2BB010AC002667DA /* UIApplication+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E88158C2BB010AC002667DA /* UIApplication+Extension.swift */; };
 		0EB623292C3015DF00262EF6 /* MessageEntity.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0EB623272C3015DF00262EF6 /* MessageEntity.xcdatamodeld */; };
 		0EB6232B2C30168C00262EF6 /* MessageDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB6232A2C30168C00262EF6 /* MessageDataController.swift */; };
+		0EC834472C666F230004CFF5 /* AppleSDGothicNeoR.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0EC834442C666F230004CFF5 /* AppleSDGothicNeoR.ttf */; };
+		0EC834482C666F230004CFF5 /* CustomFontModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC834452C666F230004CFF5 /* CustomFontModifier.swift */; };
 		0ED1D68C2BB84A3A0097CE2C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0ED1D68B2BB84A3A0097CE2C /* LaunchScreen.storyboard */; };
 		0ED6177C2C3A6DB00062E5C9 /* NoteEntity.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0ED6177A2C3A6DB00062E5C9 /* NoteEntity.xcdatamodeld */; };
 		0ED6177E2C3A6DE30062E5C9 /* NoteDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED6177D2C3A6DE30062E5C9 /* NoteDataController.swift */; };
@@ -68,6 +70,8 @@
 		0EB623282C3015DF00262EF6 /* MessageEntity.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MessageEntity.xcdatamodel; sourceTree = "<group>"; };
 		0EB6232A2C30168C00262EF6 /* MessageDataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDataController.swift; sourceTree = "<group>"; };
 		0EC834342C59BE170004CFF5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0EC834442C666F230004CFF5 /* AppleSDGothicNeoR.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AppleSDGothicNeoR.ttf; sourceTree = "<group>"; };
+		0EC834452C666F230004CFF5 /* CustomFontModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomFontModifier.swift; sourceTree = "<group>"; };
 		0ED1D68B2BB84A3A0097CE2C /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0ED6177B2C3A6DB00062E5C9 /* NoteEntity.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = NoteEntity.xcdatamodel; sourceTree = "<group>"; };
 		0ED6177D2C3A6DE30062E5C9 /* NoteDataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDataController.swift; sourceTree = "<group>"; };
@@ -184,6 +188,7 @@
 		0E53A6A52BA4509F002C37C5 /* Memow */ = {
 			isa = PBXGroup;
 			children = (
+				0EC834462C666F230004CFF5 /* Font */,
 				0E53A6B42BA451B3002C37C5 /* App */,
 				0E53A6B62BA451D5002C37C5 /* Component */,
 				0E53A6C12BA46124002C37C5 /* Extension */,
@@ -283,6 +288,15 @@
 			path = Extension;
 			sourceTree = "<group>";
 		};
+		0EC834462C666F230004CFF5 /* Font */ = {
+			isa = PBXGroup;
+			children = (
+				0EC834442C666F230004CFF5 /* AppleSDGothicNeoR.ttf */,
+				0EC834452C666F230004CFF5 /* CustomFontModifier.swift */,
+			);
+			path = Font;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -341,6 +355,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0EC834472C666F230004CFF5 /* AppleSDGothicNeoR.ttf in Resources */,
 				0ED1D68C2BB84A3A0097CE2C /* LaunchScreen.storyboard in Resources */,
 				0E53A6AE2BA450A0002C37C5 /* Preview Assets.xcassets in Resources */,
 				0E53A6AB2BA450A0002C37C5 /* Assets.xcassets in Resources */,
@@ -374,6 +389,7 @@
 				0EB623292C3015DF00262EF6 /* MessageEntity.xcdatamodeld in Sources */,
 				0E437E602BAD84C90069252D /* OnboardingViewModel.swift in Sources */,
 				0E53A6C02BA4605B002C37C5 /* Message.swift in Sources */,
+				0EC834482C666F230004CFF5 /* CustomFontModifier.swift in Sources */,
 				0E437E142BA84DDB0069252D /* NoteListViewModel.swift in Sources */,
 				0E437E192BA8980E0069252D /* PathType.swift in Sources */,
 				0E437E172BA898010069252D /* Path.swift in Sources */,
