@@ -317,15 +317,16 @@ private struct MessageFieldView: View {
                 } label: {
                     Image("SendMessage")
                         .resizable()
-                        .frame(width: 25, height: 25)
-                        .padding(.trailing, 8)
+                        .frame(width: 24, height: 24)
+                        .padding(.trailing, 16)
                 }
             }
         }
         .frame(minHeight: 40)
         .background(Color.customTextField)
         .cornerRadius(16)
-        .padding(.horizontal)
+        .padding(.horizontal, 16)
+        .padding(.bottom, 8)
     }
 }
 

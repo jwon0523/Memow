@@ -148,7 +148,7 @@ private struct NoteListCellView: View {
     }
 }
 
-// NoteRowView: Note 항목 뷰
+// MARK: - 노트 리스트 로우 뷰
 private struct NoteRowView: View {
     @EnvironmentObject private var pathModel: PathModel
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
@@ -156,16 +156,42 @@ private struct NoteRowView: View {
     @EnvironmentObject private var noteDataController: NoteDataController
     @Environment(\.managedObjectContext) private var viewContext
     @State private var note: Note
+    @State private var isRemoveSelected: Bool
     
-    init(note: Note) {
+    init(
+        note: Note,
+        isRemoveSelected: Bool = false
+    ) {
         _note = State(initialValue: note)
+        self.isRemoveSelected = isRemoveSelected
     }
     
     var body: some View {
         HStack {
+            if noteListViewModel.isEditNoteMode
+                || homeViewModel.isShowNoteListModal {
+                Button(action: {
+                    isRemoveSelected.toggle()
+                    // 삭제 버튼 클릭시 해당 노트 noteListViewModel의 removeNotes에 추가
+                    noteListViewModel.noteRemoveSelectedBoxTapped(note)
+                }, label: {
+                    isRemoveSelected ?
+                    Image("SelectedBox") : Image("unSelectedBox")
+                })
+                .padding(.vertical)
+                .padding(.horizontal, 5)
+            }
+            
             NoteContentView(note: $note)
-                .background(Color.backgroundComponent)
-                .cornerRadius(24)
+                .onTapGesture {
+                    if(!noteListViewModel.isEditNoteMode
+                       && !homeViewModel.isShowNoteListModal) {
+                        pathModel.paths.append(.noteView(
+                            isCreateMode: false,
+                            note: note
+                        ))
+                    }
+                }
             
             if note.isSwiped {
                 Button(action: {
@@ -243,6 +269,8 @@ private struct NoteContentView: View {
             .padding(.leading, 24)
         }
         .frame(maxWidth: .infinity, maxHeight: 78, alignment: .leading)
+        .background(Color.backgroundComponent)
+        .cornerRadius(24)
     }
 }
 
