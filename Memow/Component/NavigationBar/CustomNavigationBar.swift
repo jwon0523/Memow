@@ -28,7 +28,7 @@ struct CustomNavigationBar: View {
         leftBtnAction: @escaping () -> Void = {},
         rightBtnAction: @escaping () -> Void = {},
         leftBtnType: NavigationBtnType = .sideMenuIcon,
-        rightBtnType: NavigationBtnType = .update
+        rightBtnType: NavigationBtnType = .select
     ) {
         self.isDisplayLeftBtn = isDisplayLeftBtn
         self.isDisplayRightBtn = isDisplayRightBtn
@@ -60,11 +60,13 @@ struct CustomNavigationBar: View {
                                 .padding(8)
                                 .foregroundColor(.customFont)
                         } else {
-                            Image(leftBtnType.rawValue)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 25, height: 25)
-                                .padding(.leading, 10)
+                            VStack {
+                                Image(leftBtnType.rawValue)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                            }
+                            .frame(width: 48, height: 48)
                         }
                     }
                 )
@@ -84,11 +86,13 @@ struct CustomNavigationBar: View {
                                 .fontWeight(.bold)
                                 .padding(.trailing, 10)
                         } else {
-                            Image(rightBtnType.rawValue)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 25, height: 25)
-                                .padding(.trailing, 10)
+                            VStack {
+                                Image(rightBtnType.rawValue)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 25, height: 25)
+                            }
+                            .frame(width: 48, height: 48)
                         }
                 })
             }

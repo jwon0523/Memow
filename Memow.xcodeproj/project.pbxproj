@@ -530,7 +530,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: SEUNGYEOP KIM (J8D7JYM8XX)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: SEUNGYEOP KIM (J8D7JYM8XX)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"Memow/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = J8D7JYM8XX;
@@ -568,7 +568,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: SEUNGYEOP KIM (J8D7JYM8XX)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: SEUNGYEOP KIM (J8D7JYM8XX)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"Memow/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = J8D7JYM8XX;

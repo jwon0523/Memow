@@ -135,11 +135,19 @@ private struct NoteListCellView: View {
     ) private var notes: FetchedResults<NoteEntity>
     
     fileprivate var body: some View {
-        List(notes.map { $0.note }, id:\.id) { note in
-            NoteContentView(note: note)
+        List {
+            ForEach(notes.map { $0.note }, id:\.id) { note in
+                NoteContentView(note: note)
+                    .listRowSeparator(.hidden)
+                    .background(Color.backgroundComponent)
+                    .cornerRadius(24)
+            }
+            .listRowInsets(
+                EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
+            )
         }
-        // 리스트 간격 벌려주는 속성
-        .listRowSpacing(20)
+        .listRowSpacing(16)
+        .listStyle(.plain)
     }
 }
 
@@ -152,6 +160,7 @@ private struct NoteContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @State private var isRemoveSelected: Bool
     private var note: Note
+    private let noteContentScreenHeight: CGFloat = 78
     
     fileprivate init(
         note: Note,
@@ -161,11 +170,11 @@ private struct NoteContentView: View {
         self.isRemoveSelected = isRemoveSelected
     }
     
-    
     // 모달창에서 노트리스트를 선택하면 숫자 꼬이는 버그 고치기
     fileprivate var body: some View {
         VStack {
-            Button(action: {
+            Button(
+                action: {
                 // 노트 리스트 편집 모드가 아니고 HomeView에서
                 // 모달 뷰를 띄우지 않았을 때만 노트로 이동 가능
                 if(!noteListViewModel.isEditNoteMode
@@ -176,7 +185,7 @@ private struct NoteContentView: View {
                     ))
                 }
             }, label: {
-                HStack(alignment:.top) {
+                HStack {
                     // 리스트 수정 모드시 선택 버튼 활성
                     if noteListViewModel.isEditNoteMode
                         || homeViewModel.isShowNoteListModal {
@@ -193,31 +202,36 @@ private struct NoteContentView: View {
                     }
                     
                     VStack(alignment: .leading) {
-                        Spacer()
-                        
                         Text(note.title)
+                            .customFontStyle(.body)
                             .lineLimit(1)
-                            .font(.system(size: 16))
                             .foregroundColor(.customYellow)
-                            .padding(.bottom, 8)
+                            
+                        Spacer()
+                            .frame(height: 8)
                         
                         Text(note.content)
+                            .customFontStyle(.body)
                             .multilineTextAlignment(.leading)
                             .lineLimit(1)
-                            .font(.system(size: 12))
                             .foregroundColor(.customFont)
                         
-                        Spacer()
                     }
-                    .frame(maxHeight: .infinity, alignment: .leading)
+                    .frame(
+                        height: noteContentScreenHeight,
+                        alignment: .leading
+                    )
+                    .padding(.leading, 24)
                 }
-                .frame(maxWidth: .infinity, maxHeight: 50, alignment: .leading)
+                .frame(
+                    maxWidth: .infinity,
+                    maxHeight: noteContentScreenHeight,
+                    alignment: .leading
+                )
             })
         }
-        .frame(minHeight: 50)
-        // 스와이프 기능 추가
+//         스와이프 기능 추가
         .swipeActions {
-            // 리스트 삭제
             Button(
                 action: {
                     withAnimation {

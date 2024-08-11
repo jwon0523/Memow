@@ -281,7 +281,6 @@ private struct MessageBubbleView: View {
             .frame(maxWidth: .infinity, alignment: .trailing)
         }
         .padding(.vertical, 3)
-        .padding(.horizontal, 10)
     }
 }
 
