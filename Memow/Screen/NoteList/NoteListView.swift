@@ -135,105 +135,40 @@ private struct NoteListCellView: View {
     ) private var notes: FetchedResults<NoteEntity>
     
     fileprivate var body: some View {
-        List {
-            ForEach(notes.map { $0.note }, id:\.id) { note in
-                NoteContentView(note: note)
-                    .listRowSeparator(.hidden)
-                    .background(Color.backgroundComponent)
-                    .cornerRadius(24)
+        ScrollView {
+            VStack(spacing: 10) {
+                ForEach(notes.map { $0.note }, id: \.id) { note in
+                    NoteRowView(note: note)
+                }
+                .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
             }
-            .listRowInsets(
-                EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
-            )
         }
         .listRowSpacing(16)
         .listStyle(.plain)
     }
 }
 
-// MARK: - 노트 컨텐트 뷰
-private struct NoteContentView: View {
+// NoteRowView: Note 항목 뷰
+private struct NoteRowView: View {
     @EnvironmentObject private var pathModel: PathModel
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
     @EnvironmentObject private var homeViewModel: HomeViewModel
     @EnvironmentObject private var noteDataController: NoteDataController
     @Environment(\.managedObjectContext) private var viewContext
-    @State private var isRemoveSelected: Bool
-    private var note: Note
-    private let noteContentScreenHeight: CGFloat = 78
+    @State private var note: Note
     
-    fileprivate init(
-        note: Note,
-        isRemoveSelected: Bool = false
-    ) {
-        self.note = note
-        self.isRemoveSelected = isRemoveSelected
+    init(note: Note) {
+        _note = State(initialValue: note)
     }
     
-    // 모달창에서 노트리스트를 선택하면 숫자 꼬이는 버그 고치기
-    fileprivate var body: some View {
-        VStack {
-            Button(
-                action: {
-                // 노트 리스트 편집 모드가 아니고 HomeView에서
-                // 모달 뷰를 띄우지 않았을 때만 노트로 이동 가능
-                if(!noteListViewModel.isEditNoteMode
-                   && !homeViewModel.isShowNoteListModal) {
-                    pathModel.paths.append(.noteView(
-                        isCreateMode: false,
-                        note: note
-                    ))
-                }
-            }, label: {
-                HStack {
-                    // 리스트 수정 모드시 선택 버튼 활성
-                    if noteListViewModel.isEditNoteMode
-                        || homeViewModel.isShowNoteListModal {
-                        Button(action: {
-                            isRemoveSelected.toggle()
-                            // 삭제 버튼 클릭시 해당 노트 noteListViewModel의 removeNotes에 추가
-                            noteListViewModel.noteRemoveSelectedBoxTapped(note)
-                        }, label: {
-                            isRemoveSelected ?
-                            Image("SelectedBox") : Image("unSelectedBox")
-                        })
-                        .padding(.vertical)
-                        .padding(.horizontal, 5)
-                    }
-                    
-                    VStack(alignment: .leading) {
-                        Text(note.title)
-                            .customFontStyle(.body)
-                            .lineLimit(1)
-                            .foregroundColor(.customYellow)
-                            
-                        Spacer()
-                            .frame(height: 8)
-                        
-                        Text(note.content)
-                            .customFontStyle(.body)
-                            .multilineTextAlignment(.leading)
-                            .lineLimit(1)
-                            .foregroundColor(.customFont)
-                        
-                    }
-                    .frame(
-                        height: noteContentScreenHeight,
-                        alignment: .leading
-                    )
-                    .padding(.leading, 24)
-                }
-                .frame(
-                    maxWidth: .infinity,
-                    maxHeight: noteContentScreenHeight,
-                    alignment: .leading
-                )
-            })
-        }
-//         스와이프 기능 추가
-        .swipeActions {
-            Button(
-                action: {
+    var body: some View {
+        HStack {
+            NoteContentView(note: $note)
+                .background(Color.backgroundComponent)
+                .cornerRadius(24)
+            
+            if note.isSwiped {
+                Button(action: {
                     withAnimation {
                         noteListViewModel.swipeRemoveNote(
                             note: note,
@@ -241,13 +176,73 @@ private struct NoteContentView: View {
                             context: viewContext
                         )
                     }
-                },
-                label: {
-                    Text("삭제")
-                        .foregroundColor(.customWhite)
-                })
-            .tint(.red)
+                }) {
+                    Text("Delete")
+                        .customFontStyle(.body)
+                        .foregroundColor(.red)
+                        .padding(.vertical, 26)
+                        .padding(.horizontal, 20)
+                        .background(Color.backgorundBtn)
+                        .cornerRadius(24)
+                }
+                .transition(.move(edge: .trailing)) // 부드러운 등장 효과
+                .animation(.easeInOut(duration: 0.25), value: note.isSwiped)
+            }
         }
+        .contentShape(Rectangle())
+        .offset(x: note.offset)
+        .gesture(
+            DragGesture()
+                .onChanged { gesture in
+                    if gesture.translation.width < -30 {
+                        withAnimation(.easeInOut(duration: 0.25)) {
+                            note.offset = -10
+                            note.isSwiped = true
+                        }
+                    } else if gesture.translation.width > 30 {
+                        withAnimation(.easeInOut(duration: 0.25)) {
+                            note.offset = 0
+                            note.isSwiped = false
+                        }
+                    }
+                }
+                .onEnded { _ in
+                    if !note.isSwiped {
+                        withAnimation(.easeInOut(duration: 0.15)) {
+                            note.offset = 0
+                        }
+                    }
+                }
+        )
+        .padding(.vertical, 8)
+        .padding(.horizontal)
+    }
+}
+
+// MARK: - 노트 컨텐트 뷰
+private struct NoteContentView: View {
+    @Binding var note: Note
+
+    var body: some View {
+        HStack {
+            VStack(alignment: .leading) {
+                Text(note.title)
+                    .customFontStyle(.body)
+                    .lineLimit(1)
+                    .foregroundColor(.customYellow)
+                
+                Spacer().frame(height: 8)
+                
+                Text(note.content)
+                    .customFontStyle(.body)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(1)
+                    .foregroundColor(.customFont)
+            }
+            .frame(height: 78, alignment: .leading)
+            .padding(.leading, 24)
+        }
+        .frame(maxWidth: .infinity, maxHeight: 78, alignment: .leading)
     }
 }
 

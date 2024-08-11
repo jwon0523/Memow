@@ -13,16 +13,26 @@ struct Note: Hashable {
     var title: String
     var content: String
     var date: Date
+    var offset: CGFloat = 0
+    var isSwiped: Bool = false
 }
 
 extension NoteEntity {
     // NoteEntity를 Note로 변환
     var note: Note {
-        return Note(
-            id: id ?? UUID(),
-            title: title ?? "",
-            content: content ?? "",
-            date: date ?? Date()
-        )
+        get {
+            return Note(
+                id: id ?? UUID(),
+                title: title ?? "",
+                content: content ?? "",
+                date: date ?? Date()
+            )
+        }
+        set {
+            self.id = newValue.id
+            self.title = newValue.title
+            self.content = newValue.content
+            self.date = newValue.date
+        }
     }
 }
