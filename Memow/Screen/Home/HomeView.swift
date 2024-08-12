@@ -83,7 +83,6 @@ private struct ChatListView: View {
                 ScrollViewReader { proxy in
                     // 메세지가 작성된 날짜를 보여줌
                     ChatListCellView()
-                        .padding(.top, 10)
                         .padding(.horizontal)
                         .background(.customBackground)
                         .onChange(of: homeViewModel.lastMessageId) { id in
@@ -121,7 +120,7 @@ private struct ChatListCellView: View {
         )
         LazyVGrid(
             columns: columns,
-            spacing: 0
+            spacing: 20
             //            pinnedViews: [.sectionHeaders]
         ) {
             ForEach(
@@ -148,12 +147,14 @@ private struct DateSectionHeader: View {
     
     fileprivate var body: some View {
         // 바인딩 필요
-        Text(homeViewModel.formattedDateComponents(dateComponents))
-            .customFontStyle(.body)
-            .foregroundStyle(.customFont)
-            .frame(height: 20)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 20)
+        VStack {
+            Text(homeViewModel.formattedDateComponents(dateComponents))
+                .customFontStyle(.body)
+                .foregroundStyle(.lableDisable)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.top, 24)
+        .padding(.bottom, 8)
     }
 }
 
@@ -280,7 +281,6 @@ private struct MessageBubbleView: View {
             }
             .frame(maxWidth: .infinity, alignment: .trailing)
         }
-        .padding(.vertical, 3)
     }
 }
 

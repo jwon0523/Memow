@@ -97,6 +97,7 @@ struct CustomNavigationBar: View {
                 })
             }
         }
+        .frame(height: 48)
     }
 }
 
