@@ -34,7 +34,9 @@ struct NoteView: View {
                             )
                         } else {
                             noteListViewModel.updateNote(
-                                noteViewModel.note,
+                                id: noteViewModel.note.id,
+                                updateTitle: noteViewModel.note.title,
+                                updateContent: noteViewModel.note.content,
                                 noteDataController: noteDataController,
                                 context: viewContext
                             )

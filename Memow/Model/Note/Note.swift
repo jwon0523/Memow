@@ -8,13 +8,38 @@
 import Foundation
 import CoreData
 
-struct Note: Hashable {
-    var id = UUID()
-    var title: String
-    var content: String
-    var date: Date
-    var offset: CGFloat = 0
-    var isSwiped: Bool = false
+class Note: ObservableObject, Hashable {
+    @Published var id = UUID()
+    @Published var title: String
+    @Published var content: String
+    @Published var date: Date
+    @Published var offset: CGFloat = 0
+    @Published var isSwiped: Bool = false
+
+    init(
+        id: UUID = UUID(),
+        title: String,
+        content: String,
+        date: Date,
+        offset: CGFloat = 0,
+        isSwiped: Bool = false
+    ) {
+        self.id = id
+        self.title = title
+        self.content = content
+        self.date = date
+        self.offset = offset
+        self.isSwiped = isSwiped
+    }
+
+    // Hashable을 위한 메서드
+    static func == (lhs: Note, rhs: Note) -> Bool {
+        return lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 }
 
 extension NoteEntity {

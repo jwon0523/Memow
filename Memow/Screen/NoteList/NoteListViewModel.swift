@@ -48,14 +48,16 @@ extension NoteListViewModel {
     }
     
     func updateNote(
-        _ note: Note,
+        id: UUID,
+        updateTitle: String,
+        updateContent: String,
         noteDataController: NoteDataController,
         context: NSManagedObjectContext
     ) {
         noteDataController.updateNoteData(
-            id: note.id,
-            updateTitle: note.title,
-            updateContent: note.content,
+            id: id,
+            updateTitle: updateTitle,
+            updateContent: updateContent,
             context: context
         )
     }

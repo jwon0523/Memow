@@ -140,11 +140,8 @@ private struct NoteListCellView: View {
                 ForEach(notes.map { $0.note }, id: \.id) { note in
                     NoteRowView(note: note)
                 }
-                .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
             }
         }
-        .listRowSpacing(16)
-        .listStyle(.plain)
     }
 }
 
@@ -155,16 +152,8 @@ private struct NoteRowView: View {
     @EnvironmentObject private var homeViewModel: HomeViewModel
     @EnvironmentObject private var noteDataController: NoteDataController
     @Environment(\.managedObjectContext) private var viewContext
-    @State private var note: Note
-    @State private var isRemoveSelected: Bool
-    
-    init(
-        note: Note,
-        isRemoveSelected: Bool = false
-    ) {
-        _note = State(initialValue: note)
-        self.isRemoveSelected = isRemoveSelected
-    }
+    @ObservedObject var note: Note
+    @State private var isRemoveSelected: Bool = false
     
     var body: some View {
         HStack {
@@ -182,7 +171,7 @@ private struct NoteRowView: View {
                 .padding(.horizontal, 5)
             }
             
-            NoteContentView(note: $note)
+            NoteContentView(note: note)
                 .onTapGesture {
                     if(!noteListViewModel.isEditNoteMode
                        && !homeViewModel.isShowNoteListModal) {
@@ -247,7 +236,7 @@ private struct NoteRowView: View {
 
 // MARK: - 노트 컨텐트 뷰
 private struct NoteContentView: View {
-    @Binding var note: Note
+    @ObservedObject var note: Note
 
     var body: some View {
         HStack {
