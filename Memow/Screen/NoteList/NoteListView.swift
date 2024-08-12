@@ -255,7 +255,7 @@ private struct NoteContentView: View {
                 Text(note.title)
                     .customFontStyle(.body)
                     .lineLimit(1)
-                    .foregroundColor(.customYellow)
+                    .foregroundColor(.colorPrimary)
                 
                 Spacer().frame(height: 8)
                 
@@ -293,7 +293,7 @@ private struct WriteNoteBtnView: View {
                         Image(systemName: "square.and.pencil.circle.fill")
                             .resizable()
                             .frame(width: 50, height: 50)
-                            .foregroundColor(.customYellow)
+                            .foregroundColor(.colorPrimary)
                     }
                 )
             }
@@ -323,10 +323,11 @@ private struct MoveMessageToNoteListBtnView: View {
                     homeViewModel.toggleEditMessageMode()
                 }, label: {
                     Text("Move text to selected Note")
+                        .customFontStyle(.body)
                         .foregroundStyle(.customFont)
                         .frame(width: 250)
                         .padding()
-                        .background(.customBackground)
+                        .background(.backgorundBtn)
                         .cornerRadius(20)
                 })
             }

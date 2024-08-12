@@ -253,7 +253,7 @@ private struct SettingContentBtnView: View {
                     .foregroundColor(.black)
             })
             .frame(width: 150, height: 50)
-            .background(isSelected ? Color.customYellow : Color.customWhite)
+            .background(isSelected ? Color.colorPrimary : Color.customWhite)
             .cornerRadius(15)
             .shadow(radius: 3, y: 2)
         }

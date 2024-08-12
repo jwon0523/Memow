@@ -198,17 +198,17 @@ private struct MessageBubbleView: View {
                         .customFontStyle(.body)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 8)
-                        .background(Color.customYellow)
+                        .background(Color.colorPrimary)
+                        .opacity(
+                            homeViewModel.isEditMessageMode &&
+                            !homeViewModel.selectedMessages.contains(message) ? 0.3 : 1
+                        )
                         .cornerRadius(10)
-                    
                 }
-                // 선택모드일 때 투명도 0.3 지정하고, 선택박스 선택시 투명도 없음
-                .opacity(homeViewModel.isEditMessageMode ? 0.3 : 1)
+//                .opacity(homeViewModel.isEditMessageMode ? 0.4 : 1)
                 // 메세지의 최대 너비는 화면의 68%로 지정
                 .frame(maxWidth: screenWidth * 0.68, alignment: .trailing)
-                // 왼쪽으로 당기면 x축으로 전체 width범위의 -10까지 이동
                 .offset(x: moveLeft ? -10 : 0)
-                // 왼쪽으로 당기는 제스처
                 .gesture(
                     DragGesture(minimumDistance: 50)
                         .onChanged { value in
@@ -337,56 +337,62 @@ fileprivate struct OptionMenuBarView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     fileprivate var body: some View {
-        HStack {
-            Spacer()
-            
-            Button(action: {
-                withAnimation {
-                    homeViewModel.removeBtnTapped(
-                        messageDataController: messageDataController,
-                        context: viewContext
-                    )
-                }
-            }, label: {
-                Text("Delete")
-                    .customFontStyle(.body)
-                    .foregroundColor(.customDelete)
-                Image("Trash")
-                    .resizable()
-                    .frame(width: 20, height: 20)
-            })
-            
-            Spacer()
-            
-//            Button(action: {
-//                print("Share")
-//            }, label: {
-//                Text("Share")
-//                    .foregroundColor(.customFont)
-//                Image("Share")
-//                    .resizable()
-//                    .frame(width: 20, height: 20)
-//            })
-            
-//            Spacer()
-            
-            Button(action: {
-                if(!homeViewModel.selectedMessages.isEmpty) {
-                    homeViewModel.toggleNoteListModal()
-                }
-            }, label: {
-                Text("Connect")
-                    .customFontStyle(.body)
-                    .foregroundColor(.customFont)
-                Image("AddFile")
-                    .resizable()
-                    .frame(width: 20, height: 20)
-            })
-            
-            Spacer()
+        VStack {
+            HStack {
+                Spacer()
+                
+                Button(action: {
+                    withAnimation {
+                        homeViewModel.removeBtnTapped(
+                            messageDataController: messageDataController,
+                            context: viewContext
+                        )
+                    }
+                }, label: {
+                    Text("Delete")
+                        .customFontStyle(.body)
+                        .foregroundColor(.customDelete)
+                    Image("Trash")
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                })
+                
+                Spacer()
+                
+    //            Button(action: {
+    //                print("Share")
+    //            }, label: {
+    //                Text("Share")
+    //                    .foregroundColor(.customFont)
+    //                Image("Share")
+    //                    .resizable()
+    //                    .frame(width: 20, height: 20)
+    //            })
+                
+    //            Spacer()
+                
+                Button(action: {
+                    if(!homeViewModel.selectedMessages.isEmpty) {
+                        homeViewModel.toggleNoteListModal()
+                    }
+                }, label: {
+                    Text("Connect")
+                        .customFontStyle(.body)
+                        .foregroundColor(.customFont)
+                    Image("Copy")
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                })
+                
+                Spacer()
+            }
+            .frame(height: 40)
+            .background(Color.backgorundBtn)
+            .opacity(homeViewModel.selectedMessages.isEmpty ? 0.4 : 1)
+            .cornerRadius(16)
         }
-        .frame(maxWidth: .infinity)
-        .padding(.bottom, 10)
+        .padding(.all, 16)
+        .frame(height: 72)
     }
 }
 
