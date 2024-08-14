@@ -19,22 +19,20 @@ extension Date {
         return formatter.string(from: self)
     }
     
-    // 날짜 커스텀
-    var formattedDay: String {
-        //        let now = Date()
-        //        let calender = Calendar.current
+    func formattedDate(from dateComponents: DateComponents) -> String {
+        let calendar = Calendar.current
         
-        //        let nowStartOfDay = calender.startOfDay(for: now)
-        //        let dateStartOfDay = calender.startOfDay(for: self)
-        //        let numOfDaysDifference = calender.dateComponents([.day], from: nowStartOfDay, to: dateStartOfDay).day!
+        guard let date = calendar.date(from: dateComponents) else {
+            return "Invalid Date"
+        }
         
+        // DateFormatter 설정
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ko_KR")
-        formatter.dateFormat = "Y년 M월 d일 E요일"
+        formatter.locale = Locale(identifier: "en_US")
+        formatter.dateFormat = "EEEE, MMMM d, yyyy" // "Wednesday, December 20, 2023" 형식
         
-        return formatter.string(from: self)
-        
-        
+        // 날짜를 포맷팅하여 문자열로 반환
+        return formatter.string(from: date)
     }
     
     func daysBetween(date: Date) -> Int {

@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+private let screenWidth: CGFloat = UIScreen.main.bounds.size.width
+
 struct NoteListView: View {
     @EnvironmentObject private var pathModel: PathModel
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
@@ -50,7 +52,7 @@ struct NoteListView: View {
                 NoteListCellView()
                 
             }
-            .background(.customBackground)
+            .background(Color.backgroundDefault)
             
             if(homeViewModel.isShowNoteListModal) {
                 MoveMessageToNoteListBtnView()
@@ -165,10 +167,9 @@ private struct NoteRowView: View {
                     noteListViewModel.noteRemoveSelectedBoxTapped(note)
                 }, label: {
                     isRemoveSelected ?
-                    Image("SelectedBox") : Image("unSelectedBox")
+                    Image("NoteSelectedBtn") : Image("NoteUnSelectedBtn")
                 })
-                .padding(.vertical)
-                .padding(.horizontal, 5)
+                .padding(.horizontal, 16)
             }
             
             NoteContentView(note: note)
@@ -182,7 +183,7 @@ private struct NoteRowView: View {
                     }
                 }
             
-            if note.isSwiped {
+            if note.isSwiped && !noteListViewModel.isEditNoteMode {
                 Button(action: {
                     withAnimation {
                         noteListViewModel.swipeRemoveNote(
@@ -205,16 +206,18 @@ private struct NoteRowView: View {
             }
         }
         .contentShape(Rectangle())
-        .offset(x: note.offset)
+        .offset(x: 0)
         .gesture(
             DragGesture()
                 .onChanged { gesture in
-                    if gesture.translation.width < -30 {
+                    guard !noteListViewModel.isEditNoteMode else { return }
+                    
+                    if gesture.translation.width < -30 && !note.isSwiped {
                         withAnimation(.easeInOut(duration: 0.25)) {
                             note.offset = -10
                             note.isSwiped = true
                         }
-                    } else if gesture.translation.width > 30 {
+                    } else if gesture.translation.width > 30 && note.isSwiped {
                         withAnimation(.easeInOut(duration: 0.25)) {
                             note.offset = 0
                             note.isSwiped = false
@@ -230,7 +233,7 @@ private struct NoteRowView: View {
                 }
         )
         .padding(.vertical, 8)
-        .padding(.horizontal)
+        .padding(.horizontal, 16)
     }
 }
 
@@ -252,7 +255,7 @@ private struct NoteContentView: View {
                     .customFontStyle(.body)
                     .multilineTextAlignment(.leading)
                     .lineLimit(1)
-                    .foregroundColor(.customFont)
+                    .foregroundColor(.labelDisable)
             }
             .frame(height: 78, alignment: .leading)
             .padding(.leading, 24)

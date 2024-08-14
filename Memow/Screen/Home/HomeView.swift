@@ -48,7 +48,7 @@ struct HomeView: View {
                     MessageFieldView()
                 }
             }
-            .background(.customBackground)
+            .background(Color.backgroundDefault)
             .sheet(
                 isPresented: $homeViewModel.isShowNoteListModal,
                 onDismiss: noteListViewModel.removeAllSelectedNote
@@ -84,7 +84,7 @@ private struct ChatListView: View {
                     // 메세지가 작성된 날짜를 보여줌
                     ChatListCellView()
                         .padding(.horizontal)
-                        .background(.customBackground)
+                        .background(Color.backgroundDefault)
                         .onChange(of: homeViewModel.lastMessageId) { id in
                             // 메세지의 lastMessageId가 변경되면 대화의 마지막 부분으로 이동
                             withAnimation {
@@ -144,11 +144,12 @@ private struct ChatListCellView: View {
 private struct DateSectionHeader: View {
     @EnvironmentObject private var homeViewModel: HomeViewModel
     let dateComponents: DateComponents
+    let date: Date = Date()
     
     fileprivate var body: some View {
         // 바인딩 필요
         VStack {
-            Text(homeViewModel.formattedDateComponents(dateComponents))
+            Text(date.formattedDate(from: dateComponents))
                 .customFontStyle(.body)
                 .foregroundStyle(.lableDisable)
         }
@@ -197,6 +198,7 @@ private struct MessageBubbleView: View {
                     
                     Text(message.content!)
                         .customFontStyle(.body)
+                        .foregroundColor(.labelMemo)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 8)
                         .background(Color.colorPrimary)
@@ -256,7 +258,7 @@ private struct MessageBubbleView: View {
                                 .resizable()
                                 .frame(width: 20, height: 20)
                                 .padding(3)
-                                .background(.customBackground)
+                                .background(Color.backgroundDefault)
                         }
                         
                         Spacer()
@@ -270,7 +272,7 @@ private struct MessageBubbleView: View {
                                 .resizable()
                                 .frame(width: 20, height: 20)
                                 .padding(3)
-                                .background(.customBackground)
+                                .background(Color.backgroundDefault)
                         }
 
                         
