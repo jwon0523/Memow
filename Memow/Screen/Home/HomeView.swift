@@ -208,38 +208,8 @@ private struct MessageBubbleView: View {
                         )
                         .cornerRadius(10)
                 }
-//                .opacity(homeViewModel.isEditMessageMode ? 0.4 : 1)
-                // 메세지의 최대 너비는 화면의 68%로 지정
                 .frame(maxWidth: screenWidth * 0.68, alignment: .trailing)
-                .offset(x: moveLeft ? -10 : 0)
-                .gesture(
-                    DragGesture(minimumDistance: 50)
-                        .onChanged { value in
-                            // 편집 모드가 아닌 경우에만 메세지 드래그 가능
-                            if !homeViewModel.isEditMessageMode {
-                                self.dragOffset = value.translation
-                                // 오른쪽에서 왼쪽으로 드래그
-                                if self.dragOffset.width < 0 {
-                                    // 애니메이션으로 부드럽게 보여줌
-                                    withAnimation {
-                                        self.showRightIcon = true
-                                        self.moveLeft = true
-                                    }
-                                    // 왼쪽에서 오른쪽으로 드래그
-                                } else if self.dragOffset.width > 0 {
-                                    // 애니메이션으로 부드럽게 보여줌
-                                    withAnimation {
-                                        self.showRightIcon = false
-                                        self.moveLeft = false
-                                    }
-                                }
-                            }
-                        }
-                        .onEnded { _ in
-                            self.dragOffset = .zero
-                            // 드래그 완료시 작동할 코드 추가 가능.
-                        }
-                )
+                .offset(x: dragOffset.width)
                 
                 if showRightIcon && !homeViewModel.isEditMessageMode {
                     HStack {
@@ -249,9 +219,7 @@ private struct MessageBubbleView: View {
                             } else if notificationManager.authorizationStatus == .denied {
                                 print("Notification permission denied.")
                             } else {
-                                homeViewModel.selectedMessageAlarmBtnTapped(
-                                    message: message
-                                )
+                                homeViewModel.selectedMessageAlarmBtnTapped(message: message)
                             }
                         } label: {
                             Image("Alarm")
@@ -261,8 +229,7 @@ private struct MessageBubbleView: View {
                                 .background(Color.backgroundDefault)
                         }
                         
-                        Spacer()
-                            .frame(width: 15)
+                        Spacer().frame(width: 15)
                         
                         Button {
                             homeViewModel.messageSelectedBoxTapped(message)
@@ -274,15 +241,44 @@ private struct MessageBubbleView: View {
                                 .padding(3)
                                 .background(Color.backgroundDefault)
                         }
-
                         
-                        Spacer()
-                            .frame(width: 5)
+                        Spacer().frame(width: 5)
                     }
+                    .offset(x: dragOffset.width)
+                    .animation(.easeInOut(duration: 0.6), value: showRightIcon)
+                    .opacity(dragOffset.width > 20 ? 0.5 : dragOffset.width >= 60 ? 0 : 1)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .trailing)
         }
+        .background(Color.backgroundDefault)
+        .gesture(
+            DragGesture()
+                .onChanged { gesture in
+                    let translation = gesture.translation.width
+                    if translation < -50 {
+                        self.dragOffset.width = -50
+                    } else if translation > 80 {
+                        self.dragOffset.width = 80
+                    } else {
+                        self.dragOffset.width = translation
+                    }
+                }
+                .onEnded { _ in
+                    if dragOffset.width < -40 {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            self.showRightIcon = true
+                        }
+                    } else if dragOffset.width > 60 {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            self.showRightIcon = false
+                        }
+                    }
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        self.dragOffset = .zero
+                    }
+                }
+        )
     }
 }
 

@@ -202,7 +202,10 @@ private struct NoteRowView: View {
                         .cornerRadius(24)
                 }
                 .transition(.move(edge: .trailing)) // 부드러운 등장 효과
-                .animation(.easeInOut(duration: 0.25), value: note.isSwiped)
+                .animation(
+                    .easeInOut(duration: 0.25),
+                    value: note.isSwiped
+                )
             }
         }
         .contentShape(Rectangle())
