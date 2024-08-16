@@ -196,34 +196,8 @@ private struct MessageBubbleView: View {
             }
             
             HStack {
-                HStack {
-                    VStack(alignment: .trailing) {
-                        if message.isAlarmSet {
-                            Image("AlarmBadge")
-                                .resizable()
-                                .frame(width: 18, height: 18)
-                        }
-                        Text(message.date!.formattedTime)
-                            .customFontStyle(.caption)
-                            .foregroundColor(.customFont)
-                    }
-                    .frame(height: 34, alignment: .bottom)
-                    
-                    Text(message.content!)
-                        .customFontStyle(.body)
-                        .frame(height: 34)
-                        .foregroundColor(.labelMemo)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 1.5)
-                        .background(Color.colorPrimary)
-                        .opacity(
-                            homeViewModel.isEditMessageMode &&
-                            !homeViewModel.selectedMessages.contains(message) ? 0.3 : 1
-                        )
-                        .cornerRadius(10)
-                }
-                .frame(maxWidth: screenWidth * 0.7, alignment: .trailing)
-                .offset(x: dragOffset.width)
+                MessageContentView(message: message)
+                    .offset(x: dragOffset.width)
                 
                 if showRightIcon && !homeViewModel.isEditMessageMode {
                     HStack {
@@ -292,6 +266,46 @@ private struct MessageBubbleView: View {
                         self.dragOffset = .zero
                     }
                 }
+        )
+    }
+}
+
+// MARK: - 메세지 내용 뷰
+private struct MessageContentView: View {
+    @EnvironmentObject private var homeViewModel: HomeViewModel
+    private var message: MessageEntity
+    
+    fileprivate init(message: MessageEntity) {
+        self.message = message
+    }
+    
+    fileprivate var body: some View {
+        HStack {
+            VStack(alignment: .trailing) {
+                Spacer()
+                
+                if message.isAlarmSet {
+                    Image("AlarmBadge")
+                        .resizable()
+                        .frame(width: 18, height: 18)
+                }
+                Text(message.date!.formattedTime)
+                    .customFontStyle(.caption)
+                    .foregroundColor(.customFont)
+            }
+            
+            Text(message.content!)
+                .customFontStyle(.body)
+                .foregroundColor(.labelMemo)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 10)
+                .background(Color.colorPrimary)
+                .cornerRadius(8)
+        }
+        .frame(maxWidth: screenWidth * 0.7, alignment: .trailing)
+        .opacity(
+            homeViewModel.isEditMessageMode &&
+            !homeViewModel.selectedMessages.contains(message) ? 0.3 : 1
         )
     }
 }
