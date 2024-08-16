@@ -76,24 +76,36 @@ struct HomeView: View {
 // MARK: - 채팅 리스트 뷰
 private struct ChatListView: View {
     @EnvironmentObject private var homeViewModel: HomeViewModel
+    @Environment(\.managedObjectContext) private var viewContext
+    @FetchRequest(
+        entity: MessageEntity.entity(),
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \MessageEntity.date, ascending: true)
+        ],
+        animation: .default
+    ) private var messages: FetchedResults<MessageEntity>
     
     fileprivate var body: some View {
-        GeometryReader(content: { geometry in
+        GeometryReader { geometry in
             ScrollView {
                 ScrollViewReader { proxy in
                     // 메세지가 작성된 날짜를 보여줌
-                    ChatListCellView()
+                    ChatListCellView(messages: Array(messages))
                         .padding(.horizontal)
                         .background(Color.backgroundDefault)
                         .onChange(of: homeViewModel.lastMessageId) { id in
-                            // 메세지의 lastMessageId가 변경되면 대화의 마지막 부분으로 이동
                             withAnimation {
                                 proxy.scrollTo(id, anchor: .bottom)
                             }
                         }
+                        .onAppear {
+                            if let id = messages.last?.id {
+                                homeViewModel.setLastMessageId(lastMessageId: id)
+                            }
+                        }
                 }
             }
-        })
+        }
         // 키보드 화면 밖 선택시 키보드 내림
         .onTapGesture {
             UIApplication.shared.keyboardDown()
@@ -103,16 +115,13 @@ private struct ChatListView: View {
 
 // MARK: - 날짜별 섹션 뷰
 private struct ChatListCellView: View {
-    @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var homeViewModel: HomeViewModel
     private let columns = [GridItem(.flexible())]
-    @FetchRequest(
-        entity: MessageEntity.entity(),
-        sortDescriptors: [
-            NSSortDescriptor(keyPath: \MessageEntity.date, ascending: true)
-        ],
-        animation: .default
-    ) private var messages: FetchedResults<MessageEntity>
+    private var messages: [MessageEntity]
+    
+    fileprivate init(messages: [MessageEntity]) {
+        self.messages = messages
+    }
     
     fileprivate var body: some View {
         let groupedMessages = homeViewModel.groupMessagesByDate(
@@ -130,7 +139,7 @@ private struct ChatListCellView: View {
                     header: DateSectionHeader(dateComponents: dateComponents)
                 ) {
                     ForEach(
-                        groupedMessages[dateComponents]!, id: \.self
+                        groupedMessages[dateComponents]!, id: \.id
                     ) { message in
                         MessageBubbleView(message: message)
                     }
@@ -305,6 +314,7 @@ private struct MessageFieldView: View {
                     // 입력된 내용이 없을 경우 전송되지 않음
                     if text != "" {
                         messageDataController.addMessage(
+                            homeViewModel: homeViewModel,
                             content: text,
                             context: viewContext
                         )
@@ -324,7 +334,7 @@ private struct MessageFieldView: View {
         .background(Color.customTextField)
         .cornerRadius(16)
         .padding(.horizontal, 16)
-        .padding(.bottom, 8)
+        .padding(.vertical, 10)
     }
 }
 

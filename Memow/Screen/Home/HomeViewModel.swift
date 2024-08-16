@@ -51,11 +51,8 @@ class HomeViewModel: ObservableObject {
 
 // 함수 기능 추가
 extension HomeViewModel {
-    // HomeView 안에서 마지막 메세지로 자동 스크롤 하기 위해 lastMessageId 얻는 함수
-    func getLastMessageId() {
-        if let id = self.messages.last?.id {
-            self.lastMessageId = id
-        }
+    func setLastMessageId(lastMessageId id: UUID) {
+        self.lastMessageId = id
     }
     
     func removeMessage(_ message: MessageEntity) {

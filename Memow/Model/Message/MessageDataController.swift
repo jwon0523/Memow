@@ -32,17 +32,26 @@ class MessageDataController: ObservableObject {
 }
 
 extension MessageDataController {
-    func addMessage(content: String, context: NSManagedObjectContext? = nil) {
+    func addMessage(
+        homeViewModel: HomeViewModel = HomeViewModel(),
+        content: String,
+        context: NSManagedObjectContext? = nil
+    ) {
         let context = context ?? self.context
         let newMessage = MessageEntity(context: context)
         newMessage.id = UUID()
         newMessage.content = content
         newMessage.date = Date()
         
+        homeViewModel.setLastMessageId(lastMessageId: newMessage.id!)
+        
         saveContext(context: context)
     }
     
-    func deleteMessage(_ message: MessageEntity, context: NSManagedObjectContext? = nil) {
+    func deleteMessage(
+        _ message: MessageEntity,
+        context: NSManagedObjectContext? = nil
+    ) {
         let context = context ?? self.context
         context.delete(message)
         
