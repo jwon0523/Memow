@@ -197,19 +197,24 @@ private struct MessageBubbleView: View {
             
             HStack {
                 HStack {
-                    VStack {
-                        Spacer()
+                    VStack(alignment: .trailing) {
+                        if message.isAlarmSet {
+                            Image("AlarmBadge")
+                                .resizable()
+                                .frame(width: 18, height: 18)
+                        }
                         Text(message.date!.formattedTime)
                             .customFontStyle(.caption)
                             .foregroundColor(.customFont)
-                            .padding(.top)
                     }
+                    .frame(height: 34, alignment: .bottom)
                     
                     Text(message.content!)
                         .customFontStyle(.body)
+                        .frame(height: 34)
                         .foregroundColor(.labelMemo)
                         .padding(.horizontal, 12)
-                        .padding(.vertical, 8)
+                        .padding(.vertical, 1.5)
                         .background(Color.colorPrimary)
                         .opacity(
                             homeViewModel.isEditMessageMode &&
@@ -217,7 +222,7 @@ private struct MessageBubbleView: View {
                         )
                         .cornerRadius(10)
                 }
-                .frame(maxWidth: screenWidth * 0.68, alignment: .trailing)
+                .frame(maxWidth: screenWidth * 0.7, alignment: .trailing)
                 .offset(x: dragOffset.width)
                 
                 if showRightIcon && !homeViewModel.isEditMessageMode {
@@ -228,7 +233,7 @@ private struct MessageBubbleView: View {
                             } else if notificationManager.authorizationStatus == .denied {
                                 print("Notification permission denied.")
                             } else {
-                                homeViewModel.selectedMessageAlarmBtnTapped(message: message)
+                                homeViewModel.selectedMessageAlarmBtnTapped(for: message)
                             }
                         } label: {
                             Image("Alarm")
@@ -407,6 +412,8 @@ fileprivate struct OptionMenuBarView: View {
 fileprivate struct SelectedAlarmDatePicerView: View {
     @EnvironmentObject private var notificationManager: NotificationManager
     @EnvironmentObject private var homeViewModel: HomeViewModel
+    @EnvironmentObject private var messageDataController: MessageDataController
+    @Environment(\.managedObjectContext) private var viewContext
     @State private var selectedAlarmDate = Date()
     
     fileprivate var body: some View {
@@ -419,11 +426,14 @@ fileprivate struct SelectedAlarmDatePicerView: View {
             .padding()
             
             Button("Schedule notification") {
-                notificationManager.scheduleNotification(
-                    date: selectedAlarmDate,
-                    subtitle: homeViewModel.selectedAlarmMessage
+                homeViewModel.scheduleNotificationBtnTapped(
+                    for: selectedAlarmDate,
+                    using: notificationManager
                 )
-                homeViewModel.isShowDatePickerModal = false
+                homeViewModel.toggleMessageIsAlarmSet(
+                    using: messageDataController, 
+                    in: viewContext
+                )
             }
             .buttonStyle(.bordered)
             
@@ -438,7 +448,6 @@ fileprivate struct SelectedAlarmDatePicerView: View {
 #Preview {
     let controller = MessageDataController.preview
     let context = controller.context
-    
     let homeViewModel = HomeViewModel()
     let pathModel = PathModel()
     let noteListViewModel = NoteListViewModel()

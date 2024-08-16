@@ -38,7 +38,7 @@ extension NotificationManager {
         }
     }
     
-    func scheduleNotification(date: Date, subtitle: String = "") {
+    func createScheduledNotification(date: Date, subtitle: String = "") {
         incrementBadgeCount()
         let content = UNMutableNotificationContent()
         content.title = "Don't forget this"

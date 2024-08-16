@@ -18,14 +18,12 @@ class HomeViewModel: ObservableObject {
     @Published var isShowNoteListModal: Bool
     @Published var isShowDatePickerModal: Bool
     @Published var isMessageToNoteSipped: Bool
-    @Published var selectedAlarmMessage: String
+    @Published var selectedAlarmMessage: Notification
     
     var navigationBarRightMode: NavigationBtnType {
         return isEditMessageMode ? .close : .select
     }
-    
-    // 앱 실행시 빈 배열로 messages 배열 초기화
-    // 추후 로컬이나 서버 DB에서 메세지를 받아올 예정
+
     init(
         messages: [MessageEntity] = [],
         removeMessages: [MessageEntity] = [],
@@ -35,7 +33,7 @@ class HomeViewModel: ObservableObject {
         isShowNoteListModal: Bool = false,
         isShowDatePickerModal: Bool = false,
         isMessageToNoteSipped: Bool = false,
-        selectedAlarmMessage: String = ""
+        selectedAlarmMessage: Notification = Notification(id: UUID(), content: "")
     ) {
         self.messages = messages
         self.removeMessages = removeMessages
@@ -117,9 +115,31 @@ extension HomeViewModel {
         isShowNoteListModal = true
     }
     
-    func selectedMessageAlarmBtnTapped(message: MessageEntity) {
+    func selectedMessageAlarmBtnTapped(for message: MessageEntity) {
         isShowDatePickerModal = true
-        selectedAlarmMessage = message.content!
+        selectedAlarmMessage = Notification(id: message.id!, content: message.content!)
+    }
+    
+    func scheduleNotificationBtnTapped(
+        for date: Date,
+        using notificationManager: NotificationManager
+    ) {
+        notificationManager.createScheduledNotification(
+            date: date,
+            subtitle: selectedAlarmMessage.content
+        )
+        isShowDatePickerModal.toggle()
+    }
+    
+    func toggleMessageIsAlarmSet(
+        using messageDataController: MessageDataController,
+        in context: NSManagedObjectContext? = nil
+    ) {
+        messageDataController.setMessageAlarm(
+            for: selectedAlarmMessage.id,
+            to: true,
+            in: context
+        )
     }
     
     func groupMessagesByDate(messages: [MessageEntity]) -> [DateComponents: [MessageEntity]] {

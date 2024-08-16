@@ -42,10 +42,35 @@ extension MessageDataController {
         newMessage.id = UUID()
         newMessage.content = content
         newMessage.date = Date()
+        newMessage.isAlarmSet = false
         
         homeViewModel.setLastMessageId(lastMessageId: newMessage.id!)
         
         saveContext(context: context)
+    }
+    
+    func setMessageAlarm(
+        for id: UUID,
+        to isAlarmSet: Bool,
+        in context: NSManagedObjectContext? = nil
+    ) {
+        let context = context ?? self.context
+        let fetchRequest: NSFetchRequest<MessageEntity> = MessageEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        
+        do {
+            let message = try context.fetch(fetchRequest)
+            if let messageToUpdate = message.first {
+                messageToUpdate.isAlarmSet = isAlarmSet
+                
+                saveContext(context: context)
+            } else {
+                print("No message found with the specified ID.")
+            }
+        } catch {
+            let nserror = error as NSError
+            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+        }
     }
     
     func deleteMessage(
