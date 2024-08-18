@@ -13,7 +13,7 @@ enum NavigationBtnType: String {
     case close = "Close"
     case leftBack = "LeftBack"
     case add = "Create"
-    case complete = "완료"
+    case complete = "Done"
     case update = "수정"
     case home = "house"
     case select = "Select"

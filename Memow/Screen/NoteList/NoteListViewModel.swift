@@ -62,7 +62,6 @@ extension NoteListViewModel {
         )
     }
     
-    // 메세지 노트로 옮김
     func addSelectedMessageToNote(
         selectedNotes: Set<Note>,
         selectedMessages: Set<MessageEntity>,
@@ -71,11 +70,20 @@ extension NoteListViewModel {
     ) {
         for selectedNote in selectedNotes {
             var combinedContent = selectedNote.content
-            for selectedMessage in selectedMessages.sorted(by: { $0.date! < $1.date! }) {
+            for selectedMessage in selectedMessages.sorted(by: {
+                if let date1 = $0.date, let date2 = $1.date {
+                    return date1 < date2
+                }
+                return false
+            }) {
                 if combinedContent == "" {
-                    combinedContent = selectedMessage.content ?? ""
+                    if let content = selectedMessage.content {
+                        combinedContent = content
+                    }
                 } else {
-                    combinedContent += "\n" + (selectedMessage.content ?? "")
+                    if let content = selectedMessage.content {
+                        combinedContent += "\n" + content
+                    }
                 }
             }
             noteDataController.updateNoteData(
