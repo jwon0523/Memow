@@ -42,7 +42,7 @@ struct OnboardingView: View {
 //                    .navigationDestination(for: PathType.self) { pathType in
 //                        destinationView(for: pathType)
 //                    }
-//            } 
+//            }
 //            else {
 //                OnboardingContentView(onboardingViewModel: onboardingViewModel)
 //                    .onDisappear {
@@ -51,6 +51,7 @@ struct OnboardingView: View {
 //            }
         }
         .environmentObject(pathModel)
+        .tint(.colorPrimary)
     }
     
     @ViewBuilder
@@ -77,7 +78,6 @@ struct OnboardingView: View {
                 : .init(note: note ?? .init(title: "", content: "", date: Date())),
                 isCreateMode: isCreateMode
             )
-            .navigationBarBackButtonHidden()
             .environmentObject(noteListViewModel)
             .environment(\.managedObjectContext, noteDataController.container.viewContext)
         }

@@ -28,7 +28,7 @@ struct NoteListView: View {
                                 noteListViewModel.navigationSelectBtnTapped()
                             }
                         },
-                        leftBtnType: .memow,
+                        leftBtnType: .notes,
                         // 버튼 클릭할 때마다 선택 이미지와 삭제 전환
                         rightBtnType: noteListViewModel.navigationBarRightMode
                     )

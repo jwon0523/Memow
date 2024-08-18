@@ -8,7 +8,7 @@
 import Foundation
 
 enum NavigationBtnType: String {
-    // CustomNavigationBar에서 title 외 나머지는 이미지로 보여줌
+    case emptyBtn = ""
     case notes = "Notes"
     case close = "Close"
     case leftBack = "LeftBack"

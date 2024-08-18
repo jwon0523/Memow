@@ -21,10 +21,19 @@ struct NoteView: View {
     var body: some View {
         ZStack {
             VStack {
+                 NoteTitleView(
+                    noteViewModel: noteViewModel,
+                    isCreateMode: $isCreateMode
+                 )
+                 .padding(.top, 10)
+                
+                 NoteContentInputView(noteViewModel: noteViewModel)
+            }
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
                 CustomNavigationBar(
-                    leftBtnAction: {
-                        pathModel.paths.removeLast()
-                    },
                     rightBtnAction: {
                         if isCreateMode {
                             noteListViewModel.addNote(
@@ -42,19 +51,10 @@ struct NoteView: View {
                             )
                         }
                         pathModel.paths.removeLast()
-                    }, 
-                    leftBtnType: .leftBack,
+                    },
+                    leftBtnType: .emptyBtn,
                     rightBtnType: isCreateMode ? .complete : .update
                 )
-                
-                 NoteTitleView(
-                    noteViewModel: noteViewModel,
-                    isCreateMode: $isCreateMode
-                 )
-                 .padding(.top, 10)
-                
-                 NoteContentInputView(noteViewModel: noteViewModel)
-                
             }
         }
     }
