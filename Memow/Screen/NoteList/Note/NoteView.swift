@@ -16,10 +16,16 @@ struct NoteView: View {
     @EnvironmentObject private var noteDataController: NoteDataController
     @Environment(\.managedObjectContext) private var viewContext
     @StateObject var noteViewModel: NoteViewModel
+    @FocusState private var focusedField: Field?
     @State var isCreateMode: Bool = true
     @State private var isEditNote: Bool = false
     @State private var prevNoteTitle: String? = nil
     @State private var prevNoteContent: String? = nil
+    
+    enum Field: Hashable {
+        case title
+        case content
+    }
     
     var body: some View {
         ZStack {
@@ -29,6 +35,10 @@ struct NoteView: View {
                     isCreateMode: $isCreateMode
                  )
                  .padding(.top, 10)
+                 .focused($focusedField, equals: .title)
+                 .onSubmit {
+                     focusedField = .content
+                 }
                  .onChange(of: noteViewModel.note.title) { newNoteTitle in
                      if prevNoteTitle != newNoteTitle {
                          isEditNote = true
@@ -38,6 +48,7 @@ struct NoteView: View {
                  }
                 
                  NoteContentInputView(noteViewModel: noteViewModel)
+                    .focused($focusedField, equals: .content)
                     .onChange(of: noteViewModel.note.content) { newNoteContent in
                         if prevNoteContent != newNoteContent {
                             isEditNote = true
