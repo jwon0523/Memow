@@ -235,6 +235,11 @@ private struct NoteRowView: View {
                     }
                 }
         )
+        .onChange(of: noteListViewModel.isEditNoteMode) { newValue in
+            if newValue == true {
+                note.isSwiped = false
+            }
+        }
         .padding(.vertical, 8)
         .padding(.horizontal, 16)
     }

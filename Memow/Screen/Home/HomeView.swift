@@ -233,8 +233,11 @@ private struct MessageBubbleView: View {
                         Spacer().frame(width: 5)
                     }
                     .offset(x: dragOffset.width)
-                    .animation(.easeInOut(duration: 0.6), value: showRightIcon)
-                    .opacity(dragOffset.width > 20 ? 0.5 : dragOffset.width >= 60 ? 0 : 1)
+                    .transition(.move(edge: .trailing))
+                    .animation(
+                        .easeInOut(duration: 0.3),
+                        value: showRightIcon
+                    )
                 }
             }
             .frame(maxWidth: .infinity, alignment: .trailing)
@@ -244,8 +247,8 @@ private struct MessageBubbleView: View {
             DragGesture()
                 .onChanged { gesture in
                     let translation = gesture.translation.width
-                    if translation < -50 {
-                        self.dragOffset.width = -50
+                    if translation < -30 {
+                        self.dragOffset.width = -30
                     } else if translation > 80 {
                         self.dragOffset.width = 80
                     } else {
@@ -253,7 +256,7 @@ private struct MessageBubbleView: View {
                     }
                 }
                 .onEnded { _ in
-                    if dragOffset.width < -40 {
+                    if dragOffset.width < -25 {
                         withAnimation(.easeInOut(duration: 0.2)) {
                             self.showRightIcon = true
                         }
