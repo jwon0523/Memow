@@ -18,6 +18,8 @@ struct NoteView: View {
     @StateObject var noteViewModel: NoteViewModel
     @State var isCreateMode: Bool = true
     @State private var isEditNote: Bool = false
+    @State private var prevNoteTitle: String? = nil
+    @State private var prevNoteContent: String? = nil
     
     var body: some View {
         ZStack {
@@ -28,7 +30,6 @@ struct NoteView: View {
                  )
                  .padding(.top, 10)
                  .onChange(of: noteViewModel.note.title) { newNoteTitle in
-                     let prevNoteTitle = noteViewModel.note.title
                      if prevNoteTitle != newNoteTitle {
                          isEditNote = true
                      } else {
@@ -38,13 +39,16 @@ struct NoteView: View {
                 
                  NoteContentInputView(noteViewModel: noteViewModel)
                     .onChange(of: noteViewModel.note.content) { newNoteContent in
-                        let prevNoteContent = noteViewModel.note.title
                         if prevNoteContent != newNoteContent {
                             isEditNote = true
                         } else {
                             isEditNote = false
                         }
                     }
+            }
+            .onAppear {
+                self.prevNoteTitle = noteViewModel.note.title
+                self.prevNoteContent = noteViewModel.note.content
             }
         }
         .navigationBarTitleDisplayMode(.inline)
