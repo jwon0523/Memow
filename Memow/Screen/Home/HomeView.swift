@@ -181,7 +181,7 @@ private struct MessageBubbleView: View {
     @EnvironmentObject private var homeViewModel: HomeViewModel
     @EnvironmentObject private var notificationManager: NotificationManager
     @State private var messageHeight: CGFloat = 0
-    @State private var showRightIcon: Bool = false
+    @State private var isShowRightIcon: Bool = false
     @State private var dragOffset: CGSize = .zero
     @State private var moveLeft: Bool = false
     
@@ -210,46 +210,17 @@ private struct MessageBubbleView: View {
                 )
                 .offset(x: dragOffset.width)
                 
-                if showRightIcon && !homeViewModel.isEditMessageMode {
-                    HStack {
-                        Button {
-                            if notificationManager.authorizationStatus == .notDetermined {
-                                notificationManager.requestAuthorization()
-                            } else if notificationManager.authorizationStatus == .denied {
-                                print("Notification permission denied.")
-                            } else {
-                                homeViewModel.selectedMessageAlarmBtnTapped(for: message)
-                            }
-                        } label: {
-                            Image("Alarm")
-                                .resizable()
-                                .frame(width: 20, height: 20)
-                        }
-                        .frame(width: 40 ,height: messageHeight)
-                        .background(Color.backgorundBtn)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                        
-                        Spacer().frame(width: 15)
-                        
-                        Button {
-                            homeViewModel.messageSelectedBoxTapped(message)
-                            homeViewModel.messageToNoteSwipingTapped()
-                        } label: {
-                            Image("AddFile")
-                                .resizable()
-                                .frame(width: 20, height: 20)
-                        }
-                        .frame(width: 40 ,height: messageHeight)
-                        .background(Color.backgorundBtn)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                        
-                        Spacer().frame(width: 5)
-                    }
+                if isShowRightIcon && !homeViewModel.isEditMessageMode {
+                    MessageBubbleIconView(
+                        message: message,
+                        messageHeight: $messageHeight,
+                        isShowRightIcon: $isShowRightIcon
+                    )
                     .offset(x: dragOffset.width)
                     .transition(.move(edge: .trailing))
                     .animation(
-                        .easeInOut(duration: 0.3),
-                        value: showRightIcon
+                        .easeInOut(duration: 0.2),
+                        value: isShowRightIcon
                     )
                 }
             }
@@ -271,11 +242,11 @@ private struct MessageBubbleView: View {
                 .onEnded { _ in
                     if dragOffset.width < -25 {
                         withAnimation(.easeInOut(duration: 0.2)) {
-                            self.showRightIcon = true
+                            self.isShowRightIcon = true
                         }
                     } else if dragOffset.width > 60 {
                         withAnimation(.easeInOut(duration: 0.2)) {
-                            self.showRightIcon = false
+                            self.isShowRightIcon = false
                         }
                     }
                     withAnimation(.easeInOut(duration: 0.2)) {
@@ -337,6 +308,66 @@ private struct MessageContentView: View {
             homeViewModel.isEditMessageMode &&
             !homeViewModel.selectedMessages.contains(message) ? 0.3 : 1
         )
+    }
+}
+
+// MARK: - 메시지 아이콘 뷰
+private struct MessageBubbleIconView: View {
+    private var message: MessageEntity
+    @EnvironmentObject private var homeViewModel: HomeViewModel
+    @EnvironmentObject private var notificationManager: NotificationManager
+    @Binding private var messageHeight: CGFloat
+    @Binding private var isShowRightIcon: Bool
+    private let iconCornerRadiusSize: CGFloat = 8
+    
+    fileprivate init(
+        message: MessageEntity,
+        messageHeight: Binding<CGFloat>,
+        isShowRightIcon: Binding<Bool>
+    ) {
+        self.message = message
+        self._messageHeight = messageHeight
+        self._isShowRightIcon = isShowRightIcon
+    }
+    
+    fileprivate var body: some View {
+        HStack(spacing: 10) {
+            Button {
+                withAnimation {
+                    if notificationManager.authorizationStatus == .notDetermined {
+                        notificationManager.requestAuthorization()
+                    } else if notificationManager.authorizationStatus == .denied {
+                        print("Notification permission denied.")
+                        self.isShowRightIcon.toggle()
+                    } else {
+                        homeViewModel.selectedMessageAlarmBtnTapped(for: message)
+                        self.isShowRightIcon.toggle()
+                    }
+                }
+            } label: {
+                Image("Alarm")
+                    .resizable()
+                    .frame(width: 20, height: 20)
+            }
+            .frame(width: 40 ,height: messageHeight)
+            .background(Color.backgorundBtn)
+            .clipShape(RoundedRectangle(cornerRadius: iconCornerRadiusSize))
+            
+            Button {
+                homeViewModel.messageSelectedBoxTapped(message)
+                homeViewModel.messageToNoteSwipingTapped()
+                withAnimation {
+                    self.isShowRightIcon.toggle()
+                }
+            } label: {
+                Image("AddFile")
+                    .resizable()
+                    .frame(width: 20, height: 20)
+            }
+            .frame(width: 40 ,height: messageHeight)
+            .background(Color.backgorundBtn)
+            .clipShape(RoundedRectangle(cornerRadius: iconCornerRadiusSize))
+        }
     }
 }
 
