@@ -168,11 +168,19 @@ private struct DateSectionHeader: View {
     }
 }
 
+struct HeightPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
+    }
+}
+
 // MARK: - 메세지 버블 뷰
 private struct MessageBubbleView: View {
     private var message: MessageEntity
     @EnvironmentObject private var homeViewModel: HomeViewModel
     @EnvironmentObject private var notificationManager: NotificationManager
+    @State private var messageHeight: CGFloat = 0
     @State private var showRightIcon: Bool = false
     @State private var dragOffset: CGSize = .zero
     @State private var moveLeft: Bool = false
@@ -196,8 +204,11 @@ private struct MessageBubbleView: View {
             }
             
             HStack {
-                MessageContentView(message: message)
-                    .offset(x: dragOffset.width)
+                MessageContentView(
+                    message: message,
+                    messageHeight: $messageHeight
+                )
+                .offset(x: dragOffset.width)
                 
                 if showRightIcon && !homeViewModel.isEditMessageMode {
                     HStack {
@@ -213,9 +224,10 @@ private struct MessageBubbleView: View {
                             Image("Alarm")
                                 .resizable()
                                 .frame(width: 20, height: 20)
-                                .padding(3)
-                                .background(Color.backgroundDefault)
                         }
+                        .frame(width: 40 ,height: messageHeight)
+                        .background(Color.backgorundBtn)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                         
                         Spacer().frame(width: 15)
                         
@@ -226,9 +238,10 @@ private struct MessageBubbleView: View {
                             Image("AddFile")
                                 .resizable()
                                 .frame(width: 20, height: 20)
-                                .padding(3)
-                                .background(Color.backgroundDefault)
                         }
+                        .frame(width: 40 ,height: messageHeight)
+                        .background(Color.backgorundBtn)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                         
                         Spacer().frame(width: 5)
                     }
@@ -277,9 +290,14 @@ private struct MessageBubbleView: View {
 private struct MessageContentView: View {
     @EnvironmentObject private var homeViewModel: HomeViewModel
     private var message: MessageEntity
+    @Binding private var messageHeight: CGFloat
     
-    fileprivate init(message: MessageEntity) {
+    fileprivate init(
+        message: MessageEntity,
+        messageHeight: Binding<CGFloat>
+    ) {
         self.message = message
+        self._messageHeight = messageHeight
     }
     
     fileprivate var body: some View {
@@ -303,9 +321,18 @@ private struct MessageContentView: View {
                 .padding(.horizontal, 12)
                 .padding(.vertical, 10)
                 .background(Color.colorPrimary)
+                .overlay(
+                    GeometryReader { geometry in
+                        Color.clear
+                            .preference(key: HeightPreferenceKey.self, value: geometry.size.height)
+                    }
+                )
+                .onPreferenceChange(HeightPreferenceKey.self) { height in
+                    self.messageHeight = height
+                }
                 .cornerRadius(8)
         }
-        .frame(maxWidth: screenWidth * 0.7, alignment: .trailing)
+        .frame(maxWidth: screenWidth * 0.58, alignment: .trailing)
         .opacity(
             homeViewModel.isEditMessageMode &&
             !homeViewModel.selectedMessages.contains(message) ? 0.3 : 1
