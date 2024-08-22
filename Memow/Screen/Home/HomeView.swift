@@ -500,17 +500,23 @@ fileprivate struct SelectedAlarmDatePicerView: View {
             )
             .padding()
             
-            Button("Schedule notification") {
+            Button {
                 homeViewModel.scheduleNotificationBtnTapped(
                     for: selectedAlarmDate,
                     using: notificationManager
                 )
                 homeViewModel.toggleMessageIsAlarmSet(
-                    using: messageDataController, 
+                    using: messageDataController,
                     in: viewContext
                 )
+            } label: {
+                Text("Schedule notification")
+                    .customFontStyle(.body)
+                    .foregroundStyle(Color.customFont)
             }
-            .buttonStyle(.bordered)
+            .padding(10)
+            .background(Color.backgorundBtn)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
             
             //            Button("Cancel notification") {
             //                notificationManager.cancelNotification()
