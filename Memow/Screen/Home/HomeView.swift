@@ -15,8 +15,8 @@ struct HomeView: View {
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
     @EnvironmentObject private var messageDataController: MessageDataController
     @EnvironmentObject private var noteDataController: NoteDataController
-    @State private var isSideMenuShowing: Bool = false
-    
+    @State private var isShowingSideMenu: Bool = false
+
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
@@ -24,7 +24,7 @@ struct HomeView: View {
                     leftBtnAction: {
                         if !homeViewModel.isEditMessageMode {
                             withAnimation {
-                                isSideMenuShowing.toggle()
+                                isShowingSideMenu.toggle()
                             }
                         }
                     },
@@ -35,7 +35,6 @@ struct HomeView: View {
                     },
                     leftBtnType: .sideMenuIcon,
                     rightBtnType: homeViewModel.navigationBarRightMode
-                    // 오른쪽 버튼 클릭시 작동 함수 필요
                 )
                 
                 if homeViewModel.isEditMessageMode {
@@ -68,7 +67,7 @@ struct HomeView: View {
                 NotificationManager.instance.resetBadgeCount()
             }
             
-            SideMenuView(isShowing: $isSideMenuShowing)
+            SideMenuView(isShowing: $isShowingSideMenu)
         }
     }
 }
