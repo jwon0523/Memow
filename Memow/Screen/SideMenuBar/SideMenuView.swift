@@ -13,22 +13,15 @@ struct SideMenuView: View {
     @EnvironmentObject private var homeViewModel: HomeViewModel
     @EnvironmentObject private var noteDataController: NoteDataController
     @Binding var isShowing: Bool
-    @State private var offset: CGFloat = 0
-    @State private var lastOffset: CGFloat = 0
+    @Binding var offset: CGFloat
+    @Binding var lastOffset: CGFloat
     @State private var backgroundOpacity: Double = 0.0
+
+    private let sideMenuWidth: CGFloat = 340
 
     var body: some View {
         ZStack {
             if isShowing {
-                Rectangle()
-                    .opacity(backgroundOpacity)
-                    .ignoresSafeArea()
-                    .onTapGesture {
-                        withAnimation {
-                            isShowing = false
-                        }
-                    }
-                
                 HStack {
                     VStack(alignment: .leading, spacing: 32) {
                         NoteListView()
@@ -38,35 +31,25 @@ struct SideMenuView: View {
                             .environmentObject(noteDataController)
                             .environment(\.managedObjectContext, noteDataController.container.viewContext)
                     }
-                    .frame(width: 340, alignment: .leading)
-                    .background(.white)
+                    .frame(width: sideMenuWidth, alignment: .leading)
+                    .background(Color.white)
                     .offset(x: offset)
                     .gesture(
                         DragGesture()
                             .onChanged { value in
+                                // 오른쪽으로 드래그 시 열림, 왼쪽으로 드래그 시 닫힘
                                 let totalTranslation = value.translation.width + lastOffset
-                                // 왼쪽으로 드래그 시 totalTranslation이 0 이하로 넘어가지 않도록 제한
                                 if totalTranslation <= 0 {
                                     offset = totalTranslation
-                                    backgroundOpacity = Double(
-                                        min(abs(offset) / 340, 0.3)
-                                    )
+                                    backgroundOpacity = Double(min(abs(offset) / sideMenuWidth, 0.3))
                                 }
                             }
                             .onEnded { value in
-                                let dragThreshold: CGFloat = 100
-                                if -offset > dragThreshold {
-                                    // 사용자가 충분히 왼쪽으로 드래그하면 사이드 메뉴를 닫음
-                                    withAnimation {
+                                withAnimation {
+                                    if -offset > sideMenuWidth / 2 {
                                         isShowing = false
                                     }
-                                    offset = -340
-                                } else {
-                                    // 그렇지 않으면 사이드 메뉴를 다시 원위치로
-                                    withAnimation {
-                                        offset = 0
-                                        backgroundOpacity = 0.3
-                                    }
+                                    offset = 0
                                 }
                                 lastOffset = offset
                             }
@@ -77,6 +60,13 @@ struct SideMenuView: View {
                 .transition(.move(edge: .leading))
             }
         }
+        .frame(maxWidth: .infinity)
+        .background(.backgroundDefault.opacity(0.05))
+        .onTapGesture {
+            withAnimation {
+                isShowing = false
+            }
+        }
         .onChange(of: isShowing) { newValue in
             withAnimation(.easeInOut(duration: 0.3)) {
                 if newValue {
@@ -84,6 +74,7 @@ struct SideMenuView: View {
                     lastOffset = 0
                     backgroundOpacity = 0.3
                 } else {
+                    offset = -sideMenuWidth
                     backgroundOpacity = 0.0
                 }
             }
@@ -103,7 +94,9 @@ struct SideMenuView: View {
     }
     
     return SideMenuView(
-        isShowing: .constant(true)
+        isShowing: .constant(true),
+        offset: .constant(0),
+        lastOffset: .constant(0)
     )
     .environment(\.managedObjectContext, context)
     .environmentObject(PathModel())

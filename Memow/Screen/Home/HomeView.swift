@@ -16,9 +16,13 @@ struct HomeView: View {
     @EnvironmentObject private var messageDataController: MessageDataController
     @EnvironmentObject private var noteDataController: NoteDataController
     @State private var isShowingSideMenu: Bool = false
+    @State private var sideMenuOffset: CGFloat = 0
+    @State private var lastSideMenuOffset: CGFloat = 0
+
+    private let sideMenuWidth: CGFloat = 340
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: .leading) {
             VStack(spacing: 0) {
                 CustomNavigationBar(
                     leftBtnAction: {
@@ -47,7 +51,31 @@ struct HomeView: View {
                     MessageFieldView()
                 }
             }
+            // offset 값을 최소 0으로 제한
+            .offset(
+                x: isShowingSideMenu 
+                ? max(sideMenuOffset + sideMenuWidth, 0)
+                : max(sideMenuOffset, 0)
+            )
             .background(Color.backgroundDefault)
+            .gesture(
+                DragGesture()
+                    .onChanged { value in
+                        // 왼쪽으로 드래그 시 사이드바 닫기
+                        if value.translation.width < 0 {
+                            sideMenuOffset = max(value.translation.width + lastSideMenuOffset, -sideMenuWidth)
+                        }
+                    }
+                    .onEnded { value in
+                        withAnimation {
+                            if -sideMenuOffset > sideMenuWidth / 2 {
+                                isShowingSideMenu = false
+                            }
+                            sideMenuOffset = 0
+                        }
+                        lastSideMenuOffset = sideMenuOffset
+                    }
+            )
             .sheet(
                 isPresented: $homeViewModel.isShowNoteListModal,
                 onDismiss: noteListViewModel.removeAllSelectedNote
@@ -67,7 +95,11 @@ struct HomeView: View {
                 NotificationManager.instance.resetBadgeCount()
             }
             
-            SideMenuView(isShowing: $isShowingSideMenu)
+            SideMenuView(
+                isShowing: $isShowingSideMenu,
+                offset: $sideMenuOffset,
+                lastOffset: $lastSideMenuOffset
+            )
         }
     }
 }
@@ -302,7 +334,7 @@ private struct MessageContentView: View {
                 }
                 .cornerRadius(8)
         }
-        .frame(maxWidth: screenWidth * 0.58, alignment: .trailing)
+        .frame(maxWidth: screenWidth * 0.63, alignment: .trailing)
         .opacity(
             homeViewModel.isEditMessageMode &&
             !homeViewModel.selectedMessages.contains(message) ? 0.3 : 1
@@ -347,10 +379,10 @@ private struct MessageBubbleIconView: View {
                 Image("Alarm")
                     .resizable()
                     .frame(width: 20, height: 20)
+                    .frame(width: 40 ,height: messageHeight)
+                    .background(Color.backgorundBtn)
+                    .clipShape(RoundedRectangle(cornerRadius: iconCornerRadiusSize))
             }
-            .frame(width: 40 ,height: messageHeight)
-            .background(Color.backgorundBtn)
-            .clipShape(RoundedRectangle(cornerRadius: iconCornerRadiusSize))
             
             Button {
                 homeViewModel.messageSelectedBoxTapped(message)
@@ -362,10 +394,10 @@ private struct MessageBubbleIconView: View {
                 Image("AddFile")
                     .resizable()
                     .frame(width: 20, height: 20)
+                    .frame(width: 40 ,height: messageHeight)
+                    .background(Color.backgorundBtn)
+                    .clipShape(RoundedRectangle(cornerRadius: iconCornerRadiusSize))
             }
-            .frame(width: 40 ,height: messageHeight)
-            .background(Color.backgorundBtn)
-            .clipShape(RoundedRectangle(cornerRadius: iconCornerRadiusSize))
         }
     }
 }
@@ -446,17 +478,17 @@ fileprivate struct OptionMenuBarView: View {
                 
                 Spacer()
                 
-    //            Button(action: {
-    //                print("Share")
-    //            }, label: {
-    //                Text("Share")
-    //                    .foregroundColor(.customFont)
-    //                Image("Share")
-    //                    .resizable()
-    //                    .frame(width: 20, height: 20)
-    //            })
+                //            Button(action: {
+                //                print("Share")
+                //            }, label: {
+                //                Text("Share")
+                //                    .foregroundColor(.customFont)
+                //                Image("Share")
+                //                    .resizable()
+                //                    .frame(width: 20, height: 20)
+                //            })
                 
-    //            Spacer()
+                //            Spacer()
                 
                 Button(action: {
                     if(!homeViewModel.selectedMessages.isEmpty) {

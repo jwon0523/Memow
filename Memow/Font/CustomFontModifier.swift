@@ -12,6 +12,7 @@ enum FontName: String {
 }
 
 enum CustomFontStyle {
+    case title
     case heading
     case body
     case label
@@ -19,6 +20,8 @@ enum CustomFontStyle {
 
     func font(fontName: FontName) -> Font{
         switch self {
+        case .title:
+            return Font.custom(fontName.rawValue, size: 20).bold()
         case .heading:
             return Font.custom(fontName.rawValue, size: 16)
         case .body:
@@ -32,6 +35,8 @@ enum CustomFontStyle {
 
     var lineSpacing: CGFloat {
         switch self {
+        case .title:
+            return 28
         case .heading:
             return 24
         case .body:
@@ -45,7 +50,7 @@ enum CustomFontStyle {
 
     var kerning: CGFloat {
         switch self {
-        case .heading, .body:
+        case .title, .heading, .body:
             return -0.004
         case .label, .caption:
             return 0.0

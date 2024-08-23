@@ -112,7 +112,7 @@ private struct NoteTitleView: View {
                 "제목을 입력하세요",
                 text: $noteViewModel.note.title
             )
-            .customFontStyle(.heading)
+            .customFontStyle(.title)
             .foregroundStyle(.colorPrimary)
             .focused($isTitleFieldFocused)
             .onAppear {
