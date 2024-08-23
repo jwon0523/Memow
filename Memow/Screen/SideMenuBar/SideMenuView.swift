@@ -22,15 +22,6 @@ struct SideMenuView: View {
     var body: some View {
         ZStack {
             if isShowing {
-                Rectangle()
-                    .opacity(backgroundOpacity)
-                    .ignoresSafeArea()
-                    .onTapGesture {
-                        withAnimation {
-                            isShowing = false
-                        }
-                    }
-                
                 HStack {
                     VStack(alignment: .leading, spacing: 32) {
                         NoteListView()
@@ -67,6 +58,13 @@ struct SideMenuView: View {
                     Spacer()
                 }
                 .transition(.move(edge: .leading))
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .background(.backgroundDefault.opacity(0.05))
+        .onTapGesture {
+            withAnimation {
+                isShowing = false
             }
         }
         .onChange(of: isShowing) { newValue in
