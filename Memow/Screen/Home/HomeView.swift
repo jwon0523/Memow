@@ -16,8 +16,8 @@ struct HomeView: View {
     @EnvironmentObject private var messageDataController: MessageDataController
     @EnvironmentObject private var noteDataController: NoteDataController
     @State private var isShowingSideMenu: Bool = false
-    @State private var sideMenuOffset: CGFloat = 0
-    @State private var lastSideMenuOffset: CGFloat = 0
+    @State private var sideMenuOffset: CGFloat = -340
+    @State private var lastSideMenuOffset: CGFloat = -340
 
     private let sideMenuWidth: CGFloat = 340
 
@@ -51,55 +51,39 @@ struct HomeView: View {
                     MessageFieldView()
                 }
             }
-            // offset 값을 최소 0으로 제한
-            .offset(
-                x: isShowingSideMenu 
-                ? max(sideMenuOffset + sideMenuWidth, 0)
-                : max(sideMenuOffset, 0)
-            )
-            .background(Color.backgroundDefault)
+            .offset(x: sideMenuOffset + sideMenuWidth)
             .gesture(
                 DragGesture()
                     .onChanged { value in
-                        // 왼쪽으로 드래그 시 사이드바 닫기
-                        if value.translation.width < 0 {
-                            sideMenuOffset = max(value.translation.width + lastSideMenuOffset, -sideMenuWidth)
+                        let totalTranslation = value.translation.width + lastSideMenuOffset
+                        if totalTranslation <= 0 && totalTranslation >= -sideMenuWidth {
+                            sideMenuOffset = totalTranslation
                         }
                     }
                     .onEnded { value in
                         withAnimation {
                             if -sideMenuOffset > sideMenuWidth / 2 {
                                 isShowingSideMenu = false
+                                sideMenuOffset = -sideMenuWidth
+                            } else {
+                                isShowingSideMenu = true
+                                sideMenuOffset = 0
                             }
-                            sideMenuOffset = 0
                         }
                         lastSideMenuOffset = sideMenuOffset
                     }
             )
-            .sheet(
-                isPresented: $homeViewModel.isShowNoteListModal,
-                onDismiss: noteListViewModel.removeAllSelectedNote
-            ) {
-                NoteListView()
-                    .environment(
-                        \.managedObjectContext,
-                         noteDataController.container.viewContext
-                    )
-            }
-            .sheet(
-                isPresented: $homeViewModel.isShowDatePickerModal
-            ) {
-                SelectedAlarmDatePicerView()
-            }
-            .onAppear {
-                NotificationManager.instance.resetBadgeCount()
-            }
-            
+            .background(Color.backgroundDefault)
+
             SideMenuView(
                 isShowing: $isShowingSideMenu,
                 offset: $sideMenuOffset,
                 lastOffset: $lastSideMenuOffset
             )
+        }
+        .onAppear {
+            sideMenuOffset = isShowingSideMenu ? 0 : -sideMenuWidth
+            lastSideMenuOffset = sideMenuOffset
         }
     }
 }
