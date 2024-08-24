@@ -51,7 +51,7 @@ struct HomeView: View {
                     MessageFieldView()
                 }
             }
-            .offset(x: sideMenuOffset + sideMenuWidth)
+            .offset(x: max(sideMenuOffset + sideMenuWidth, 0))
             .gesture(
                 DragGesture()
                     .onChanged { value in
@@ -246,20 +246,25 @@ private struct MessageBubbleView: View {
             DragGesture()
                 .onChanged { gesture in
                     let translation = gesture.translation.width
-                    if translation < -30 {
-                        self.dragOffset.width = -30
-                    } else if translation > 80 {
-                        self.dragOffset.width = 80
-                    } else {
-                        self.dragOffset.width = translation
+                    
+                    // 메시지 버블이 화면을 벗어나지 않도록 제한
+                    // 양수로 변경시 오른쪽으로 당겼다가 돌아오는 제스처 가능.
+                    if translation < 0 {
+                        // 왼쪽으로 스와이프할 때 (아이콘 열기)
+                        self.dragOffset.width = max(translation, -30)
+                    } else if translation > 0 && isShowRightIcon {
+                        // 오른쪽으로 스와이프할 때 (아이콘 닫기)
+                        self.dragOffset.width = min(translation, 80)
                     }
                 }
                 .onEnded { _ in
+                    // 왼쪽으로 스와이프하여 아이콘을 열 때
                     if dragOffset.width < -25 {
                         withAnimation(.easeInOut(duration: 0.2)) {
                             self.isShowRightIcon = true
                         }
-                    } else if dragOffset.width > 60 {
+                    } // 오른쪽으로 스와이프하여 아이콘을 닫을 때
+                    else if dragOffset.width > 60 {
                         withAnimation(.easeInOut(duration: 0.2)) {
                             self.isShowRightIcon = false
                         }

@@ -38,10 +38,13 @@ struct SideMenuView: View {
                         DragGesture()
                             .onChanged { value in
                                 // 오른쪽으로 드래그 시 열림, 왼쪽으로 드래그 시 닫힘
-                                let totalTranslation = value.translation.width + lastOffset
-                                if totalTranslation <= 0 && totalTranslation >= -sideMenuWidth {
+                                let totalTranslation = value.translation.width + lastOffset 
+                                if totalTranslation <= 0 
+                                    && totalTranslation >= -sideMenuWidth {
                                     offset = totalTranslation
-                                    backgroundOpacity = Double(min(abs(offset) / sideMenuWidth, 0.01))
+                                    backgroundOpacity = Double(
+                                        min(abs(offset) / sideMenuWidth, 0.01)
+                                    )
                                 }
                             }
                             .onEnded { value in
