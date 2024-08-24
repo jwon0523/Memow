@@ -10,6 +10,11 @@ import SwiftUI
 // 노트 horizontal 패딩 사이즈 상수 선언
 private let noteHorizontalPaddingSize: CGFloat = 16
 
+struct UpdateNoteData: Hashable {
+    var title: String
+    var content: String
+}
+
 struct NoteView: View {
     @EnvironmentObject private var pathModel: PathModel
     @EnvironmentObject private var noteListViewModel: NoteListViewModel
@@ -21,6 +26,9 @@ struct NoteView: View {
     @State private var isEditNote: Bool = false
     @State private var prevNoteTitle: String? = nil
     @State private var prevNoteContent: String? = nil
+    @State private var updateNoteData: UpdateNoteData = UpdateNoteData(
+        title: "", content: ""
+    )
     
     enum Field: Hashable {
         case title
@@ -32,14 +40,15 @@ struct NoteView: View {
             VStack {
                  NoteTitleView(
                     noteViewModel: noteViewModel,
-                    isCreateMode: $isCreateMode
+                    isCreateMode: $isCreateMode,
+                    updateNotetitle: $updateNoteData.title
                  )
                  .padding(.top, 10)
                  .focused($focusedField, equals: .title)
                  .onSubmit {
                      focusedField = .content
                  }
-                 .onChange(of: noteViewModel.note.title) { newNoteTitle in
+                 .onChange(of: updateNoteData.title) { newNoteTitle in
                      if prevNoteTitle != newNoteTitle {
                          isEditNote = true
                      } else {
@@ -47,9 +56,12 @@ struct NoteView: View {
                      }
                  }
                 
-                 NoteContentInputView(noteViewModel: noteViewModel)
+                 NoteContentInputView(
+                    noteViewModel: noteViewModel,
+                    updateNoteContent: $updateNoteData.content
+                 )
                     .focused($focusedField, equals: .content)
-                    .onChange(of: noteViewModel.note.content) { newNoteContent in
+                    .onChange(of: updateNoteData.content) { newNoteContent in
                         if prevNoteContent != newNoteContent {
                             isEditNote = true
                         } else {
@@ -58,8 +70,10 @@ struct NoteView: View {
                     }
             }
             .onAppear {
+                self.updateNoteData.title = noteViewModel.note.title
                 self.prevNoteTitle = noteViewModel.note.title
-                self.prevNoteContent = noteViewModel.note.content
+                self.updateNoteData.content = noteViewModel.note.content
+                self.prevNoteContent = updateNoteData.content
             }
         }
         .navigationBarTitleDisplayMode(.inline)
@@ -76,11 +90,13 @@ struct NoteView: View {
                         } else {
                             noteListViewModel.updateNote(
                                 id: noteViewModel.note.id,
-                                updateTitle: noteViewModel.note.title,
-                                updateContent: noteViewModel.note.content,
+                                updateTitle: updateNoteData.title,
+                                updateContent: updateNoteData.content,
                                 noteDataController: noteDataController,
                                 context: viewContext
                             )
+                            noteViewModel.note.title = updateNoteData.title
+                            noteViewModel.note.content = updateNoteData.content
                         }
                         pathModel.paths.removeLast()
                     },
@@ -97,20 +113,23 @@ private struct NoteTitleView: View {
     @ObservedObject private var noteViewModel: NoteViewModel
     @FocusState private var isTitleFieldFocused: Bool
     @Binding private var isCreateMode: Bool
+    @Binding private var updateNotetitle: String
     
     fileprivate init(
         noteViewModel: NoteViewModel,
-        isCreateMode: Binding<Bool>
+        isCreateMode: Binding<Bool>,
+        updateNotetitle: Binding<String>
     ) {
         self.noteViewModel = noteViewModel
         self._isCreateMode = isCreateMode
+        self._updateNotetitle = updateNotetitle
     }
     
     fileprivate var body: some View {
         VStack {
             TextField(
                 "제목을 입력하세요",
-                text: $noteViewModel.note.title
+                text: $updateNotetitle
             )
             .customFontStyle(.title)
             .foregroundStyle(.colorPrimary)
@@ -128,14 +147,19 @@ private struct NoteTitleView: View {
 
 private struct NoteContentInputView: View {
     @ObservedObject private var noteViewModel: NoteViewModel
+    @Binding var updateNoteContent: String
     
-    fileprivate init(noteViewModel: NoteViewModel) {
+    fileprivate init(
+        noteViewModel: NoteViewModel,
+        updateNoteContent: Binding<String>
+    ) {
         self.noteViewModel = noteViewModel
+        self._updateNoteContent = updateNoteContent
     }
     
     fileprivate var body: some View {
         ZStack {
-            TextEditor(text: $noteViewModel.note.content)
+            TextEditor(text: $updateNoteContent)
             
             if noteViewModel.note.content.isEmpty {
                 Text("메모를 입력하세요.")
