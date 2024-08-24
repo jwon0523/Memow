@@ -51,6 +51,7 @@ struct HomeView: View {
                     MessageFieldView()
                 }
             }
+            .background(Color.backgroundDefault)
             .offset(x: max(sideMenuOffset + sideMenuWidth, 0))
             .gesture(
                 DragGesture()
@@ -73,7 +74,24 @@ struct HomeView: View {
                         lastSideMenuOffset = sideMenuOffset
                     }
             )
-            .background(Color.backgroundDefault)
+            .sheet(
+                isPresented: $homeViewModel.isShowNoteListModal,
+                onDismiss: noteListViewModel.removeAllSelectedNote
+            ) {
+                NoteListView()
+                    .environment(
+                        \.managedObjectContext,
+                         noteDataController.container.viewContext
+                    )
+            }
+            .sheet(
+                isPresented: $homeViewModel.isShowDatePickerModal
+            ) {
+                SelectedAlarmDatePicerView()
+            }
+            .onAppear {
+                NotificationManager.instance.resetBadgeCount()
+            }
 
             SideMenuView(
                 isShowing: $isShowingSideMenu,
@@ -224,6 +242,39 @@ private struct MessageBubbleView: View {
                     messageHeight: $messageHeight
                 )
                 .offset(x: dragOffset.width)
+                .background(Color.backgroundDefault)
+                .gesture(
+                    DragGesture()
+                        .onChanged { gesture in
+                            let translation = gesture.translation.width
+                            
+                            // 메시지 버블이 화면을 벗어나지 않도록 제한
+                            // 양수로 변경시 오른쪽으로 당겼다가 돌아오는 제스처 가능.
+                            if translation < 0 {
+                                // 왼쪽으로 스와이프할 때 (아이콘 열기)
+                                self.dragOffset.width = max(translation, -30)
+                            } else if translation > 0 && isShowRightIcon {
+                                // 오른쪽으로 스와이프할 때 (아이콘 닫기)
+                                self.dragOffset.width = min(translation, 80)
+                            }
+                        }
+                        .onEnded { _ in
+                            // 왼쪽으로 스와이프하여 아이콘을 열 때
+                            if dragOffset.width < -25 {
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    self.isShowRightIcon = true
+                                }
+                            } // 오른쪽으로 스와이프하여 아이콘을 닫을 때
+                            else if dragOffset.width > 60 {
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    self.isShowRightIcon = false
+                                }
+                            }
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                self.dragOffset = .zero
+                            }
+                        }
+                )
                 
                 if isShowRightIcon && !homeViewModel.isEditMessageMode {
                     MessageBubbleIconView(
@@ -242,38 +293,6 @@ private struct MessageBubbleView: View {
             .frame(maxWidth: .infinity, alignment: .trailing)
         }
         .background(Color.backgroundDefault)
-        .gesture(
-            DragGesture()
-                .onChanged { gesture in
-                    let translation = gesture.translation.width
-                    
-                    // 메시지 버블이 화면을 벗어나지 않도록 제한
-                    // 양수로 변경시 오른쪽으로 당겼다가 돌아오는 제스처 가능.
-                    if translation < 0 {
-                        // 왼쪽으로 스와이프할 때 (아이콘 열기)
-                        self.dragOffset.width = max(translation, -30)
-                    } else if translation > 0 && isShowRightIcon {
-                        // 오른쪽으로 스와이프할 때 (아이콘 닫기)
-                        self.dragOffset.width = min(translation, 80)
-                    }
-                }
-                .onEnded { _ in
-                    // 왼쪽으로 스와이프하여 아이콘을 열 때
-                    if dragOffset.width < -25 {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            self.isShowRightIcon = true
-                        }
-                    } // 오른쪽으로 스와이프하여 아이콘을 닫을 때
-                    else if dragOffset.width > 60 {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            self.isShowRightIcon = false
-                        }
-                    }
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        self.dragOffset = .zero
-                    }
-                }
-        )
     }
 }
 
