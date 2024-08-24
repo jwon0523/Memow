@@ -83,7 +83,10 @@ struct NoteView: View {
                     rightBtnAction: {
                         if isCreateMode {
                             noteListViewModel.addNote(
-                                noteViewModel.note,
+                                id: noteViewModel.note.id,
+                                title: updateNoteData.title,
+                                content: updateNoteData.content,
+                                date: noteViewModel.note.date,
                                 noteDataController: noteDataController,
                                 context: viewContext
                             )

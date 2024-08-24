@@ -33,15 +33,18 @@ class NoteDataController: ObservableObject {
 
 extension NoteDataController {
     func addNoteData(
-        note: Note,
+        id: UUID,
+        title: String,
+        content: String,
+        date: Date,
         context: NSManagedObjectContext? = nil
     ) {
         let context = context ?? self.context
         let newNote = NoteEntity(context: context)
-        newNote.id = note.id
-        newNote.title = note.title
-        newNote.content = note.content
-        newNote.date = note.date
+        newNote.id = id
+        newNote.title = title
+        newNote.content = content
+        newNote.date = date
         
         saveContext(context: context)
     }

@@ -40,11 +40,20 @@ class NoteListViewModel: ObservableObject {
 
 extension NoteListViewModel {
     func addNote(
-        _ note: Note,
+        id: UUID,
+        title: String,
+        content: String,
+        date: Date,
         noteDataController: NoteDataController,
         context: NSManagedObjectContext
     ) {
-        noteDataController.addNoteData(note: note, context: context)
+        noteDataController.addNoteData(
+            id: id,
+            title: title,
+            content: content,
+            date: date,
+            context: context
+        )
     }
     
     func updateNote(
