@@ -21,7 +21,7 @@ struct SideMenuView: View {
 
     var body: some View {
         ZStack {
-            if isShowing {
+            if isShowing || offset > -sideMenuWidth {
                 HStack {
                     VStack(alignment: .leading, spacing: 32) {
                         NoteListView()
@@ -38,18 +38,24 @@ struct SideMenuView: View {
                         DragGesture()
                             .onChanged { value in
                                 // 오른쪽으로 드래그 시 열림, 왼쪽으로 드래그 시 닫힘
-                                let totalTranslation = value.translation.width + lastOffset
-                                if totalTranslation <= 0 {
+                                let totalTranslation = value.translation.width + lastOffset 
+                                if totalTranslation <= 0 
+                                    && totalTranslation >= -sideMenuWidth {
                                     offset = totalTranslation
-                                    backgroundOpacity = Double(min(abs(offset) / sideMenuWidth, 0.3))
+                                    backgroundOpacity = Double(
+                                        min(abs(offset) / sideMenuWidth, 0.01)
+                                    )
                                 }
                             }
                             .onEnded { value in
                                 withAnimation {
                                     if -offset > sideMenuWidth / 2 {
                                         isShowing = false
+                                        offset = -sideMenuWidth
+                                    } else {
+                                        isShowing = true
+                                        offset = 0
                                     }
-                                    offset = 0
                                 }
                                 lastOffset = offset
                             }
@@ -61,10 +67,11 @@ struct SideMenuView: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .background(.backgroundDefault.opacity(0.05))
+        .background(Color.black.opacity(backgroundOpacity).ignoresSafeArea())
         .onTapGesture {
             withAnimation {
                 isShowing = false
+                offset = -sideMenuWidth
             }
         }
         .onChange(of: isShowing) { newValue in
@@ -72,7 +79,7 @@ struct SideMenuView: View {
                 if newValue {
                     offset = 0
                     lastOffset = 0
-                    backgroundOpacity = 0.3
+                    backgroundOpacity = 0.01
                 } else {
                     offset = -sideMenuWidth
                     backgroundOpacity = 0.0
