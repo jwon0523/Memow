@@ -16,8 +16,17 @@ struct SideMenuView: View {
     @Binding var offset: CGFloat
     @Binding var lastOffset: CGFloat
     @State private var backgroundOpacity: Double = 0.0
-
     private let sideMenuWidth: CGFloat = 340
+    
+    init(
+        isShowing: Binding<Bool>,
+        offset: Binding<CGFloat>,
+        lastOffset: Binding<CGFloat>
+    ) {
+        self._isShowing = isShowing
+        self._offset = offset
+        self._lastOffset = lastOffset
+    }
 
     var body: some View {
         ZStack {
